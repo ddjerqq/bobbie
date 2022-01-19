@@ -35,7 +35,10 @@ class App(discord.Client):
             process = str(content).replace("!gay", "").strip()
             random_number = random.randint(1, 100)
             number = str(random_number)
-            await message.channel.send("%s %s პროცენტით გეია." % (process, number))
+            if not process:
+                await message.channel.send("ვინმე დაპინგე!")
+            else:
+                await message.channel.send("%s %s პროცენტით გეია." % (process, number))
 
 
 
