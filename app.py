@@ -1,4 +1,5 @@
 import discord
+import random
 import json
 
 import requests as r
@@ -28,6 +29,13 @@ class App(discord.Client):
                 await message.channel.send("რაებს ჩალიჩობ ბრატ?")
             else:
                 await channel.send(process_message)
+
+        if message.content.startswith("!gay"):
+            content = message.content
+            process = str(content).replace("!gay", "").strip()
+            random_number = random.randint(1, 100)
+            number = str(random_number)
+            await message.channel.send("%s %s პროცენტით გეია." % (process, number))
 
 
 
