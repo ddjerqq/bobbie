@@ -21,9 +21,13 @@ class App(discord.Client):
     async def on_message(self, message):
         if message.content.startswith("!say"):
             content = message.content
+            author = message.author.id
             process_message = str(content).replace("!say", "").strip()
             channel = app.get_channel(740486454240870420)
-            await channel.send(process_message)
+            if message.author.id != 834942471808483349:
+                await message.channel.send("რაებს ჩალიჩობ ბრატ?")
+            else:
+                await channel.send(process_message)
 
 
 
