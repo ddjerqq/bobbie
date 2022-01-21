@@ -1,5 +1,6 @@
 import discord
 import random
+import os
 import json
 
 import requests as r
