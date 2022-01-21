@@ -22,7 +22,6 @@ class App(discord.Client):
     async def on_message(self, message):
         if message.content.startswith("!say"):
             content = message.content
-            author = message.author.id
             process_message = str(content).replace("!say", "").strip()
             channel = app.get_channel(740486454240870420)
             if message.author.id != 834942471808483349:
@@ -55,7 +54,6 @@ class App(discord.Client):
                 await message.channel.send("ვინმე დაპინგე!")
             else:
                 await message.channel.send("%s'მ მოიწვია ყავაზე %s. ☕" % (message.author.mention, process))
-
 
 
 app = App(intents=intents)
