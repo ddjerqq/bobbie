@@ -38,7 +38,7 @@ class App(discord.Client):
             if not process:
                 await message.channel.send("ვინმე დაპინგე!")
             else:
-                await message.channel.send("%s %s პროცენტით გეია." % (process, number))
+                await message.channel.send("%s %s პროცენტით გეია. 🏳️‍🌈" % (process, number))
 
         if message.content.startswith("!tea"):
             content = message.content
@@ -46,7 +46,15 @@ class App(discord.Client):
             if not process:
                 await message.channel.send("ვინმე დაპინგე!")
             else:
-                await message.channel.send("%s'მ შესთავაზა ჩაი %s'ს." % (message.author.mention, process))
+                await message.channel.send("%s'მ შესთავაზა ჩაი %s'ს. ☕" % (message.author.mention, process))
+
+        if message.content.startswith("!coffee"):
+            content = message.content
+            process = str(content).replace("!coffee", "").strip()
+            if not process:
+                await message.channel.send("ვინმე დაპინგე!")
+            else:
+                await message.channel.send("%s'მ მოიწვია ყავაზე %s. ☕" % (message.author.mention, process))
 
 
 
