@@ -3,7 +3,7 @@ from random import randint
 from discord.ext import commands
 
 
-class Commands(commands.Cog):
+class Commands(commands.Cog, commands.Bot):
 
     def __init(self, app):
         self.app = app
