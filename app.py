@@ -2,11 +2,28 @@ import discord
 import random
 import os
 import json
+from discord.ext import commands
 
 import requests as r
 
 intents = discord.Intents.default()
 intents.members = True
+app = commands.Bot(command_prefix="!")
+
+
+@app.command()
+async def load(ctx, extension):
+    app.load_extension(f"cogs{extension}")
+
+
+@app.command
+async def unload(ctx, extension):
+    app.unload_extension(f"cogs{extension}")
+
+
+for filename in os.listdir("./cogs"):
+    if filename.endswith(".py"):
+        app.load_extension(f"cogs.{filename[:-3]}")
 
 
 class App(discord.Client):
@@ -20,7 +37,7 @@ class App(discord.Client):
             print("Something went wrong:", e)
             exit()
 
-    async def on_message(self, message):
+    """async def on_message(self, message):
         if message.content.startswith("!say"):
             content = message.content
             process_message = str(content).replace("!say", "").strip()
@@ -54,8 +71,8 @@ class App(discord.Client):
             if not process:
                 await message.channel.send("ვინმე დაპინგე!")
             else:
-                await message.channel.send("%s'მ მოიწვია ყავაზე %s. ☕" % (message.author.mention, process))
+                await message.channel.send("%s'მ მოიწვია ყავაზე %s. ☕" % (message.author.mention, process))"""
 
 
-app = App(intents=intents)
+# app = App(intents=intents)
 app.run("OTMzMjQzODQwOTA1NzY5MDQw.YeetDg.--AR1OpWo1NZkLz-jzC0PaOuJmI")
