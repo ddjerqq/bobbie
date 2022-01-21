@@ -24,7 +24,7 @@ class Commands(commands.Cog):
         if not process:
             await ctx.send("ვინმე დაპინგე!")
         else:
-            await ctx.send("%s დაპატიჟა ყავაზე %s" % (ctx.message.author.mention, content))
+            await ctx.send("%s დაპატიჟა ყავაზე %s" % (ctx.message.author.mention, process))
 
 
 def setup(app):
