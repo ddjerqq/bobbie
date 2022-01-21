@@ -2,7 +2,6 @@ import discord
 import json
 import requests as r
 from random import randint
-from geopy.geocoders import Nominatim
 from discord.ext import commands
 
 
