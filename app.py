@@ -40,6 +40,14 @@ class App(discord.Client):
             else:
                 await message.channel.send("%s %s პროცენტით გეია." % (process, number))
 
+        if message.content.startswith("!tea"):
+            content = message.content
+            process = str(content).replace("!tea", "").strip()
+            if not process:
+                await message.channel.send("ვინმე დაპინგე!")
+            else:
+                await message.channel.send("%s'მ შესთავაზა ჩაი %s'ს." % (message.author.mention, process))
+
 
 
 app = App(intents=intents)
