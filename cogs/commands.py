@@ -43,6 +43,16 @@ class Commands(commands.Cog, commands.Bot):
         await ctx.message.delete()
 
     @commands.command()
+    async def hug(self, ctx):
+        content = ctx.message.content
+        process = str(content).replace("!hug", "").strip()
+        if not process:
+            await ctx.send("ვინმე დაპინგე!")
+        else:
+            await ctx.send("%s გულიანად ჩაეხუტა %s 🫂" % (ctx.message.author.mention, process))
+        await ctx.message.delete()
+
+    @commands.command()
     async def weather(self, ctx, arg):
         geolocate = Nominatim(user_agent="Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) "
                                          "Chrome/41.0.2228.0 Safari/537.36")
