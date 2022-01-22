@@ -11,8 +11,8 @@ class Connection(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("Claude succesfully connected.")
-        activity = discord.Game("discord.gg/Georgia")
+        print("Bobbie succesfully connected.")
+        activity = discord.Game("Bobbie's Campfire!")
         status = discord.Status.dnd
         await app.app.change_presence(activity=activity, status=status)
 
