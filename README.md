@@ -1,2 +1,2 @@
 # claude
-A discord bot written for Georgia Community discord server.
+A discord multipurpose bot written in python.
