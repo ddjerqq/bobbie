@@ -20,6 +20,7 @@ class Commands(commands.Cog, commands.Bot):
             await ctx.send("%s 100 პროცენტით გეია" % process)
         else:
             await ctx.send("%s %s პროცენტით გეია 🏳️‍🌈" % (process, randint(1, 100)))
+        await ctx.message.delete()
 
     @commands.command()
     async def coffee(self, ctx):
@@ -29,6 +30,7 @@ class Commands(commands.Cog, commands.Bot):
             await ctx.send("ვინმე დაპინგე!")
         else:
             await ctx.send("%s დაპატიჟა ყავაზე %s ☕" % (ctx.message.author.mention, process))
+        await ctx.message.delete()
 
     @commands.command()
     async def tea(self, ctx):
@@ -38,6 +40,7 @@ class Commands(commands.Cog, commands.Bot):
             await ctx.send("ვინმე დაპინგე!")
         else:
             await ctx.send("%s შესთავაზა ჩაი %s ☕" % (ctx.message.author.mention, process))
+        await ctx.message.delete()
 
     @commands.command()
     async def weather(self, ctx, arg):
