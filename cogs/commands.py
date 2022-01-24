@@ -17,8 +17,6 @@ class Commands(commands.Cog, commands.Bot):
         process = str(content).replace("!gay", "").strip()
         if not process:
             await ctx.send("ვინმე დაპინგე!")
-        elif "denis" in process:
-            await ctx.send("%s 100 პროცენტით გეია" % process)
         else:
             await ctx.send("%s %s პროცენტით გეია 🏳️‍🌈" % (process, randint(1, 100)))
 
