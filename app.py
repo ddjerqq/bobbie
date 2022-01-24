@@ -26,6 +26,4 @@ for filename in os.listdir("./cogs"):
         app.load_extension(f"cogs.{filename[:-3]}")
 
 
-
-
 app.run("OTMzMjQzODQwOTA1NzY5MDQw.YeetDg.b4icjZ7hgbXTtTn_4GR-QWYKyuw")
