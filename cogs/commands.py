@@ -10,7 +10,7 @@ class Commands(commands.Cog, commands.Bot):
     def __init(self, app):
         self.app = app
 
-    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command()
     async def gay(self, ctx):
         content = ctx.message.content
         process = str(content).replace("!gay", "").strip()
@@ -21,7 +21,7 @@ class Commands(commands.Cog, commands.Bot):
         else:
             await ctx.send("%s %s პროცენტით გეია 🏳️‍🌈" % (process, randint(1, 100)))
 
-    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command()
     async def coffee(self, ctx):
         content = ctx.message.content
         process = str(content).replace("!coffee", "").strip()
@@ -31,7 +31,7 @@ class Commands(commands.Cog, commands.Bot):
             await ctx.send("%s დაპატიჟა ყავაზე %s ☕" % (ctx.message.author.mention, process))
         await ctx.message.delete()
 
-    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command()
     async def tea(self, ctx):
         content = ctx.message.content
         process = str(content).replace("!tea", "").strip()
@@ -41,7 +41,7 @@ class Commands(commands.Cog, commands.Bot):
             await ctx.send("%s შესთავაზა ჩაი %s ☕" % (ctx.message.author.mention, process))
         await ctx.message.delete()
 
-    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command()
     async def hug(self, ctx):
         content = ctx.message.content
         process = str(content).replace("!hug", "").strip()
