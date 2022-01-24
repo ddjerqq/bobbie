@@ -50,7 +50,7 @@ class Commands(commands.Cog, commands.Bot):
         if not process:
             await ctx.send("ვინმე დაპინგე!")
         else:
-            await ctx.send("%s გულიანად ჩაეხუტა %s 🫂'ს" % (ctx.message.author.mention, process))
+            await ctx.send("%s გულიანად ჩაეხუტა %s'ს🫂" % (ctx.message.author.mention, process))
         await ctx.message.delete()
 
     @commands.command()
