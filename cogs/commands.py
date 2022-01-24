@@ -78,8 +78,8 @@ class Commands(commands.Cog, commands.Bot):
         avatar = avamember.avatar_url
         try:
             await ctx.send(avatar)
-        except MemberNotFound as e:
-            await ctx.send("`MemberNotFound exception.`")
+        except AttributeError as e:
+            await ctx.send(e)
 
 
 def setup(app):
