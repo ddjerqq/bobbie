@@ -3,6 +3,7 @@ import json
 import requests as r
 from random import randint
 from discord.ext import commands
+from discord.ext.commands import MemberNotFound
 
 
 class Commands(commands.Cog, commands.Bot):
@@ -17,7 +18,9 @@ class Commands(commands.Cog, commands.Bot):
         process = str(content).replace("!gay", "").strip()
         embed = discord.Embed(title="გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი", color=0x2d56a9)
         random = randint(1, 100)
-        embed.add_field(name="ტესტის რეზულტატი".format(ctx.message.author.mention), value="{0}'მ გატესტა მექანიზმი და აღმოაჩინა რომ {1} {2} პროცენტით გეია 🏳️‍🌈.".format(ctx.message.author.mention, process, random), inline=False)
+        embed.add_field(name="ტესტის რეზულტატი".format(ctx.message.author.mention),
+                        value="{0}'მ გატესტა მექანიზმი და აღმოაჩინა რომ {1} {2} პროცენტით გეია 🏳️‍🌈.".format(
+                            ctx.message.author.mention, process, random), inline=False)
         if not process:
             await ctx.send("ვინმე დაპინგე!")
         else:
@@ -69,6 +72,14 @@ class Commands(commands.Cog, commands.Bot):
         with open("cogs/weather.json", "r+") as weather:
             weather_data = json.load(weather)
         await ctx.send("weather in %s: %s" % (arg, weather_data["currently"]["summary"]))
+
+    @commands.command()
+    async def avatar(self, ctx, *, avamember: discord.Member = None):
+        avatar = avamember.avatar_url
+        try:
+            await ctx.send(avatar)
+        except MemberNotFound as e:
+            await ctx.send("`MemberNotFound exception.`")
 
 
 def setup(app):
