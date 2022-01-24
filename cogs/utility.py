@@ -16,7 +16,6 @@ class Utility(commands.Cog):
         with open("cogs/weather.json", "w+") as f:
             json.dump(data.json(), f, indent=4)
 
-
     @commands.command()
     async def avatar(self, ctx, *, avamember: discord.Member = None):
         avatar = avamember.avatar_url
