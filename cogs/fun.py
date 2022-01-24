@@ -24,7 +24,7 @@ class Commands(commands.Cog, commands.Bot):
             await ctx.send("ვინმე დაპინგე!")
         else:
             await ctx.send(embed=embed)
-        await ctx.message.delete()
+            await ctx.message.delete()
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
