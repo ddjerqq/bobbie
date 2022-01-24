@@ -8,7 +8,7 @@ import requests as r
 
 intents = discord.Intents.default()
 intents.members = True
-app = commands.Bot(command_prefix="!")
+app = commands.Bot(command_prefix="!", help_command=None)
 
 
 @app.command()
