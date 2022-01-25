@@ -24,39 +24,42 @@ class Commands(commands.Cog, commands.Bot):
             await ctx.send("ვინმე დაპინგე!")
         else:
             await ctx.send(embed=embed)
-            await ctx.message.delete()
+        await ctx.message.delete()
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
-    async def coffee(self, ctx):
+    async def coffee(self, ctx, member: discord.Member = None):
+        member = member.mention
         content = ctx.message.content
         process = str(content).replace("!coffee", "").strip()
         if not process:
             await ctx.send("ვინმე დაპინგე!")
         else:
-            await ctx.send("%s დაპატიჟა ყავაზე %s ☕" % (ctx.message.author.mention, process))
+            await ctx.send("%s დაპატიჟა ყავაზე %s ☕" % (ctx.message.author.mention, member))
         await ctx.message.delete()
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
-    async def tea(self, ctx):
+    async def tea(self, ctx, member: discord.Member = None):
+        member = member.mention
         content = ctx.message.content
         process = str(content).replace("!tea", "").strip()
         if not process:
             await ctx.send("ვინმე დაპინგე!")
         else:
-            await ctx.send("%s შესთავაზა ჩაი %s ☕" % (ctx.message.author.mention, process))
+            await ctx.send("%s შესთავაზა ჩაი %s ☕" % (ctx.message.author.mention, member))
         await ctx.message.delete()
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
-    async def hug(self, ctx):
+    async def hug(self, ctx, member: discord.Member = None):
+        member = member.mention
         content = ctx.message.content
         process = str(content).replace("!hug", "").strip()
         if not process:
             await ctx.send("ვინმე დაპინგე!")
         else:
-            await ctx.send("%s გულიანად ჩაეხუტა %s'ს🫂" % (ctx.message.author.mention, process))
+            await ctx.send("%s გულიანად ჩაეხუტა %s'ს🫂" % (ctx.message.author.mention, member))
         await ctx.message.delete()
 
 
