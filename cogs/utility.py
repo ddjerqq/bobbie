@@ -27,6 +27,5 @@ class Utility(commands.Cog):
         await channel.send(process)
 
 
-
 def setup(app):
     app.add_cog(Utility(app))
