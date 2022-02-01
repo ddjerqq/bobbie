@@ -72,9 +72,9 @@ class Commands(commands.Cog, commands.Bot):
         if not process:
             await ctx.send("ვინმე დაპინგე მოსატყნავად!!")
         elif random < 50:
-            await ctx.send("%s აუდგა და შეეცადა %s გაჟიმვას, მარა როგორც კი შეუდო ეგრევე გული წაუვიდა." % (ctx.message.author, member))
+            await ctx.send("%s აუდგა და შეეცადა %s გაჟიმვას, მარა როგორც კი შეუდო ეგრევე გული წაუვიდა 😦" % (ctx.message.author.mention, member))
         elif random > 50:
-            await ctx.send("%s აუდგა და გულიანად და ღრმად გაჟიმა %s 😎" % (ctx.message.author, member))
+            await ctx.send("%s აუდგა და გულიანად და ღრმად გაჟიმა %s 😎" % (ctx.message.author.mention, member))
         else:
             # await ctx.send("%s გაჟიმა %s 😎" % (ctx.message.author.mention, member))
             pass
