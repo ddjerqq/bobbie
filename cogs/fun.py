@@ -65,13 +65,20 @@ class Commands(commands.Cog, commands.Bot):
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
     async def fuck(self, ctx, member: discord.Member = None):
+        random = randint(1, 100)
         member = member.mention
         content = ctx.message.content
         process = str(content).replace("!fuck", "").strip()
         if not process:
             await ctx.send("ვინმე დაპინგე მოსატყნავად!!")
+        elif random < 50:
+            await ctx.send("%s აუდგა და შეეცადა %s გაჟიმვას, მარა როგორც კი შეუდო ეგრევე გული წაუვიდა." % (ctx.message.author, member))
+        elif random > 50:
+            await ctx.send("%s აუდგა და გულიანად და ღრმად გაჟიმა %s 😎" % (ctx.message.author, member))
         else:
-            await ctx.send("%s გაჟიმა %s 😎" % (ctx.message.author.mention, member))
+            # await ctx.send("%s გაჟიმა %s 😎" % (ctx.message.author.mention, member))
+            pass
+
         await ctx.message.delete()
 
     @commands.command()
