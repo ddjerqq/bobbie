@@ -3,6 +3,8 @@ import json
 import requests as r
 from discord.ext import commands
 
+import app
+
 
 class Utility(commands.Cog):
 
@@ -16,6 +18,14 @@ class Utility(commands.Cog):
             await ctx.send(avatar)
         except AttributeError as e:
             await ctx.send(e)
+
+    @commands.command()
+    async def say(self, ctx):
+        content = ctx.message.content
+        channel = app.app.get_channel(935887688085680128)
+        process = content.replace("!say", "").strip()
+        await channel.send(process)
+
 
 
 def setup(app):
