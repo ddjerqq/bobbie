@@ -63,6 +63,18 @@ class Commands(commands.Cog, commands.Bot):
         await ctx.message.delete()
 
     @commands.command()
+    # @commands.cooldown(1, 30, commands.BucketType.user)
+    async def fuck(self, ctx, member: discord.Member = None):
+        member = member.mention
+        content = ctx.message.content
+        process = str(content).replace("!fuck", "").strip()
+        if not process:
+            await ctx.send("ვინმე დაპინგე მოსატყნავად!!")
+        else:
+            await ctx.send("%s გაჟიმა %s 😎" % (ctx.message.author.mention, member))
+        await ctx.message.delete()
+
+    @commands.command()
     async def post_rules(self, ctx):
         embed = discord.Embed(title="Frosty's Campfire",
                               description="Frosty's Campfire არის ერთ ერთი ქართული დისქორდ სერვერი სხვადასხვა თემებზე დისკუსიებისთვის.",
