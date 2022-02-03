@@ -13,7 +13,6 @@ class Utility(commands.Cog):
 
     @commands.command()
     async def avatar(self, ctx, avamember: discord.Member = None):
-        # avatar = avamember.avatar_url
         try:
             if avamember is None:
                 avamember = ctx.message.author
