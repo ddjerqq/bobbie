@@ -16,7 +16,8 @@ class Utility(commands.Cog):
         try:
             if avamember is None:
                 avamember = ctx.message.author
-                print(avamember)
+                await ctx.send(avamember.avatar_url)
+            else:
                 await ctx.send(avamember.avatar_url)
         except AttributeError as e:
             await ctx.send(e)
