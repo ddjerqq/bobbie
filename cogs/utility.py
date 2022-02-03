@@ -12,10 +12,13 @@ class Utility(commands.Cog):
         self.app = app
 
     @commands.command()
-    async def avatar(self, ctx, *, avamember: discord.Member = None):
-        avatar = avamember.avatar_url
+    async def avatar(self, ctx, avamember: discord.Member = None):
+        # avatar = avamember.avatar_url
         try:
-            await ctx.send(avatar)
+            if avamember is None:
+                avamember = ctx.message.author
+                print(avamember)
+                await ctx.send(avamember.avatar_url)
         except AttributeError as e:
             await ctx.send(e)
 
