@@ -12,16 +12,16 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def gay(self, ctx):
+    async def gay(self, ctx, target: discord.Member = None):
         content = ctx.message.content
-        process = str(content).replace("!gay", "").strip()
+        # process = str(content).replace("!gay", "").strip()
         embed = discord.Embed(title="გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი", color=0x2d56a9)
         random = randint(1, 100)
-        embed.add_field(name="ტესტის რეზულტატი".format(ctx.message.author.mention),
+        embed.add_field(name="გეი ტესტის რეზულტატი".format(ctx.message.author.mention),
                         value="{0}'მ გატესტა მექანიზმი და აღმოაჩინა რომ {1} {2} პროცენტით გეია 🏳️‍🌈.".format(
-                            ctx.message.author.mention, process, random), inline=False)
-        if not process:
-            await ctx.send("ვინმე დაპინგე!")
+                            ctx.message.author.mention, target.mention, random), inline=False)
+        if target is None:
+            await ctx.send("ვინმე დაპინგე ტესტის ჩასატარებლად!")
         else:
             await ctx.send(embed=embed)
         await ctx.message.delete()
@@ -71,7 +71,8 @@ class Commands(commands.Cog, commands.Bot):
         if member is None:
             await ctx.send("ვინმე დაპინგე მოსატყნავად!!")
         elif random < 50:
-            await ctx.send("%s აუდგა და შეეცადა %s'ს გაჟიმვას, მარა როგორც კი შეუდო ეგრევე გული წაუვიდა 😦" % (ctx.message.author.mention, member.mention))
+            await ctx.send("%s აუდგა და შეეცადა %s'ს გაჟიმვას, მარა როგორც კი შეუდო ეგრევე გული წაუვიდა 😦" % (
+            ctx.message.author.mention, member.mention))
         elif random > 50:
             await ctx.send("%s აუდგა და გულიანად და ღრმად გაჟიმა %s 😎" % (ctx.message.author.mention, member.mention))
         else:
