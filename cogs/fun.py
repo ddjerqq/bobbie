@@ -13,15 +13,19 @@ class Commands(commands.Cog, commands.Bot):
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
     async def gay(self, ctx, target: discord.Member = None):
-        target_mention = target.mention
         embed = discord.Embed(title="გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი", color=0x2d56a9)
         random = randint(1, 100)
-        embed.add_field(name="გეი ტესტის რეზულტატი".format(ctx.message.author.mention),
-                        value="{0}'მ გატესტა მექანიზმი და აღმოაჩინა რომ {1} {2} პროცენტით გეია 🏳️‍🌈.".format(
-                            ctx.message.author.mention, target_mention, random), inline=False)
         if target is None:
-            await ctx.send("ვინმე დაპინგე ტესტის ჩასატარებლად!")
+            # target_author = ctx.message.author
+            embed.add_field(name="გეი ტესტის რეზულტატი",
+                            value="{0}'მ ჩაიტარა გეი გამოკვლების ტესტი და აღმოაჩინა რომ {1} პროცენთით გეია 🏳️‍🌈.".format(
+                                ctx.message.author.mention, random), inline=False)
+            await ctx.send(embed=embed)
         else:
+            target_mention = target.mention
+            embed.add_field(name="გეი ტესტის რეზულტატი",
+                            value="{0}'მ გატესტა მექანიზმი და აღმოაჩინა რომ {1} {2} პროცენტით გეია 🏳️‍🌈".format(
+                                ctx.message.author.mention, target_mention, random), inline=False)
             await ctx.send(embed=embed)
         await ctx.message.delete()
 
