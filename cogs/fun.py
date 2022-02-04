@@ -67,6 +67,14 @@ class Commands(commands.Cog, commands.Bot):
         await ctx.message.delete()
 
     @commands.command()
+    async def beer(self, ctx, target: discord.Member = None):
+        if target is None or target == ctx.message.author:
+            await ctx.send("%s'მ დაისხა ლუდი და მოწრუპა ჭიქიდან, შემდეგ კი ჩაცალა მთლიანი ბოთლი როგორც ნამდვილმა "
+                           "ლოთმა 🍺" % ctx.message.author.mention)
+        else:
+            await ctx.send("%s'მ დაისხა ლუდი თავისთვის და ასევე დაუსხა %s 🍺" % (ctx.message.author.mention, target.mention))
+
+    @commands.command()
     async def post_rules(self, ctx):
         embed = discord.Embed(title="Frosty's Campfire",
                               description="Frosty's Campfire არის ერთ ერთი ქართული დისქორდ სერვერი სხვადასხვა თემებზე დისკუსიებისთვის.",
