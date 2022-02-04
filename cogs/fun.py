@@ -17,7 +17,6 @@ class Commands(commands.Cog, commands.Bot):
         random = randint(1, 100)
         if target is None or target == ctx.message.author:
             print("same author detected")
-            # target_author = ctx.message.author
             embed.add_field(name="გეი ტესტის რეზულტატი",
                             value="{0}'მ ჩაიტარა გეი გამოკვლების ტესტი და აღმოაჩინა რომ {1} პროცენთით გეია 🏳️‍🌈.".format(
                                 ctx.message.author.mention, random), inline=False)
@@ -32,47 +31,40 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def coffee(self, ctx, member: discord.Member = None):
-        member = member.mention
-        content = ctx.message.content
-        process = str(content).replace("!coffee", "").strip()
-        if not process:
-            await ctx.send("ვინმე დაპინგე!")
+    async def coffee(self, ctx, target: discord.Member = None):
+        if target is None or target == ctx.message.author:
+            await ctx.send("%s'მა დაისხა ყავა თავისთვის ☕" % ctx.message.author.mention)
         else:
-            await ctx.send("%s დაპატიჟა ყავაზე %s ☕" % (ctx.message.author.mention, member))
+            await ctx.send("%s დაპატიჟა ყავაზე %s ☕" % (ctx.message.author.mention, target.mention))
         await ctx.message.delete()
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def tea(self, ctx, member: discord.Member = None):
-        member = member.mention
-        content = ctx.message.content
-        process = str(content).replace("!tea", "").strip()
-        if not process:
-            await ctx.send("ვინმე დაპინგე!")
+    async def tea(self, ctx, target: discord.Member = None):
+        if target is None or target == ctx.message.author:
+            await ctx.send("%s'მა დაისხა ჩაი თავისთვის ☕" % ctx.message.author.mention)
         else:
-            await ctx.send("%s შესთავაზა ჩაი %s ☕" % (ctx.message.author.mention, member))
+            await ctx.send("%s შესთავაზა ჩაი %s ☕" % (ctx.message.author.mention, target.mention))
         await ctx.message.delete()
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def hug(self, ctx, member: discord.Member = None):
-        member = member.mention
-        content = ctx.message.content
-        process = str(content).replace("!hug", "").strip()
-        if not process:
-            await ctx.send("ვინმე დაპინგე!")
+    async def hug(self, ctx, target: discord.Member = None):
+        if target is None or target == ctx.message.author:
+            await ctx.send("%s'მ მოიწყინა და დაუწყო თავის თავს მოფერება 🫂" % ctx.message.author.mention)
         else:
-            await ctx.send("%s გულიანად ჩაეხუტა %s'ს🫂" % (ctx.message.author.mention, member))
+            await ctx.send("%s გულიანად ჩაეხუტა %s'ს🫂" % (ctx.message.author.mention, target.mention))
         await ctx.message.delete()
 
     @commands.command()
+    # @commands.cooldown(1, 30, commands.BucketType.user)
     async def beer(self, ctx, target: discord.Member = None):
         if target is None or target == ctx.message.author:
             await ctx.send("%s'მ დაისხა ლუდი და მოწრუპა ჭიქიდან, შემდეგ კი ჩაცალა მთლიანი ბოთლი როგორც ნამდვილმა "
                            "ლოთმა 🍺" % ctx.message.author.mention)
         else:
             await ctx.send("%s'მ დაისხა ლუდი თავისთვის და ასევე დაუსხა %s 🍺" % (ctx.message.author.mention, target.mention))
+        await ctx.message.delete()
 
     @commands.command()
     async def post_rules(self, ctx):
