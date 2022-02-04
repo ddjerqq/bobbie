@@ -13,13 +13,12 @@ class Commands(commands.Cog, commands.Bot):
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
     async def gay(self, ctx, target: discord.Member = None):
-        content = ctx.message.content
-        # process = str(content).replace("!gay", "").strip()
+        target_mention = target.mention
         embed = discord.Embed(title="გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი", color=0x2d56a9)
         random = randint(1, 100)
         embed.add_field(name="გეი ტესტის რეზულტატი".format(ctx.message.author.mention),
                         value="{0}'მ გატესტა მექანიზმი და აღმოაჩინა რომ {1} {2} პროცენტით გეია 🏳️‍🌈.".format(
-                            ctx.message.author.mention, target.mention, random), inline=False)
+                            ctx.message.author.mention, target_mention, random), inline=False)
         if target is None:
             await ctx.send("ვინმე დაპინგე ტესტის ჩასატარებლად!")
         else:
