@@ -37,10 +37,14 @@ async def on_message_delete(message):
     embed.add_field(name="ავტორი", value="%s" % msg_author, inline=True)
     embed.add_field(name="ID", value="%s" % author_id, inline=True)
     embed.add_field(name="მესიჯი", value="%s" % msg_content, inline=False)
-    if author_id == 933243840905769040:
-        pass
-    else:
-        await channel.send(embed=embed)
+    list = ["!gay", "coffee," "!tea", "hug"]
+    for word in list:
+        if word in msg_content:
+            pass
+        elif msg_author == 933243840905769040:
+            pass
+        else:
+            await channel.send(embed=embed)
 
 
 @app.listen()
