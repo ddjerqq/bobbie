@@ -37,7 +37,7 @@ async def on_message_delete(message):
     embed.add_field(name="ავტორი", value="%s" % msg_author, inline=True)
     embed.add_field(name="ID", value="%s" % author_id, inline=True)
     embed.add_field(name="მესიჯი", value="%s" % msg_content, inline=False)
-    words = ["!gay", "!coffee", "!tea", "!hug"]
+    words = ["!gay", "!coffee", "!tea", "!hug", "?ban", "kick", "?purge"]
     if any(word in msg_content for word in words):
         pass
     elif msg_author == 933243840905769040:
