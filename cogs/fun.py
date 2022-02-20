@@ -1,6 +1,4 @@
 import discord
-import json
-import requests as r
 from random import randint
 from discord.ext import commands
 
