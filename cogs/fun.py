@@ -14,7 +14,6 @@ class Commands(commands.Cog, commands.Bot):
         embed = discord.Embed(title="გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი", color=0x2d56a9)
         random = randint(1, 100)
         if target is None or target == ctx.message.author:
-            print("same author detected")
             embed.add_field(name="გეი ტესტის რეზულტატი",
                             value="{0}'მ ჩაიტარა გეი გამოკვლების ტესტი და აღმოაჩინა რომ {1} პროცენთით გეია 🏳️‍🌈.".format(
                                 ctx.message.author.mention, random), inline=False)
