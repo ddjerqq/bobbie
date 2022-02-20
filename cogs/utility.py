@@ -1,6 +1,4 @@
 import discord
-import json
-import requests as r
 from discord.ext import commands
 
 import app
