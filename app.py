@@ -54,7 +54,7 @@ async def on_member_remove(member):
     embed = discord.Embed()
     embed.add_field(name="სახელი", value="%s" % member_name, inline=True)
     embed.add_field(name="ID", value="%s" % member_id, inline=True)
-    await channel.send("გავიდა დისქორდიდან: %s, ID: %s" % (member_name, member_id))
+    await channel.send(embed=embed)
 
 
 app.run("OTMzMjQzODQwOTA1NzY5MDQw.YeetDg.0VU1hSrwSyGC96VVygS82L38zck")
