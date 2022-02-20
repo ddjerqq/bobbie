@@ -1,10 +1,7 @@
 import discord
-import random
 import os
-import json
 from discord.ext import commands
 
-import requests as r
 
 intents = discord.Intents.default()
 intents.members = True
