@@ -15,12 +15,12 @@ class Utility(commands.Cog):
             if avamember is None:
                 avamember = ctx.message.author
                 embed = discord.Embed(color=0x2d56a9)
-                embed.add_field(name="%s" % avamember, value="%s" % avamember.id, inline=True)
+                embed.add_field(name="%s" % avamember, value="ID: %s" % avamember.id, inline=True)
                 embed.set_image(url=avamember.avatar_url)
                 await ctx.send(embed=embed)
             else:
                 embed = discord.Embed(color=0x2d56a9)
-                embed.add_field(name="%s" % avamember, value="%s" % avamember.id, inline=True)
+                embed.add_field(name="%s" % avamember, value="ID: %s" % avamember.id, inline=True)
                 embed.set_image(url=avamember.avatar_url)
                 await ctx.send(embed=embed)
         except AttributeError as e:
