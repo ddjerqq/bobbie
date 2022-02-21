@@ -57,7 +57,7 @@ async def on_member_remove(member):
 @app.listen()
 async def on_message_edit(message_before, message_after):
     if message_before.channel.id == 936740832105603173:
-        embed = discord.Embed(description="ვიღაცამ დაარედაქტირა მესიჯი, შესაძლოა თამაშის გაფუჭებას ცდილობს! ყურადღებით"
+        embed = discord.Embed(description="ვიღაცამ დაარედაქტირა მესიჯი, შესაძლოა თამაშის გაფუჭებას ცდილობს! ყურადღებით "
                                           "წაიკითხე დაბლა!", color=0x2d56a9)
         embed.add_field(name="დარედაქტირებული მესიჯი", value="%s" % message_after.content, inline=False)
         embed.add_field(name="ორიგინალური მესიჯი", value="%s" % message_before.content, inline=True)
