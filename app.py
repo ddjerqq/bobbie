@@ -54,5 +54,16 @@ async def on_member_remove(member):
     embed.set_thumbnail(url=member.avatar_url)
     await channel.send(embed=embed)
 
+@app.listen()
+async def on_message_edit(message_before, message_after):
+    if message_before.channel.id == 936740832105603173:
+        embed = discord.Embed(description="ვიღაცამ დაარედაქტირა ციფრი რომ სხვებს ჩაუჯვას მუღამში! მე გეტყვი ნამდვილ "
+                                          "ციფრს!", color=0x2d56a9)
+        embed.add_field(name="ნამდვილი ციფრი", value="%s" % message_before.content, inline=True)
+        embed.set_footer(text="დაარედაქტირა: %s" % message_before.author, icon_url=message_before.author.avatar_url)
+        await message_before.channel.send(embed=embed)
+    else:
+        pass
+
 
 app.run("OTMzMjQzODQwOTA1NzY5MDQw.YeetDg.0VU1hSrwSyGC96VVygS82L38zck")
