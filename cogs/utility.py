@@ -67,7 +67,7 @@ class Utility(commands.Cog):
         author_id = message.author.id
         embed = discord.Embed(title="Bobbie's Archives", description="ბობიმ შეამჩნია წაშლილი მესიჯი მაგრამ მოასწრო "
                                                                      "სქრინის გადაღება!", color=0x2d56a9)
-        embed.add_field(name="ავტორი", value="%s" % msg_author, inline=True)
+        embed.add_field(name="ავტორი", value="%s" % msg_author.mention, inline=True)
         embed.add_field(name="ID", value="%s" % author_id, inline=True)
         embed.add_field(name="მესიჯი", value="%s" % msg_content, inline=False)
         words = ["!gay", "!coffee", "!tea", "!hug", "!beer", "?ban", "?kick", "?purge", "?mute", "?unmute"]
