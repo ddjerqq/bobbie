@@ -87,7 +87,7 @@ class Commands(commands.Cog, commands.Bot):
                         value="წევრები არიან ვალდებულნი პატივი სცენ დისქორდის ToS, თუ დავინახეთ რომ რომელიმე წევრი არღვევს მას, მივიღებთ ზომებს გაფრთხილების გარეშე და ასევე დავარეპორტებთ Discord მოდერაციასთან.",
                         inline=True)
         embed.set_footer(
-            text="Bobbie - სპეციალურად Frosty's Campfire სერვერისთვის. წესები შეიძლება შეიცვალოს ნებისმიერ დროს, ადევნეთ თვალი.")
+            text="Bobbie - სპეციალურად Campfire Stories სერვერისთვის. წესები შეიძლება შეიცვალოს ნებისმიერ დროს, ადევნეთ თვალი.")
         embed.set_thumbnail(url="https://i.ibb.co/TrNmzp4/crop.gif")
         await ctx.send(embed=embed)
 
