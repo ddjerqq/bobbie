@@ -63,7 +63,7 @@ class Commands(commands.Cog, commands.Bot):
             await ctx.send("%s'მ დაისხა ლუდი თავისთვის და ასევე დაუსხა %s 🍻" % (ctx.message.author.mention, target.mention))
         await ctx.message.delete()
 
-    @commands.command()
+    """"@commands.command()
     async def post_rules(self, ctx):
         embed = discord.Embed(title="Campfire Stories 🔥",
                               description="Campfire Stories არის ერთ ერთი ქართული Community დისქორდ სერვერი სხვადასხვა თემებზე სასაუბროდ.",
@@ -89,7 +89,7 @@ class Commands(commands.Cog, commands.Bot):
         embed.set_footer(
             text="Bobbie - სპეციალურად Campfire Stories სერვერისთვის. წესები შეიძლება შეიცვალოს ნებისმიერ დროს, ადევნეთ თვალი.")
         embed.set_thumbnail(url="https://i.ibb.co/TrNmzp4/crop.gif")
-        await ctx.send(embed=embed)
+        await ctx.send(embed=embed) """
 
 
 def setup(app):
