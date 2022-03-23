@@ -55,6 +55,15 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
+    async def slap(self, ctx, target: discord.Member = None):
+        if target is None or target == ctx.message.author:
+            await ctx.send("%s'მ გააფრინა და თავის თავს გიჟივით დაუწყო ცემა ✊" % ctx.message.author.mention)
+        else:
+            await ctx.send("%s გაბრაზდა და შემოულაწუნა %s ✊" % (ctx.message.author.mention, target.mention))
+        await ctx.message.delete()
+
+    @commands.command()
+    # @commands.cooldown(1, 30, commands.BucketType.user)
     async def beer(self, ctx, target: discord.Member = None):
         if target is None or target == ctx.message.author:
             await ctx.send("%s'მ დაისხა ლუდი და მოწრუპა ჭიქიდან, შემდეგ კი ჩაცალა მთლიანი ბოთლი როგორც ნამდვილმა "
