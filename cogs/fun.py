@@ -64,7 +64,7 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def slap(self, ctx, target: discord.Member = None):
+    async def popcorn(self, ctx, target: discord.Member = None):
         if target is None or target == ctx.message.author:
             await ctx.send("%s'მ დაინტრიგდა სიტუაციით, ჯიბიდან როგორღაც ამოაცურა პოპკორნი და დაიწყო ჭამა 🍿" % ctx.message.author.mention)
         else:
