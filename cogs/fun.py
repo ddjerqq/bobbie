@@ -68,7 +68,7 @@ class Commands(commands.Cog, commands.Bot):
         if target is None or target == ctx.message.author:
             await ctx.send("%s დაინტრიგდა სიტუაციით,მოხალა პოპკორნი და ჩაუჯდა ჩათს 🍿" % ctx.message.author.mention)
         else:
-            await ctx.send("%s როგორღაც გააძრო საიდანღაც პოპკორნი, შესთავაზა %s 🍿" % (ctx.message.author.mention, target.mention))
+            await ctx.send("%s გააძრო საიდანღაც პოპკორნი, არ მკითხო როგორ, და შესთავაზა %s 🍿" % (ctx.message.author.mention, target.mention))
         await ctx.message.delete()
 
     @commands.command()
