@@ -70,7 +70,7 @@ class Commands(commands.Cog, commands.Bot):
         else:
             await ctx.send("%s გააძრო საიდანღაც პოპკორნი, არ მკითხო როგორ, და შესთავაზა %s 🍿" % (ctx.message.author.mention, target.mention))
         await ctx.message.delete()
-    #
+
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
     async def beer(self, ctx, target: discord.Member = None):
