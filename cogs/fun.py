@@ -57,7 +57,7 @@ class Commands(commands.Cog, commands.Bot):
     # @commands.cooldown(1, 30, commands.BucketType.user)
     async def slap(self, ctx, target: discord.Member = None):
         if target is None or target == ctx.message.author:
-            await ctx.send("%s'მ გააფრინა და თავის თავს გიჟივით დაუწყო ცემა ✊" % ctx.message.author.mention)
+            await ctx.send("%s გააფრინა და თავის თავს გიჟივით დაუწყო ცემა ✊" % ctx.message.author.mention)
         else:
             await ctx.send("%s გაბრაზდა და შემოულაწუნა %s ✊" % (ctx.message.author.mention, target.mention))
         await ctx.message.delete()
@@ -66,7 +66,7 @@ class Commands(commands.Cog, commands.Bot):
     # @commands.cooldown(1, 30, commands.BucketType.user)
     async def popcorn(self, ctx, target: discord.Member = None):
         if target is None or target == ctx.message.author:
-            await ctx.send("%s'მ დაინტრიგდა სიტუაციით, ჯიბიდან როგორღაც ამოაცურა პოპკორნი და დაიწყო ჭამა 🍿" % ctx.message.author.mention)
+            await ctx.send("%s დაინტრიგდა სიტუაციით,მოხალა პოპკორნი და ჩაუჯდა ჩათს 🍿" % ctx.message.author.mention)
         else:
             await ctx.send("%s როგორღაც გააძრო საიდანღაც პოპკორნი, შესთავაზა %s 🍿" % (ctx.message.author.mention, target.mention))
         await ctx.message.delete()
