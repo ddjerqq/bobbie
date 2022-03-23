@@ -91,7 +91,7 @@ class Utility(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
-        if message_before.channel.id == 936740832105603173:
+        if message_before.channel.id == 955942097960181851:
             embed = discord.Embed(
                 description="ვიღაცამ დაარედაქტირა მესიჯი, შესაძლოა თამაშის გაფუჭებას ცდილობს! ყურადღებით "
                             "წაიკითხე დაბლა!", color=0x2d56a9)
