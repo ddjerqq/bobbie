@@ -5,7 +5,7 @@ from discord.ext import commands
 
 intents = discord.Intents.default()
 intents.members = True
-app = commands.Bot(command_prefix="!", help_command=None, intents=intents)
+app = commands.Bot(command_prefix="!", help_command=None, intents=intents, case_insensitive=True)
 
 
 @app.command()
