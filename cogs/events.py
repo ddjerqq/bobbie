@@ -1,3 +1,6 @@
+import time
+import random
+
 import disnake
 from disnake.ext import commands
 from utils import *
@@ -7,20 +10,23 @@ from services.user_service import *
 class Events(commands.Cog):
     def __init__(self, client: disnake.Client):
         self.client = client
-
-
-    @commands.Cog.listener()
-    async def on_close(self):
-        print("closing")
+        self.confession_channel: disnake.TextChannel | None = None
+        self.deleted_messages_channel: disnake.TextChannel | None = None
 
 
     @commands.Cog.listener()
     async def on_ready(self):
         log("bobbi online")
 
+        self.confession_channel       = self.client.get_channel(CONFESSION_CHANNEL_ID)
+        self.deleted_messages_channel = self.client.get_channel(MESSAGE_DELETE_LOG_CHANNEL_ID)
+
         for guild in self.client.guilds:
             for user in guild.members:
-                if not await database.users.exists(user.id) and not user.bot:
+                if user.bot:
+                    continue
+                indb = await database.users.exists(user.id)
+                if indb is None:
                     await add_user(user.id, user.name, user.joined_at)
 
 
@@ -28,31 +34,50 @@ class Events(commands.Cog):
     async def on_message(self, message: disnake.Message):
         await add_xp(message.author.id, 1)
 
+        if message.channel.id == CONFESSION_CHANNEL_ID and message.author != self.client.user:
+            await message.delete()
+            embed = confession_embed(message.content, message.author)
+            await self.confession_channel.send(embed=embed)
+
+
 
     @commands.Cog.listener()
     async def on_member_join(self, member: disnake.Member):
         await add_user(member.id, member.name, member.joined_at)
         # greet user an rame maseti
 
-
     @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        channel = self.client.get_channel(939534645798793247)
-        msg_content = message.content
-        msg_author = message.author
-        author_id = message.author.id
-        embed = disnake.Embed(title="Bobbie's Archives", description="ბობიმ შეამჩნია წაშლილი მესიჯი მაგრამ მოასწრო "
-                                                                     "სქრინის გადაღება!", color=0x2d56a9)
-        embed.add_field(name="ავტორი", value="%s" % msg_author.mention, inline=True)
-        embed.add_field(name="ID", value="%s" % author_id, inline=True)
-        embed.add_field(name="მესიჯი", value="%s" % msg_content, inline=False)
-        words = ["!gay", "!coffee", "!tea", "!hug", "!beer", "?ban", "?kick", "?purge", "?mute", "?unmute", "!slap", "!popcorn"]
-        if any(word in msg_content for word in words):
-            pass
-        elif msg_author == 933243840905769040:
-            pass
-        else:
-            await channel.send(embed=embed)
+    async def on_message_delete(self, message: disnake.Message):
+        whitelist = ["!gay", "!coffee", "!tea", "!hug", "!beer", "?ban", "?kick", "?purge", "?mute", "?unmute",
+                     "!slap", "!popcorn"]
+
+        if message.author == self.client.user:
+            return
+
+        if message.channel.id == CONFESSION_CHANNEL_ID:
+            return
+
+        if any(message.content.startswith(w) for w in whitelist):
+            return
+
+        embed = disnake.Embed(
+            title=f"{message.author.name}\nID: {message.author.id}",
+            color=0x2d56a9,
+            timestamp=disnake.utils.utcnow()
+        )
+
+        embed.set_thumbnail(url=message.author.avatar.url)
+        embed.add_field(name="ჩანელი", value=message.channel.mention, inline=False)
+
+        if message.attachments:
+            embed.add_field(
+                name="ათაჩმენტ(ებ)ი",
+                value="\n".join(map(lambda a: a.url, message.attachments)))
+
+        if message.content:
+            embed.add_field(name="მესიჯი", value=message.content, inline=False)
+
+        await self.deleted_messages_channel.send(embed=embed)
 
 
     @commands.Cog.listener()

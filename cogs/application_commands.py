@@ -8,7 +8,8 @@ from utils import *
 
 
 class ApplicationCommands(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: disnake.Client):
+        self.confession_channel: disnake.TextChannel | None = None
         self.client = client
 
 
@@ -42,7 +43,7 @@ class ApplicationCommands(commands.Cog):
     async def avatar_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(color=0x2d56a9)
         embed.add_field(
-            name=f"{target.mention}'ს ავატარი",
+            name=f"{target.name}'ს ავატარი",
             value=f"ID: {target.id}")
         embed.set_image(url=target.avatar.url)
 
@@ -59,14 +60,15 @@ class ApplicationCommands(commands.Cog):
     async def info_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(color = 0x2d56a9)
         embed.add_field(
-            name = f"{target.mention}'ს ინფო",
+            name = f"{target.name}'ს ინფო",
             value = f"ID: {target.id}")
         embed.add_field(
             name = "დაჯოინდა",
             value = target.joined_at.strftime("%d-%M-%Y"))
         embed.add_field(
-            name = f"{target.mention}'ს როლები",
-            value = ", ".join(map(lambda r: r.name, target.roles))
+            name = f"{target.name}'ს როლები",
+            value = ", ".join(map(lambda r: r.name, target.roles)),
+            inline=False
         )
 
         embed.set_thumbnail(url = target.avatar.url)
@@ -103,6 +105,25 @@ class ApplicationCommands(commands.Cog):
             description = f"{inter.author.mention} გულიანად ჩაეხუტა {target.mention}'ს <3"
         )
         await inter.send(embed = embed)
+
+
+    @commands.slash_command(name="confess", guild_ids = GUILD_IDS, description="გამოთქვით რაიმე საიდუმლო ანონიმურად")
+    async def confess(self, inter: Aci, confession: str):
+        if self.confession_channel is None:
+            self.confession_channel = self.client.get_channel(CONFESSION_CHANNEL_ID)
+
+        if inter.channel.id != CONFESSION_CHANNEL_ID:
+            await inter.send(
+                f"confession-ები მხოლოდ {self.confession_channel.mention}-ში შეგიძლიათ",
+                ephemeral=True)
+            return
+
+        await inter.send(
+            "თქვენ წარმატებით გააგზავნეთ თქვენი საიდუმლო ანონიმურად",
+            ephemeral=True)
+
+        embed = confession_embed(confession, inter.author)
+        await self.confession_channel.send(embed=embed)
 
 
 def setup(client):
