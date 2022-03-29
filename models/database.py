@@ -94,9 +94,14 @@ class Database:
         rgbprint("[+] database ainit", color="green")
         self.connection = await aiosqlite.connect(self._db_path)
         self.cursor     = await self.connection.cursor()
-
         self.users      = Users(self.cursor)
-
+        await self.cursor.execute("""CREATE TABLE IF NOT EXISTS users
+        (
+            snowflake INT NOT NULL PRIMARY KEY,
+            username NVARCHAR(50) NOT NULL,
+            joindate DATE,
+            experience INT NOT NULL DEFAULT 0
+            );""")
 
     async def save(self):
         await self.connection.commit()
