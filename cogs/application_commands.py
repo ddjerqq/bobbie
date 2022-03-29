@@ -11,26 +11,15 @@ class ApplicationCommands(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+
     @commands.slash_command(name="gay", guild_ids=GUILD_IDS, description="გაიგე რამდენად გეია შენ ან სხვა")
-    async def gay(self, inter: Aci, target: disnake.Member = None):
+    async def gay_slash(self, inter: Aci, target: disnake.Member = None):
         target = target or inter.author
-
-        embed = disnake.Embed(
-            title="გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი",
-            color=0x2d56a9)
-
-        howgay = random.randint(1, 100)
-
-        embed.add_field(
-            name="გეი ტესტის რეზულტატი",
-            value=f"{inter.author.mention}'მ ჩაიტარა გეი გამოკვლების ტესტი და აღმოაჩინა რომ {target.mention} "
-                  f"{howgay} პროცენთით გეია 🏳️‍🌈.")
-
-        await inter.send(embed=embed)
+        await self.gay_usercom(inter, target)
 
 
     @commands.user_command(name="gay", guild_ids=GUILD_IDS)
-    async def gay(self, inter: Aci, target: disnake.Member):
+    async def gay_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(
             title = "გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი",
             color = 0x2d56a9)
@@ -43,21 +32,77 @@ class ApplicationCommands(commands.Cog):
         await inter.send(embed=embed)
 
 
-    # @commands.command()
-    # async def hug(self, ctx, target: disnake.Member = None):
-    #     if target is None or target == ctx.message.author:
-    #         await ctx.send("%s'მ მოიწყინა და დაუწყო თავის თავს მოფერება 🫂" % ctx.message.author.mention)
-    #     else:
-    #         await ctx.send("%s გულიანად ჩაეხუტა %s'ს🫂" % (ctx.message.author.mention, target.mention))
-    #     await ctx.message.delete()
-    #
-    # @commands.command()
-    # async def slap(self, ctx, target: disnake.Member = None):
-    #     if target is None or target == ctx.message.author:
-    #         await ctx.send("%s გააფრინა და თავის თავს გიჟივით დაუწყო ცემა ✊" % ctx.message.author.mention)
-    #     else:
-    #         await ctx.send("%s გაბრაზდა და ძლიერად შემოულაწუნა %s ✊" % (ctx.message.author.mention, target.mention))
-    #     await ctx.message.delete()
+    @commands.slash_command(name="avatar", description="გაადიდე user-ის ავატარი", guild_ids=GUILD_IDS)
+    async def avatar_slash(self, inter: Aci, target: disnake.Member = None):
+        target = target or inter.author
+        await self.avatar_usercom(inter, target)
+
+
+    @commands.user_command(name="avatar", guild_ids=GUILD_IDS)
+    async def avatar_usercom(self, inter: Aci, target: disnake.Member):
+        embed = disnake.Embed(color=0x2d56a9)
+        embed.add_field(
+            name=f"{target.mention}'ს ავატარი",
+            value=f"ID: {target.id}")
+        embed.set_image(url=target.avatar.url)
+
+        await inter.send(embed=embed)
+
+
+    @commands.slash_command(name="info", description="გაიგეთ user-ის ინფო", guild_ids=GUILD_IDS)
+    async def info_slash(self, inter: Aci, target: disnake.Member = None):
+        target = target or inter.author
+        await self.info_usercom(inter, target)
+
+
+    @commands.user_command(name="info", guild_ids=GUILD_IDS)
+    async def info_usercom(self, inter: Aci, target: disnake.Member):
+        embed = disnake.Embed(color = 0x2d56a9)
+        embed.add_field(
+            name = f"{target.mention}'ს ინფო",
+            value = f"ID: {target.id}")
+        embed.add_field(
+            name = "დაჯოინდა",
+            value = target.joined_at.strftime("%d-%M-%Y"))
+        embed.add_field(
+            name = f"{target.mention}'ს როლები",
+            value = ", ".join(map(lambda r: r.name, target.roles))
+        )
+
+        embed.set_thumbnail(url = target.avatar.url)
+        embed.set_footer(text = "დარეგისტრირდა: " + target.created_at.strftime("%d-%m-%y %H:%M:%S"))
+
+        await inter.send(embed = embed)
+
+
+    @commands.slash_command(name="slap", guild_ids=GUILD_IDS, description="გაულაწუნე ვინმეს")
+    async def slap_slash(self, inter: Aci, target: disnake.Member = None):
+        target = target or inter.author
+        await self.slap_usercom(inter, target)
+
+
+    @commands.user_command(name="slap", guild_ids=GUILD_IDS)
+    async def slap_usercom(self, inter: Aci, target: disnake.Member):
+        embed = disnake.Embed(
+            color=0x2d56a9,
+            description=f"{inter.author.mention} გაბრაზდა და ძლიერად შემოულაწუნა {target.mention}'ს ✊"
+        )
+        await inter.send(embed=embed)
+
+
+    @commands.slash_command(name = "hug", guild_ids = GUILD_IDS, description = "ჩაეხუტე ვინმეს")
+    async def hug_slash(self, inter: Aci, target: disnake.Member = None):
+        target = target or inter.author
+        await self.hug_usercom(inter, target)
+
+
+    @commands.user_command(name = "hug", guild_ids = GUILD_IDS)
+    async def hug_usercom(self, inter: Aci, target: disnake.Member):
+        embed = disnake.Embed(
+            color = 0x2d56a9,
+            description = f"{inter.author.mention} გულიანად ჩაეხუტა {target.mention}'ს <3"
+        )
+        await inter.send(embed = embed)
 
 
 def setup(client):
