@@ -18,7 +18,7 @@ class ApplicationCommands(commands.Cog):
         await self.gay_usercom(inter, target)
 
 
-    @commands.user_command(name="gay", guild_ids=GUILD_IDS)
+    @commands.user_command(name="gay", description="გაიგე რამდენად გეია შენ ან სხვა", guild_ids=GUILD_IDS)
     async def gay_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(
             title = "გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი",
@@ -38,7 +38,7 @@ class ApplicationCommands(commands.Cog):
         await self.avatar_usercom(inter, target)
 
 
-    @commands.user_command(name="avatar", guild_ids=GUILD_IDS)
+    @commands.user_command(name="avatar", description="გაადიდე user-ის ავატარი", guild_ids=GUILD_IDS)
     async def avatar_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(color=0x2d56a9)
         embed.add_field(
@@ -55,7 +55,7 @@ class ApplicationCommands(commands.Cog):
         await self.info_usercom(inter, target)
 
 
-    @commands.user_command(name="info", guild_ids=GUILD_IDS)
+    @commands.user_command(name="info", description="გაიგეთ user-ის ინფო", guild_ids=GUILD_IDS)
     async def info_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(color = 0x2d56a9)
         embed.add_field(
@@ -81,7 +81,7 @@ class ApplicationCommands(commands.Cog):
         await self.slap_usercom(inter, target)
 
 
-    @commands.user_command(name="slap", guild_ids=GUILD_IDS)
+    @commands.user_command(name="slap", guild_ids=GUILD_IDS, description="გაულაწუნე ვინმეს")
     async def slap_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(
             color=0x2d56a9,
@@ -96,7 +96,7 @@ class ApplicationCommands(commands.Cog):
         await self.hug_usercom(inter, target)
 
 
-    @commands.user_command(name = "hug", guild_ids = GUILD_IDS)
+    @commands.user_command(name = "hug", guild_ids = GUILD_IDS, description = "ჩაეხუტე ვინმეს")
     async def hug_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(
             color = 0x2d56a9,
