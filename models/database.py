@@ -41,7 +41,7 @@ class Users:
 
         if not user:
             return None
-
+        print("user inside get_by_id", user)
         return User.from_database(tuple(user))
 
     async def update_name(self, id: int, username: str) -> None:
@@ -51,7 +51,7 @@ class Users:
         await self.cursor.execute("""
         UPDATE users
         SET username=?
-        WHERE id=?
+        WHERE snowflake=?
         """, (username, id))
 
     async def add_experience(self, id: int, xp_amount: int) -> None:
@@ -67,8 +67,15 @@ class Users:
         """, (xp_amount, id))
 
     async def exists(self, id: int) -> bool:
-        user = await self.get_by_id(id)
-        return user is not None
+        """
+        check if a user is registered
+        """
+        await self.cursor.execute("""
+        SELECT username FROM users
+        WHERE snowflake=?
+        """, (id,))
+        r = await self.cursor.fetchone()
+        return r is not None
 
 
 class Database:
@@ -97,7 +104,6 @@ class Database:
 
     async def close(self):
         await self.save()
-        await asyncio.sleep(1)
         await self.connection.close()
         log("database closed")
 

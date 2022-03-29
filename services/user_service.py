@@ -32,7 +32,7 @@ async def add_user(id: int, username: str, joindate: datetime) -> None:
 
 
 async def update_username(id: int, username: str):
-    database.users.update_name(id, username)
+    await database.users.update_name(id, username)
 
 
 async def add_xp(id: int, xp_amount: int) -> None:

@@ -1,5 +1,7 @@
 import os
+import random
 import asyncio
+import disnake
 import aiohttp
 
 from rgbprint import rgbprint
@@ -12,6 +14,10 @@ PREFIX = "!"
 _ERROR_FILE_PATH = r".\logs\errors.yandr"
 _ERROR_WEBHOOK = "https://discord.com/api/webhooks/" \
                  "958311431617540126/oZynwTGIUNcA2AYYK1y28zgcV3ITK2TZXWGyVcvOVLHs5egkqzBS4Fmsb7e94uYsZvF5"
+
+MESSAGE_DELETE_LOG_CHANNEL_ID = 939534645798793247
+CONFESSION_CHANNEL_ID = 958456199148343436
+
 
 _LOG_FILE = r".\logs\logs.yandr"
 
@@ -53,4 +59,15 @@ def log(message: Any) -> None:
 
     with open(_LOG_FILE, "a+", encoding="utf-8") as file:
         file.write(f"[{datetime.now()}]\n{message}\n")
+
+
+
+def confession_embed(message: str, author: disnake.Member) -> disnake.Embed:
+    embed = disnake.Embed(
+        color=0x2d56a9,
+        title=message)
+    id = random.randint(1_000_000_000, 9_999_999_999)
+    embed.set_footer(text=f"ID: {id}")
+    log(f"confession with id: {id} was sent by: {author.name}:{author.id}")
+    return embed
 
