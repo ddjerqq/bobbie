@@ -1,17 +1,16 @@
-import discord
+import disnake
 from random import randint
-from discord.ext import commands
+from disnake.ext import commands
 
 
-class Commands(commands.Cog, commands.Bot):
-
-    def __init(self, app):
-        self.app = app
+class BobbiCommands(commands.Cog):
+    def __init__(self, client):
+        self.client = client
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def gay(self, ctx, target: discord.Member = None):
-        embed = discord.Embed(title="გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი", color=0x2d56a9)
+    async def gay(self, ctx, target: disnake.Member = None):
+        embed = disnake.Embed(title="გეი ჰორმონების პროცენტის გამოცნობის მექანიზმი", color=0x2d56a9)
         random = randint(1, 100)
         if target is None or target == ctx.message.author:
             embed.add_field(name="გეი ტესტის რეზულტატი",
@@ -28,7 +27,7 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def coffee(self, ctx, target: discord.Member = None):
+    async def coffee(self, ctx, target: disnake.Member = None):
         if target is None or target == ctx.message.author:
             await ctx.send("%s'მა დაისხა ყავა თავისთვის ☕" % ctx.message.author.mention)
         else:
@@ -37,7 +36,7 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def tea(self, ctx, target: discord.Member = None):
+    async def tea(self, ctx, target: disnake.Member = None):
         if target is None or target == ctx.message.author:
             await ctx.send("%s'მა დაისხა ჩაი თავისთვის ☕" % ctx.message.author.mention)
         else:
@@ -46,7 +45,7 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def hug(self, ctx, target: discord.Member = None):
+    async def hug(self, ctx, target: disnake.Member = None):
         if target is None or target == ctx.message.author:
             await ctx.send("%s'მ მოიწყინა და დაუწყო თავის თავს მოფერება 🫂" % ctx.message.author.mention)
         else:
@@ -55,7 +54,7 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def slap(self, ctx, target: discord.Member = None):
+    async def slap(self, ctx, target: disnake.Member = None):
         if target is None or target == ctx.message.author:
             await ctx.send("%s გააფრინა და თავის თავს გიჟივით დაუწყო ცემა ✊" % ctx.message.author.mention)
         else:
@@ -64,7 +63,7 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def popcorn(self, ctx, target: discord.Member = None):
+    async def popcorn(self, ctx, target: disnake.Member = None):
         if target is None or target == ctx.message.author:
             await ctx.send("%s დაინტრიგდა სიტუაციით,მოხალა პოპკორნი და ჩაუჯდა ჩათს 🍿" % ctx.message.author.mention)
         else:
@@ -73,7 +72,7 @@ class Commands(commands.Cog, commands.Bot):
 
     @commands.command()
     # @commands.cooldown(1, 30, commands.BucketType.user)
-    async def beer(self, ctx, target: discord.Member = None):
+    async def beer(self, ctx, target: disnake.Member = None):
         if target is None or target == ctx.message.author:
             await ctx.send("%s'მ დაისხა ლუდი და მოწრუპა ჭიქიდან, შემდეგ კი ჩაცალა მთლიანი ბოთლი როგორც ნამდვილმა "
                            "ლოთმა 🍺" % ctx.message.author.mention)
@@ -83,7 +82,7 @@ class Commands(commands.Cog, commands.Bot):
 
     """"@commands.command()
     async def post_rules(self, ctx):
-        embed = discord.Embed(title="Campfire Stories 🔥",
+        embed = disnake.Embed(title="Campfire Stories 🔥",
                               description="Campfire Stories არის ერთ ერთი ქართული Community დისქორდ სერვერი სხვადასხვა თემებზე სასაუბროდ.",
                               color=0x2d56a9)
         embed.add_field(name="1. სპამი / ფლუდი",
@@ -110,5 +109,5 @@ class Commands(commands.Cog, commands.Bot):
         await ctx.send(embed=embed) """
 
 
-def setup(app):
-    app.add_cog(Commands(app))
+def setup(client):
+    client.add_cog(BobbiCommands(client))

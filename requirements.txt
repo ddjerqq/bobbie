@@ -1,2 +1,4 @@
-discord.py
-requests
+rgbprint
+disnake~=2.4.0
+aiohttp
+aiosqlite
