@@ -23,4 +23,4 @@ for filename in os.listdir("./cogs"):
         app.load_extension(f"cogs.{filename[:-3]}")
 
 
-app.run("TcgsqPBclAl4Af2BcJij9WrZYnxwIRDO")
+app.run("OTU4MTA3OTA1NzkyNTQ0ODA5.YkIhhQ.YduxqTYY1SVVhQ84C_Ev_WBVC1M")
