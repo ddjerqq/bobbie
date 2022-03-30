@@ -3,7 +3,7 @@ import aiosqlite
 import asyncio
 import sqlite3
 
-from models.database.dbusers import DbUsers
+from models.database.DbUsers import DbUsers
 from utils import *
 
 

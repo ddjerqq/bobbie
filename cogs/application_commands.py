@@ -53,11 +53,6 @@ class ApplicationCommands(commands.Cog):
     @commands.slash_command(name="info", description="გაიგეთ user-ის ინფო", guild_ids=GUILD_IDS)
     async def info_slash(self, inter: Aci, target: disnake.Member = None):
         target = target or inter.author
-        await self.info_usercom(inter, target)
-
-
-    @commands.user_command(name="info", description="გაიგეთ user-ის ინფო", guild_ids=GUILD_IDS)
-    async def info_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(color = 0x2d56a9)
         embed.add_field(
             name = f"{target.name}'ს ინფო",
@@ -68,7 +63,7 @@ class ApplicationCommands(commands.Cog):
         embed.add_field(
             name = f"{target.name}'ს როლები",
             value = ", ".join(map(lambda r: r.name, target.roles)),
-            inline=False
+            inline = False
         )
 
         embed.set_thumbnail(url = target.avatar.url)
@@ -80,26 +75,16 @@ class ApplicationCommands(commands.Cog):
     @commands.slash_command(name="slap", guild_ids=GUILD_IDS, description="გაულაწუნე ვინმეს")
     async def slap_slash(self, inter: Aci, target: disnake.Member = None):
         target = target or inter.author
-        await self.slap_usercom(inter, target)
-
-
-    @commands.user_command(name="slap", guild_ids=GUILD_IDS, description="გაულაწუნე ვინმეს")
-    async def slap_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(
-            color=0x2d56a9,
-            description=f"{inter.author.mention} გაბრაზდა და ძლიერად შემოულაწუნა {target.mention}'ს ✊"
+            color = 0x2d56a9,
+            description = f"{inter.author.mention} გაბრაზდა და ძლიერად შემოულაწუნა {target.mention}'ს ✊"
         )
-        await inter.send(embed=embed)
+        await inter.send(embed = embed)
 
 
     @commands.slash_command(name = "hug", guild_ids = GUILD_IDS, description = "ჩაეხუტე ვინმეს")
     async def hug_slash(self, inter: Aci, target: disnake.Member = None):
         target = target or inter.author
-        await self.hug_usercom(inter, target)
-
-
-    @commands.user_command(name = "hug", guild_ids = GUILD_IDS, description = "ჩაეხუტე ვინმეს")
-    async def hug_usercom(self, inter: Aci, target: disnake.Member):
         embed = disnake.Embed(
             color = 0x2d56a9,
             description = f"{inter.author.mention} გულიანად ჩაეხუტა {target.mention}'ს <3"
