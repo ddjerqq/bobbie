@@ -95,13 +95,16 @@ class Database:
         self.connection = await aiosqlite.connect(self._db_path)
         self.cursor     = await self.connection.cursor()
         self.users      = Users(self.cursor)
-        await self.cursor.execute("""CREATE TABLE IF NOT EXISTS users
+        await self.cursor.execute("""
+        CREATE TABLE IF NOT EXTISTS users
         (
-            snowflake INT NOT NULL PRIMARY KEY,
-            username NVARCHAR(50) NOT NULL,
-            joindate DATE,
-            experience INT NOT NULL DEFAULT 0
-            );""")
+            snowflake  INTEGER      NOT NULL
+                CONSTRAINT users_pk
+                    PRIMARY KEY,
+            username   NVARCHAR(50) NOT NULL,
+            joindate   DATE,
+            experience INTEGER DEFAULT 0
+        );""")
 
     async def save(self):
         await self.connection.commit()

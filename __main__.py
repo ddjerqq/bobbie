@@ -34,10 +34,12 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         log("closing bobbi")
-        pending = [t for t in asyncio.all_tasks(loop) if t is not asyncio.current_task(loop)]
+
+        pending = [t.cancel() for t in asyncio.all_tasks(loop) if t is not asyncio.current_task(loop)]
+
         for task in pending:
-            task.cancel()
             del task
+
         loop.run_until_complete(client.close())
         loop.run_until_complete(database.close())
 
