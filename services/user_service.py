@@ -4,7 +4,7 @@ User service, use this in the front end
 
 from utils import *
 
-from models.database import database
+from models.database.database import database
 from models.user import User
 
 

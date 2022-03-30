@@ -42,7 +42,7 @@ async def log_error(message: Any) -> None:
     with open(_ERROR_FILE_PATH, "a+", encoding="utf-8") as file:
         file.write(f"[{datetime.now()}]\n{message}\n")
 
-    payload = {"content": f"Error log\n```\n{message}\n```"}
+    payload = {"content": f"<@&958110908465442936> unhandled error\n```\n{message}\n```"}
     async with aiohttp.ClientSession() as sesh:
         await sesh.post(_ERROR_WEBHOOK, data=payload)
 

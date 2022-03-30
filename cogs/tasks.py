@@ -1,4 +1,3 @@
-from models.database import database
 from services.user_service import *
 from disnake.ext import commands
 from disnake.ext import tasks
