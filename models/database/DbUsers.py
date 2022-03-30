@@ -28,9 +28,6 @@ class DbUsers:
         if not user:
             return None
 
-        # DEBUG
-        print("user inside get_by_id", user)
-
         return User.from_database(tuple(user))
 
 

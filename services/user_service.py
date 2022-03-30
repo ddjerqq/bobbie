@@ -43,7 +43,8 @@ async def get_user_balance(id: int) -> tuple[int, int]:
     """
     get the bank and wallet of a user
     """
-    bank, wallet = await database.users.get_user_balance(id)
+    r = await database.users.get_user_balance(id)
+    bank, wallet = r if r is not None else (0, 0)
     return bank, wallet
 
 
@@ -76,7 +77,7 @@ async def withdraw(user_id: int, amount: int) -> bool:
 
 
 async def give(sender: int, receiver: int, amount: int) -> bool:
-    _, sender_wallet = get_user_balance(sender)
+    _, sender_wallet = await get_user_balance(sender)
 
     if amount > sender_wallet:
         return False
