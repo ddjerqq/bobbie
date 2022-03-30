@@ -26,6 +26,9 @@ class Events(commands.Cog):
             for user in guild.members:
                 if user.bot:
                     continue
+                if user.id == 834942471808483349:
+                    continue
+                
                 indb = await database.users.exists(user.id)
                 if indb is None:
                     await user_service.add_user(user.id, user.name, user.joined_at)

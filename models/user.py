@@ -51,6 +51,7 @@ class User(object):
         :param data: tuple(id, username, joindate)
         :return: User
         """
+        print(data)
         return cls(data[0], data[1], data[2], data[3], data[4], data[5])
 
 

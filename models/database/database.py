@@ -9,8 +9,7 @@ from utils import *
 
 
 class Database:
-    # TODO FIX PATH
-    _db_path = os.getcwd() + "\\bobbi.db"
+    _db_path = PROJECT_PATH + "/bobbi.db"
 
     def __init__(self):
         self.connection: aiosqlite.Connection | None = None
