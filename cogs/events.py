@@ -4,7 +4,8 @@ import random
 import disnake
 from disnake.ext import commands
 from utils import *
-from services.user_service import *
+from services import user_service
+from models.database.database import database
 
 
 class Events(commands.Cog):
@@ -27,12 +28,12 @@ class Events(commands.Cog):
                     continue
                 indb = await database.users.exists(user.id)
                 if indb is None:
-                    await add_user(user.id, user.name, user.joined_at)
+                    await user_service.add_user(user.id, user.name, user.joined_at)
 
 
     @commands.Cog.listener()
     async def on_message(self, message: disnake.Message):
-        await add_xp(message.author.id, 1)
+        await user_service.give_exp(message.author.id, 1)
 
         if message.channel.id == CONFESSION_CHANNEL_ID and message.author != self.client.user:
             await message.delete()
@@ -43,7 +44,7 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: disnake.Member):
-        await add_user(member.id, member.name, member.joined_at)
+        await user_service.add_user(member.id, member.name, member.joined_at)
         # greet user an rame maseti
 
     @commands.Cog.listener()

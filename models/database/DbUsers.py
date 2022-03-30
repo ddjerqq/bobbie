@@ -82,3 +82,47 @@ class DbUsers:
         """, (id,))
         r = await self.cursor.fetchone()
         return r is not None
+
+
+    async def get_user_balance(self, user_id: int) -> tuple[int, int] | None:
+        """
+        get the tuple(bank, wallet) of a user
+        make sure user exists
+        :return: may be None
+        """
+        await self.cursor.execute("""
+        SELECT bank, wallet FROM users
+        WHERE snowflake=?
+        """, (user_id,))
+        r = await self.cursor.fetchone()
+        if r is not None:
+            bank, wallet = r
+            return bank, wallet
+        else:
+            return None
+
+
+    async def wallet(self, user_id: int, amount: int) -> None:
+        """
+        change amount of wallet for user \n
+        THIS DOES NOT TAKE INTO ACCOUNT UNSIGNED VALUES
+        CHECK SOMEWHERE ELSE FOR NEGATIVES!!!!!!!!!!!!!
+        """
+        await self.cursor.execute("""
+        UPDATE users 
+        SET wallet=wallet+?
+        WHERE snowflake=?
+        """, (amount, user_id))
+
+
+    async def bank(self, user_id: int, amount: int) -> None:
+        """
+        change amount of bank for user \n
+        THIS DOES NOT TAKE INTO ACCOUNT UNSIGNED VALUES
+        CHECK SOMEWHERE ELSE FOR NEGATIVES!!!!!!!!!!!!!
+        """
+        await self.cursor.execute("""
+        UPDATE users 
+        SET bank=bank+?
+        WHERE snowflake=?
+        """, (amount, user_id))

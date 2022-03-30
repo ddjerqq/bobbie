@@ -4,7 +4,7 @@ import disnake
 from disnake.ext import commands
 from utils import *
 
-from models.database import database
+from models.database.database import database
 
 
 # noinspection PyTypeChecker

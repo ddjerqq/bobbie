@@ -3,7 +3,6 @@ import aiosqlite
 import asyncio
 import sqlite3
 
-from models.user import User
 from models.database.dbusers import DbUsers
 from utils import *
 
@@ -17,6 +16,7 @@ class Database:
         self.cursor:     aiosqlite.Cursor     | None = None
         self.users:      DbUsers                | None = None
 
+
     async def ainit(self) -> None:
         """
         async initor. \n
@@ -29,10 +29,11 @@ class Database:
 
         await self._regenerate_tables()
 
+
     async def _regenerate_tables(self):
         # user table
         await self.cursor.executescript("""
-        CREATE TABLE IF NOT EXTISTS users
+        CREATE TABLE IF NOT EXISTS users
         (
             snowflake  INTEGER      NOT NULL
                 CONSTRAINT users_pk
@@ -45,7 +46,8 @@ class Database:
         );
         
         -- index snowflake
-        CREATE UNIQUE INDEX users_snowflake_uindex
+        CREATE UNIQUE INDEX IF NOT EXISTS 
+        users_snowflake_uindex 
         ON users (snowflake);
         """)
 

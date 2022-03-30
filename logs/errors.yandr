@@ -2,3 +2,12 @@
 critical system failure
 [2022-03-30 14:23:22.125181]
 error testing
+[2022-03-30 22:36:27.438320]
+<class 'AttributeError'>
+module 'models.database.database' has no attribute 'ainit'
+[2022-03-30 22:36:58.552222]
+<class 'sqlite3.OperationalError'>
+near "EXTISTS": syntax error
+[2022-03-30 22:37:23.137743]
+<class 'sqlite3.OperationalError'>
+index users_snowflake_uindex already exists
