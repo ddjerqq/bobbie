@@ -40,7 +40,6 @@ class Economy(commands.Cog):
         await inter.send(embed=embed)
 
 
-
     @commands.slash_command(name="deposit", guild_ids=GUILD_IDS, description="გადარიცხეთ თანხა საფულიდან ბანკში")
     async def deposit_slash(self, inter: Aci, amount: int):
         res = await user_service.deposit(inter.author.id, amount)
