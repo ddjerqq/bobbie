@@ -9,6 +9,7 @@ from utils import *
 
 
 class Database:
+    # TODO FIX PATH
     _db_path = os.getcwd() + "\\bobbi.db"
 
     def __init__(self):
@@ -53,6 +54,7 @@ class Database:
 
 
     async def save(self):
+        log("connectin commited")
         await self.connection.commit()
 
 

@@ -44,7 +44,10 @@ async def get_user_balance(id: int) -> tuple[int, int]:
     get the bank and wallet of a user
     """
     r = await database.users.get_user_balance(id)
-    bank, wallet = r if r is not None else (0, 0)
+    if r is not None:
+        bank, wallet = r
+    else:
+        bank, wallet = 0, 0
     return bank, wallet
 
 
@@ -60,6 +63,9 @@ async def deposit(user_id: int, amount: int) -> bool:
 
     await database.users.wallet(user_id, -amount)
     await database.users.bank(user_id, amount)
+
+    await database.save()
+
     return True
 
 
@@ -71,8 +77,12 @@ async def withdraw(user_id: int, amount: int) -> bool:
     bank, wallet = await database.users.get_user_balance(user_id)
     if amount > bank:
         return False
+
     await database.users.bank(user_id, -amount)
     await database.users.wallet(user_id, amount)
+
+    await database.save()
+
     return True
 
 
@@ -87,6 +97,8 @@ async def give(sender: int, receiver: int, amount: int) -> bool:
 
     log(f"{sender} -> {receiver} : {amount}")
 
+    await database.save()
+
 
 async def work(user_id: int) -> None:
     """
@@ -94,3 +106,4 @@ async def work(user_id: int) -> None:
     """
     await database.users.wallet(user_id, 10)
 
+    await database.save()

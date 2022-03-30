@@ -25,7 +25,7 @@ class DbUsers:
         """, (id,))
         user = await self.cursor.fetchone()
 
-        if not user:
+        if user is None:
             return None
 
         return User.from_database(tuple(user))

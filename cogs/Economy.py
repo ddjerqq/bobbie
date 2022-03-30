@@ -74,7 +74,8 @@ class Economy(commands.Cog):
 
     @commands.slash_command(name="give", guild_ids=GUILD_IDS, description="მიეც გლახაკთა საჭურჭლე, ათავისუფლე მონები")
     async def give_slash(self, inter: Aci, target: disnake.Member, amount: int):
-        if await user_service.get_by_id(target.id) is None:
+        user = await user_service.get_by_id(target.id)
+        if user is None:
             embed = disnake.Embed(
                 color=0xff0000,
                 title=f"user-ი ვერ მოიძებნა",
