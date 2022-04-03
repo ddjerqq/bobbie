@@ -13,12 +13,11 @@ class Events(commands.Cog):
         self.confession_channel: disnake.TextChannel | None = None
         self.deleted_messages_channel: disnake.TextChannel | None = None
 
-
     @commands.Cog.listener()
     async def on_ready(self):
-        log("bobbi online")
+        log("bobbie online")
 
-        self.confession_channel       = self.client.get_channel(CONFESSION_CHANNEL_ID)
+        self.confession_channel = self.client.get_channel(CONFESSION_CHANNEL_ID)
         self.deleted_messages_channel = self.client.get_channel(MESSAGE_DELETE_LOG_CHANNEL_ID)
 
         for guild in self.client.guilds:
@@ -29,7 +28,6 @@ class Events(commands.Cog):
                 if indb is None:
                     await add_user(user.id, user.name, user.joined_at)
 
-
     @commands.Cog.listener()
     async def on_message(self, message: disnake.Message):
         await add_xp(message.author.id, 1)
@@ -38,8 +36,6 @@ class Events(commands.Cog):
             await message.delete()
             embed = confession_embed(message.content, message.author)
             await self.confession_channel.send(embed=embed)
-
-
 
     @commands.Cog.listener()
     async def on_member_join(self, member: disnake.Member):
@@ -79,7 +75,6 @@ class Events(commands.Cog):
 
         await self.deleted_messages_channel.send(embed=embed)
 
-
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         member_name = member.name
@@ -90,7 +85,6 @@ class Events(commands.Cog):
         embed.add_field(name="ID", value="%s" % member_id)
         embed.set_thumbnail(url=member.avatar_url)
         await channel.send(embed=embed)
-
 
     @commands.Cog.listener()
     async def on_message_edit(self, message_before, message_after):
@@ -104,7 +98,6 @@ class Events(commands.Cog):
             await message_before.channel.send(embed=embed)
         else:
             pass
-
 
 
 def setup(client):
