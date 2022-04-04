@@ -95,7 +95,7 @@ class Economy(commands.Cog):
 
 
     @commands.slash_command(name="work", guild_ids=GUILD_IDS, description="იმუშავე და გააკეთე 10 ₾არი")
-    @commands.cooldown(1, 60, commands.BucketType.user)
+    @commands.cooldown(1, 3600, commands.BucketType.user)
     async def work_slash(self, inter: Aci):
         await user_service.work(inter.author.id)
         embed = disnake.Embed(
