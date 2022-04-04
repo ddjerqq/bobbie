@@ -46,12 +46,11 @@ class Economy(commands.Cog):
         if res:
             embed = disnake.Embed(
                 color=0x00ff00,
-                title="წარმატებით შეიტანეთ ბანკში თანხა")
+                description="წარმატებით შეიტანეთ ბანკში თანხა")
         else:
             embed = disnake.Embed(
                 color=0xff0000,
-                title="თანხის შეტანა ვერ მოხერხდა",
-                description="სავარაუდოდ საფულეში არასაკმარისი ფული გიდევს")
+                description="თანხის შეტანა ვერ მოხერხდა, სავარაუდოდ საფულეში არასაკმარისი ფული გიდევს")
 
         await inter.send(embed=embed)
 
@@ -62,12 +61,11 @@ class Economy(commands.Cog):
         if res:
             embed = disnake.Embed(
                 color = 0x00ff00,
-                title = "წარმატებით გაიტანეთ თანხა")
+                description = "წარმატებით გაიტანეთ თანხა")
         else:
             embed = disnake.Embed(
                 color = 0xff0000,
-                title = "თანხის გატანა ვერ მოხერხდა",
-                description = "სავარაუდოდ საფულეში არასაკმარისი ფული გიდევს")
+                description = "თანხის გატანა ვერ მოხერხდა, სავარაუდოდ საფულეში არასაკმარისი ფული გიდევს")
 
         await inter.send(embed = embed)
 
@@ -86,12 +84,12 @@ class Economy(commands.Cog):
         if await user_service.give(inter.author.id, target.id, amount):
             embed = disnake.Embed(
                 color = 0x00ff00,
-                title = f"შენ წარმატებით მიეცი {target.name}'ს {amount} ₾")
+                description = f"შენ წარმატებით მიეცი {target.name}'ს {amount} ₾")
         else:
             embed = disnake.Embed(
                 color = 0x00ff00,
-                title = f"შენ არ გაქვს საკმარისი ფული ჯიბეში",
-                description=f"შენ ვერ მიცემ {target.name}'ს {amount} ₾ს"
+                desctiption = f"შენ არ გაქვს საკმარისი ფული ჯიბეში",
+                description = f"შენ ვერ მიცემ {target.name}'ს {amount} ₾ს"
             )
 
         await inter.send(embed=embed)
@@ -102,7 +100,7 @@ class Economy(commands.Cog):
     async def work_slash(self, inter: Aci):
         await user_service.work(inter.author.id)
         embed = disnake.Embed(
-            title="შენ იმუშავე და გააკეთე 10 ₾არი",
+            description="შენ იმუშავე და გააკეთე 10 ₾არი",
             color=0x00ff00
         )
         await user_service.give_exp(inter.author.id, 3)
