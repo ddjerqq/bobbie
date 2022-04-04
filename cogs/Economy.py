@@ -24,10 +24,8 @@ class Economy(commands.Cog):
         bank, wallet = await user_service.get_user_balance(target.id)
 
         embed = disnake.Embed(
-            title = f"{target.name}'ს ბალანსი",
+            title = f"{target.name}'ს ბალანსი <:money:960419886180466699>",
             color = 0x2d56a9)
-
-        embed.set_thumbnail(url=target.avatar.url)
 
         embed.add_field(
             name = "ბანკი",
