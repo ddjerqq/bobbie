@@ -4,7 +4,7 @@ User service, use this in the front end
 
 from utils import *
 
-from models.database import database
+from models.database.database import database
 from models.user import User
 
 
@@ -35,9 +35,75 @@ async def update_username(id: int, username: str):
     await database.users.update_name(id, username)
 
 
-async def add_xp(id: int, xp_amount: int) -> None:
+async def give_exp(id: int, xp_amount: int) -> None:
     await database.users.add_experience(id, xp_amount)
 
 
+async def get_user_balance(id: int) -> tuple[int, int]:
+    """
+    get the bank and wallet of a user
+    """
+    r = await database.users.get_user_balance(id)
+    if r is not None:
+        bank, wallet = r
+    else:
+        bank, wallet = 0, 0
+    return bank, wallet
 
 
+async def deposit(user_id: int, amount: int) -> bool:
+    """
+    deposit from wallet to bank
+    :return: returns boolean true if transaction is successful, else false
+    """
+    bank, wallet = await database.users.get_user_balance(user_id)
+
+    if amount > wallet:
+        return False
+
+    await database.users.wallet(user_id, -amount)
+    await database.users.bank(user_id, amount)
+
+    await database.save()
+
+    return True
+
+
+async def withdraw(user_id: int, amount: int) -> bool:
+    """
+    withdraw from bank to wallet
+    :return: returns boolean true if transaction is successful, else false
+    """
+    bank, wallet = await database.users.get_user_balance(user_id)
+    if amount > bank:
+        return False
+
+    await database.users.bank(user_id, -amount)
+    await database.users.wallet(user_id, amount)
+
+    await database.save()
+
+    return True
+
+
+async def give(sender: int, receiver: int, amount: int) -> bool:
+    _, sender_wallet = await get_user_balance(sender)
+
+    if amount > sender_wallet:
+        return False
+
+    await database.users.wallet(sender, -amount)
+    await database.users.wallet(receiver, amount)
+
+    log(f"{sender} -> {receiver} : {amount}")
+
+    await database.save()
+
+
+async def work(user_id: int) -> None:
+    """
+    work command, gives users 10 money
+    """
+    await database.users.wallet(user_id, 10)
+
+    await database.save()

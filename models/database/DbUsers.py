@@ -1,31 +1,17 @@
 from __future__ import annotations
 import aiosqlite
-import asyncio
-import sqlite3
 
 from models.user import User
 from utils import *
 
 
-class Users:
+class DbUsers:
     """
     internal protected subclass for the database
     """
     def __init__(self, cursor: aiosqlite.Cursor):
         self.cursor = cursor
 
-    async def add_user(self, user: User) -> None:
-        """
-        add user to the database
-        :param user: Userobject
-        """
-        if await self.get_by_id(user.id) is not None:
-            return
-
-        await self.cursor.execute("""
-        INSERT INTO users
-        VALUES(?, ?, ?, ?)
-        """, user.to_database)
 
     async def get_by_id(self, id: int) -> User | None:
         """
@@ -39,10 +25,25 @@ class Users:
         """, (id,))
         user = await self.cursor.fetchone()
 
-        if not user:
+        if user is None:
             return None
-        print("user inside get_by_id", user)
+
         return User.from_database(tuple(user))
+
+
+    async def add_user(self, user: User) -> None:
+        """
+        add user to the database
+        :param user: Userobject
+        """
+        if await self.get_by_id(user.id) is not None:
+            return
+
+        await self.cursor.execute("""
+        INSERT INTO users
+        VALUES(?, ?, ?, ?, ?, ?)
+        """, user.to_database)
+
 
     async def update_name(self, id: int, username: str) -> None:
         """
@@ -53,6 +54,7 @@ class Users:
         SET username=?
         WHERE snowflake=?
         """, (username, id))
+
 
     async def add_experience(self, id: int, xp_amount: int) -> None:
         """
@@ -66,6 +68,7 @@ class Users:
         WHERE snowflake=?
         """, (xp_amount, id))
 
+
     async def exists(self, id: int) -> bool:
         """
         check if a user is registered
@@ -78,42 +81,45 @@ class Users:
         return r is not None
 
 
-class Database:
-    _db_path = os.getcwd() + "\\bobbi.db"
-
-    def __init__(self):
-        self.connection: aiosqlite.Connection | None = None
-        self.cursor:     aiosqlite.Cursor     | None = None
-        self.users:      Users                | None = None
-
-    async def ainit(self) -> None:
+    async def get_user_balance(self, user_id: int) -> tuple[int, int] | None:
         """
-        async initor. \n
-        `await this to initialize the database`
+        get the tuple(bank, wallet) of a user
+        make sure user exists
+        :return: may be None
         """
-        rgbprint("[+] database ainit", color="green")
-        self.connection = await aiosqlite.connect(self._db_path)
-        self.cursor     = await self.connection.cursor()
-        self.users      = Users(self.cursor)
         await self.cursor.execute("""
-        CREATE TABLE IF NOT EXTISTS users
-        (
-            snowflake  INTEGER      NOT NULL
-                CONSTRAINT users_pk
-                    PRIMARY KEY,
-            username   NVARCHAR(50) NOT NULL,
-            joindate   DATE,
-            experience INTEGER DEFAULT 0
-        );""")
-
-    async def save(self):
-        await self.connection.commit()
+        SELECT bank, wallet FROM users
+        WHERE snowflake=?
+        """, (user_id,))
+        r = await self.cursor.fetchone()
+        if r is not None:
+            bank, wallet = r
+            return bank, wallet
+        else:
+            return None
 
 
-    async def close(self):
-        await self.save()
-        await self.connection.close()
-        log("database closed")
+    async def wallet(self, user_id: int, amount: int) -> None:
+        """
+        change amount of wallet for user \n
+        THIS DOES NOT TAKE INTO ACCOUNT UNSIGNED VALUES
+        CHECK SOMEWHERE ELSE FOR NEGATIVES!!!!!!!!!!!!!
+        """
+        await self.cursor.execute("""
+        UPDATE users 
+        SET wallet=wallet+?
+        WHERE snowflake=?
+        """, (amount, user_id))
 
 
-database = Database()
+    async def bank(self, user_id: int, amount: int) -> None:
+        """
+        change amount of bank for user \n
+        THIS DOES NOT TAKE INTO ACCOUNT UNSIGNED VALUES
+        CHECK SOMEWHERE ELSE FOR NEGATIVES!!!!!!!!!!!!!
+        """
+        await self.cursor.execute("""
+        UPDATE users 
+        SET bank=bank+?
+        WHERE snowflake=?
+        """, (amount, user_id))
