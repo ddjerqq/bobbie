@@ -98,7 +98,7 @@ class Economy(commands.Cog):
     async def work_slash(self, inter: Aci):
         await user_service.work(inter.author.id)
         embed = disnake.Embed(
-            description="შენ იმუშავე და გააკეთე 10 ₾არი",
+            description="შენ იმუშავე და გააკეთე 10 ₾არი <hammer~1:960423335437680692>",
             color=0x00ff00
         )
         await user_service.give_exp(inter.author.id, 3)
