@@ -46,7 +46,7 @@ class Economy(commands.Cog):
         if res:
             embed = disnake.Embed(
                 color=0x00ff00,
-                description="წარმატებით შეიტანეთ ბანკში თანხა")
+                description=f"წარმატებით შეიტანეთ ბანკში თანხა ({amount} ₾არი)")
         else:
             embed = disnake.Embed(
                 color=0xff0000,
@@ -61,7 +61,7 @@ class Economy(commands.Cog):
         if res:
             embed = disnake.Embed(
                 color = 0x00ff00,
-                description = "წარმატებით გაიტანეთ თანხა")
+                description =f"წარმატებით გაიტანეთ თანხა({amount} ₾არი)")
         else:
             embed = disnake.Embed(
                 color = 0xff0000,
@@ -88,7 +88,6 @@ class Economy(commands.Cog):
         else:
             embed = disnake.Embed(
                 color = 0x00ff00,
-                desctiption = f"შენ არ გაქვს საკმარისი ფული ჯიბეში",
                 description = f"შენ ვერ მიცემ {target.name}'ს {amount} ₾ს"
             )
 
