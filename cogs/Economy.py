@@ -1,10 +1,13 @@
 import disnake
+from random import randint
 from disnake.ext import commands
 from disnake.ext.commands import errors
 from disnake import ApplicationCommandInteraction as Aci
 
 from utils import *
 from services import user_service
+
+from models.database.database import database
 
 
 class Economy(commands.Cog):
@@ -94,14 +97,29 @@ class Economy(commands.Cog):
         await inter.send(embed=embed)
 
 
-    @commands.slash_command(name="work", guild_ids=GUILD_IDS, description="იმუშავე და გააკეთე 10 ₾არი")
+    @commands.slash_command(name="work", guild_ids=GUILD_IDS, description="იმუშავე და გააკეთე თანხა")
     @commands.cooldown(1, 3600, commands.BucketType.user)
     async def work_slash(self, inter: Aci):
-        await user_service.work(inter.author.id)
-        embed = disnake.Embed(
-            description="შენ იმუშავე და გააკეთე 10 ₾არი",
+        work_randint = randint(7, 16)
+        # await user_service.work(inter.author.id)
+        if work_randint > 10:
+            embed = disnake.Embed(
+            description=f"შენ დღეს ძალიან კმაყოფილი წახვედი სამსახურში და იყავი მოტივირებული, რის გამოც უფროსმა ცოტა მეტი ფული ჩაგიცურა ჯიბეში ({work_randint}) ₾არი",
             color=0x00ff00
         )
+            await database.users.wallet(inter.author.id, work_randint)
+        elif work_randint < 10:
+            embed = disnake.Embed(
+            description=f"შენ დაქრინჯული სახე გქონდა დღეს სამსახურში, უფროსს ეს არ მოეწონა და ნაკლები ფული გადაგიხადა ({work_randint}) ₾არი",
+            color=0x00ff00
+        )
+            await database.users.wallet(inter.author.id, work_randint)
+        else:
+            embed = disnake.Embed(
+            description=f"შენ დაქრინჯული სახე გქონდა დღეს სამსახურში, უფროსს ეს არ მოეწონა და ნაკლები ფული გადაგიხადა ({work_randint} ₾არი)",
+            color=0x00ff00
+        )
+            await database.users.wallet(inter.author.id, work_randint)
         embed.set_thumbnail(url="https://i.imgur.com/R1jNNdZ.png")
         await user_service.give_exp(inter.author.id, 3)
         await inter.send(embed=embed)
