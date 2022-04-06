@@ -1,18 +1,16 @@
-from services.user_service import *
-from disnake.ext import commands
-from disnake.ext import tasks
-from itertools import cycle
-from utils import *
 import disnake
+from itertools import cycle
+from disnake.ext import tasks
+from disnake.ext import commands
+from models.client import Client
 
 
 class Tasks(commands.Cog):
-    statuses = cycle(["Campfire stories 🔥",
-                      "be nice",
-                      "გივევეიები ყოველ კვირა!",
-                      "frosty-ს დიდი ყლე აქვს"])
+    statuses = cycle(["მიეც გლახაკთა საჭურჭლე",
+                      "ათავისუფლე მონები",
+                      "ddjerqq#2005"])
 
-    def __init__(self, client: disnake.Client):
+    def __init__(self, client: Client):
         self.client = client
 
         self.status_changer.start()
@@ -22,39 +20,33 @@ class Tasks(commands.Cog):
     @tasks.loop(seconds=10)
     async def status_changer(self):
         await self.client.change_presence(
-            activity=disnake.Game(name=next(self.statuses))
-        )
+            activity=disnake.Game(name=next(self.statuses)))
 
     @status_changer.before_loop
     async def _statuswait(self):
         await self.client.wait_until_ready()
 
 
-    @tasks.loop(minutes=60)
+    @tasks.loop(minutes=30)
     async def username_updater(self):
         for guild in self.client.guilds:
-            for member in filter(lambda m: not m.bot, guild.members):
-                user = await get_by_id(member.id)
+            for member in guild.members:
+                if member.bot or member is None:
+                    continue
+
+                user = await self.client.db.user_service.get(member.id)
 
                 if user is None:
                     continue
 
                 if member.name != user.username:
-                    log(f"changed name for {user.username:<32} to {member.name:<32}")
-                    await update_username(member.id, member.name)
+                    await self.client.log(f"changed name for {user.username:<32} to {member.name:<32}")
+                    user.username = member.name
+                    await self.client.db.user_service.update(user)
 
     @username_updater.before_loop
     async def _usernamewait(self):
         await self.client.wait_until_ready()
-
-    @tasks.loop(minutes=5)
-    async def database_save(self):
-        await database.save()
-
-    @database_save.before_loop
-    async def _databasewait(self):
-        await self.client.wait_until_ready()
-
 
 
 def setup(client):
