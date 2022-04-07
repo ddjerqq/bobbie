@@ -159,12 +159,11 @@ class Economy(commands.Cog):
     @commands.slash_command(name="work", guild_ids=GUILD_IDS, description="იმუშავე და გააკეთე 100 ₾არი")
     @commands.cooldown(1, 3600, commands.BucketType.user)
     async def work(self, inter: Aci):
-        embed = disnake.Embed(title="შენ იმუშავე და გააკეთე 100 ₾არი", color=0x00ff00)
         user = await self.client.db.user_service.get(inter.author.id)
         user.experience += 1
-        user.wallet     += 100
+        user.wallet     += 10
         await self.client.db.user_service.update(user)
-        await inter.send(embed=embed)
+        await inter.send("> შენ იმუშავე და გააკეთე 10 ₾არი <:hammercampfire:960423335437680692>")
 
 
     @work.error
