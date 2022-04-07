@@ -161,7 +161,7 @@ class Economy(commands.Cog):
     async def work(self, inter: Aci):
         user = await self.client.db.user_service.get(inter.author.id)
         user.experience += 1
-        user.wallet     += 100
+        user.wallet     += 10
         await self.client.db.user_service.update(user)
         await inter.send("> შენ იმუშავე და გააკეთე 10 ₾არი <:hammercampfire:960423335437680692>")
 
