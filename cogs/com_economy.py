@@ -170,8 +170,7 @@ class Economy(commands.Cog):
     async def _work_error(self, ctx: commands.Context, _error: errors.CommandError):
         if isinstance(_error, errors.CommandOnCooldown):
             embed = disnake.Embed(
-                title=f"ნელა ზვიადი", color=0xFF0000,
-                description=f"შენ უკვე იმუშავე, შენ შეძლებ ისევ მუშაობას {round(_error.retry_after // 60)} წუთში")
+                description=f"> ნელა ძვიადი! შენ უკვე იმუშავე, შენ შეძლებ ისევ მუშაობას {round(_error.retry_after // 60)} წუთში")
             await ctx.send(embed=embed)
         else:
             await self.client.log(_error, priority=1)
