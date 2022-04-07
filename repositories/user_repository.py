@@ -37,16 +37,16 @@ class UserRepository:
 
     async def update(self, user: User) -> None:
         old = await self.get(user.id)
-
-        if user.username != old.username:
-            try:
+        
+        try:
+            if user.username != old.username:
                 await self._cursor.execute("""
                 UPDATE users 
                 SET username=?
                 WHERE snowflake=?
                 """, (user.username, user.id))
-            except:
-                pass
+        except:
+            pass
 
         if user.experience != old.experience:
             await self._cursor.execute("""
