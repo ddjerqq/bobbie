@@ -9,7 +9,7 @@ class UserRepository:
         self._queue      = 0
 
     async def _commit(self):
-        if not self._queue % 5:
+        if not self._queue % 3:
             await self._connection.commit()
         self._queue += 1
 

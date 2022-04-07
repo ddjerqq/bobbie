@@ -36,8 +36,9 @@ class Events(commands.Cog):
         if message.author == self.client.user: return
 
         user = await self.client.db.user_service.get(message.author.id)
-        user.experience += 1
-        await self.client.db.user_service.update(user)
+        if user is not None:
+            user.experience += 1
+            await self.client.db.user_service.update(user)
 
         if message.channel.id == CONFESSION_CHANNEL_ID:
             await message.delete()

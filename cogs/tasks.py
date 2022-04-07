@@ -27,7 +27,7 @@ class Tasks(commands.Cog):
         await self.client.wait_until_ready()
 
 
-    @tasks.loop(minutes=30)
+    @tasks.loop(minutes=60)
     async def username_updater(self):
         for guild in self.client.guilds:
             for member in guild.members:
