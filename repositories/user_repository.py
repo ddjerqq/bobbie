@@ -48,27 +48,36 @@ class UserRepository:
         except:
             pass
 
-        if user.experience != old.experience:
-            await self._cursor.execute("""
-            UPDATE users 
-            SET experience=?
-            WHERE snowflake=?
-            """, (user.experience, user.id))
+        try:
+            if user.experience != old.experience:\
+                await self._cursor.execute("""
+                UPDATE users 
+                SET experience=?
+                WHERE snowflake=?
+                """, (user.experience, user.id))
+        except:
+            pass
 
-        if user.bank != old.bank:
-            await self._cursor.execute("""
-            UPDATE users 
-            SET bank=?
-            WHERE snowflake=?
-            """, (user.bank, user.id))
 
-        if user.wallet != old.wallet:
-            await self._cursor.execute("""
-            UPDATE users 
-            SET wallet=?
-            WHERE snowflake=?
-            """, (user.wallet, user.id))
+        try:
+            if user.bank != old.bank:
+                await self._cursor.execute("""
+                UPDATE users 
+                SET bank=?
+                WHERE snowflake=?
+                """, (user.bank, user.id))
+        except:
+            pass
 
+        try:
+            if user.wallet != old.wallet:
+                await self._cursor.execute("""
+                UPDATE users 
+                SET wallet=?
+                WHERE snowflake=?
+                """, (user.wallet, user.id))
+        except:
+            pass
         await self._commit()
 
     async def delete(self, user: User) -> None:
