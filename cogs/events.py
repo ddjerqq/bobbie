@@ -46,7 +46,7 @@ class Events(commands.Cog):
             embed = disnake.Embed(color = 0x2d56a9, title = message)
             id = random.randint(1_000_000_000, 9_999_999_999)
             embed.set_footer(text = f"confession ID: {id}")
-            await self.client.log(f"confession with id: {id} was sent by: {user.name}:{user.id}")
+            await self.client.log(f"confession with id: {id} was sent by: {user.username}:{user.id}")
             await message.channel.send(embed=embed)
 
 
