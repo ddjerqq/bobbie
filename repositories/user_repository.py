@@ -39,11 +39,14 @@ class UserRepository:
         old = await self.get(user.id)
 
         if user.username != old.username:
-            await self._cursor.execute("""
-            UPDATE users 
-            SET username=?
-            WHERE snowflake=?
-            """, (user.username, user.id))
+            try:
+                await self._cursor.execute("""
+                UPDATE users 
+                SET username=?
+                WHERE snowflake=?
+                """, (user.username, user.id))
+            except:
+                pass
 
         if user.experience != old.experience:
             await self._cursor.execute("""
