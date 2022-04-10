@@ -15,7 +15,7 @@ class Database:
 
     async def ainit(self):
         self._connection = await aiosqlite.connect(self._db_path)
-        self._cursor = await self._connection.cursor()
+        self._cursor     = await self._connection.cursor()
         self.user_service = UserService(self._connection, self._cursor)
 
         await self._regenerate_tables()

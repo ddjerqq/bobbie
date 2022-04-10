@@ -9,7 +9,7 @@ class UserRepository:
         self._queue      = 0
 
     async def _commit(self):
-        if not self._queue % 3:
+        if not self._queue % 5:
             await self._connection.commit()
         self._queue += 1
 
@@ -28,6 +28,10 @@ class UserRepository:
         return None
 
     async def add(self, user: User) -> None:
+        exists = await self.get(user.id)
+        if exists is not None:
+            return
+
         await self._cursor.execute("""
         INSERT INTO users
         VALUES(?, ?, ?, ?, ?)
@@ -37,47 +41,40 @@ class UserRepository:
 
     async def update(self, user: User) -> None:
         old = await self.get(user.id)
-        
-        try:
-            if user.username != old.username:
-                await self._cursor.execute("""
-                UPDATE users 
-                SET username=?
-                WHERE snowflake=?
-                """, (user.username, user.id))
-        except:
-            pass
 
-        try:
-            if user.experience != old.experience:\
-                await self._cursor.execute("""
-                UPDATE users 
-                SET experience=?
-                WHERE snowflake=?
-                """, (user.experience, user.id))
-        except:
-            pass
+        if old is None:
+            await self.add(user)
+            return
+
+        if user.username != old.username:
+            await self._cursor.execute("""
+            UPDATE users 
+            SET username=?
+            WHERE snowflake=?
+            """, (user.username, user.id))
+
+        if user.experience != old.experience:
+            await self._cursor.execute("""
+            UPDATE users 
+            SET experience=?
+            WHERE snowflake=?
+            """, (user.experience, user.id))
 
 
-        try:
-            if user.bank != old.bank:
-                await self._cursor.execute("""
-                UPDATE users 
-                SET bank=?
-                WHERE snowflake=?
-                """, (user.bank, user.id))
-        except:
-            pass
+        if user.bank != old.bank:
+            await self._cursor.execute("""
+            UPDATE users 
+            SET bank=?
+            WHERE snowflake=?
+            """, (user.bank, user.id))
 
-        try:
-            if user.wallet != old.wallet:
-                await self._cursor.execute("""
-                UPDATE users 
-                SET wallet=?
-                WHERE snowflake=?
-                """, (user.wallet, user.id))
-        except:
-            pass
+        if user.wallet != old.wallet:
+            await self._cursor.execute("""
+            UPDATE users 
+            SET wallet=?
+            WHERE snowflake=?
+            """, (user.wallet, user.id))
+
         await self._commit()
 
     async def delete(self, user: User) -> None:

@@ -10,6 +10,7 @@ class Events(commands.Cog):
         self.client = client
         self.confession_channel: disnake.TextChannel | None = None
         self.deleted_messages_channel: disnake.TextChannel | None = None
+        self.leave_channel: disnake.TextChannel | None = None
 
 
     @commands.Cog.listener()
@@ -19,6 +20,7 @@ class Events(commands.Cog):
         self.confession_channel       = self.client.get_channel(CONFESSION_CHANNEL_ID)
         self.deleted_messages_channel = self.client.get_channel(DELETE_MESSAGE_LOG)
         self.client.log_channel       = self.client.get_channel(LOG_CHANNEL_ID)
+        self.leave_channel            = self.client.get_channel(LEAVE_CHANNEL_ID)
 
         for guild in self.client.guilds:
             for member in guild.members:
@@ -84,6 +86,21 @@ class Events(commands.Cog):
                 value=message.content, inline=False)
 
         await self.deleted_messages_channel.send(embed=embed)
+
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member: disnake.Member):
+        await self.client.db.user_service.delete(member.id)
+        await self.client.log(f"deleted ({member.id}) {member.name}")
+
+        embed = disnake.Embed(color=0x2d56a9)
+        embed.add_field(name="სახელი", value=member.name)
+        embed.add_field(name="შემოვიდა", value=member.joined_at)
+        embed.set_thumbnail(url=member.avatar.url)
+        embed.set_footer(text=f"ID {member.id}")
+
+        await self.leave_channel.send(embed=embed)
+
 
 
 def setup(client):
