@@ -90,17 +90,20 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_remove(self, member: disnake.Member):
+        user = await self.client.db.user_service.get(member.id)
         await self.client.db.user_service.delete(member.id)
         await self.client.log(f"deleted ({member.id}) {member.name}")
 
         embed = disnake.Embed(color=0x2d56a9)
         embed.add_field(name="სახელი", value=member.name)
         embed.add_field(name="შემოვიდა", value=member.joined_at)
+        embed.add_field(name="exp", value=user.experience)
+        embed.add_field(name="bank", value=user.bank)
+        embed.add_field(name="wallet", value=user.wallet)
         embed.set_thumbnail(url=member.avatar.url)
         embed.set_footer(text=f"ID {member.id}")
 
         await self.leave_channel.send(embed=embed)
-
 
 
 def setup(client):
