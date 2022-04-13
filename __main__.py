@@ -1,8 +1,11 @@
+# from templates import *  # THIS IS IMPORTANT WE NEED TO INITIALIZE THE OPTIONS FIRST
+import sys
 import disnake
 import asyncio
 from utils import *
 from rgbprint import rgbprint
 from models.client import Client
+
 
 client = Client(
     command_prefix=PREFIX,
@@ -17,7 +20,11 @@ if __name__ == "__main__":
 
     try:
         loop.run_until_complete(client.db.ainit())
-        loop.run_until_complete(client.start(TOKEN))
+
+        if len(sys.argv) == 2 and sys.argv[1] == "--dev-test":
+            loop.run_until_complete(client.start(DEV_TEST_TOKEN))
+        else:
+            loop.run_until_complete(client.start(TOKEN))
 
     except KeyboardInterrupt:
         loop.run_until_complete(client.close())
@@ -26,4 +33,5 @@ if __name__ == "__main__":
         rgbprint(f"[!!!] {type(e)}\n{e}", color="red")
 
     finally:
+        loop.run_until_complete(asyncio.sleep(1))
         loop.close()

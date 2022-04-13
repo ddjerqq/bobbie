@@ -3,6 +3,7 @@ import disnake
 from utils import *
 from disnake.ext import commands
 from models.client import Client
+from models.user import User
 
 
 class Events(commands.Cog):
@@ -28,7 +29,7 @@ class Events(commands.Cog):
 
                 user = await self.client.db.user_service.get(member.id)
 
-                if user is None:
+                if not isinstance(user, User):
                     await self.client.db.user_service.add(member.id, member.name)
                     await self.client.log(f"added ({member.id}) {member.name}")
 

@@ -6,12 +6,15 @@ from rgbprint import rgbprint
 from disnake.ext import commands
 from models.database import Database
 
+from services.embed_service import EmbedService
+
 
 class Client(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._load_extensions()
         self.db = Database()
+        self.embed_service = EmbedService(self.db)
 
         self.log_channel: disnake.TextChannel | None  = None
 

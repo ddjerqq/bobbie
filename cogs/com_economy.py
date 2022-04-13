@@ -7,83 +7,76 @@ from disnake import ApplicationCommandInteraction as Aci
 
 from utils import *
 from models.client import Client
+from services.embed_service import EmbedService
 
 
 class Economy(commands.Cog):
     def __init__(self, client: Client):
         self.client = client
 
-
     @commands.slash_command(name="balance", guild_ids=GUILD_IDS, description="გაიგე რამდენი ფული გაქვს")
     async def balance(self, inter: Aci, target: disnake.Member = None):
         target = target or inter.author
-
-        user = await self.client.db.user_service.get(target.id)
-
-        embed = disnake.Embed(
-            title = f"{target.name}'ს ბალანსი",
-            color = 0x2d56a9)
-
-        embed.set_thumbnail(url = target.avatar.url)
-
-        embed.add_field(
-            name = "ბანკი",
-            value = f"{user.bank}")
-
-        embed.add_field(
-            name = "საფულე",
-            value = f"{user.wallet}")
-
-        await inter.send(embed = embed)
-
+        em = await self.client.embed_service.econ_util_balance(target)
+        await inter.send(embed=em)
 
     @commands.slash_command(name="deposit", guild_ids=GUILD_IDS, description="გადარიცხეთ თანხა საფულიდან ბანკში")
-    async def deposit(self, inter: Aci, amount: int):
-        success = disnake.Embed(color=0x00ff00, title="წარმატებით შეიტანე ბანკში თანხა")
-        fail    = disnake.Embed(color=0xff0000, title="თანხა ვერ შეტანა",
-                                description="სავარაუდოდ საფულეში არ გაქვს საკმარისი ფული გიდევს")
-
+    async def deposit(self, inter: Aci, amount: str):
         this = await self.client.db.user_service.get(inter.author.id)
+
+        if amount.isnumeric():
+            amount = int(amount)
+        elif amount in ["max", "all", "სულ"]:
+            amount = this.wallet
+        else:
+            em = self.client.embed_service.econ_err_invalid_amount()
+            await inter.send(embed=em)
+            return
 
         if this.wallet >= amount:
-            """success"""
             this.wallet -= amount
-            this.bank   += amount
+            this.bank += amount
             await self.client.db.user_service.update(this)
-            await inter.send(embed=success)
+            em = self.client.embed_service.econ_success_deposit(this, amount)
 
         else:
-            """fail"""
-            await inter.send(embed=fail)
+            em = self.client.embed_service.econ_err_not_enough_money("საფულეში", "ბანკში შეტანისთვის", amount)
 
+        await inter.send(embed=em)
 
-    @commands.slash_command(name = "withdraw", guild_ids = GUILD_IDS, description = "გამოიტანე ფული ბანკიდან საფულეში")
-    async def withdraw(self, inter: Aci, amount: int):
-        success = disnake.Embed(color = 0x00ff00, title = "წარმატებით გამოიტანე თანხა ბანკიდან")
-        fail = disnake.Embed(color = 0xff0000, title = "თანხა ვერ გამოიტანე მოხერხდა",
-                             description = "სავარაუდოდ ბანკში არ გიდევს საკმარისი ფული გაქვს")
-
+    @commands.slash_command(name="withdraw", guild_ids=GUILD_IDS, description="გამოიტანე ფული ბანკიდან საფულეში")
+    async def withdraw(self, inter: Aci, amount: str):
         this = await self.client.db.user_service.get(inter.author.id)
 
+        if amount.isnumeric():
+            amount = int(amount)
+        elif amount in ["max", "all", "სულ"]:
+            amount = this.wallet
+        else:
+            em = self.client.embed_service.econ_err_invalid_amount()
+            await inter.send(embed=em)
+            return
+
         if this.bank >= amount:
-            this.bank   -= amount
+            this.bank -= amount
             this.wallet += amount
             await self.client.db.user_service.update(this)
-            await inter.send(embed = success)
+            em = self.client.embed_service.econ_success_withdraw(this, amount)
 
         else:
-            await inter.send(embed = fail)
+            em = self.client.embed_service.econ_err_not_enough_money("ბანკში", "გამოსატანად", amount)
 
+        await inter.send(embed=em)
 
     @commands.slash_command(name="give", guild_ids=GUILD_IDS, description="მიეც გლახაკთა საჭურჭლე, ათავისუფლე მონები")
     async def give(self, inter: Aci, target: disnake.Member, amount: int):
-        success = disnake.Embed(color = 0x00ff00, title = f"წარმატებით მიეცი {target.name}'ს {amount} ₾")
-        fail = disnake.Embed(color = 0xff0000, title = f"შენ ვერ მისცემ {target.name}'ს {amount} ₾ს",
-                             description = "სავარაუდოდ ჯიბეში არასაკმარისი ფული გიდევს")
-        not_found = disnake.Embed(color = 0xff0000, title = f"{target.name} არ არსებობს?????")
-        same_user = disnake.Embed(color = 0xff0000, title = f"შიგ ხოარაგაქვს, ფულს ვის აძლევ??")
+        success = disnake.Embed(color=0x00ff00, title=f"წარმატებით მიეცი {target.name}'ს {amount} ₾")
+        fail = disnake.Embed(color=0xff0000, title=f"შენ ვერ მისცემ {target.name}'ს {amount} ₾ს",
+                             description="სავარაუდოდ ჯიბეში არასაკმარისი ფული გიდევს")
+        not_found = disnake.Embed(color=0xff0000, title=f"{target.name} არ არსებობს?????")
+        same_user = disnake.Embed(color=0xff0000, title=f"შიგ ხოარაგაქვს, ფულს ვის აძლევ??")
 
-        this  = await self.client.db.user_service.get(inter.author.id)
+        this = await self.client.db.user_service.get(inter.author.id)
         other = await self.client.db.user_service.get(target.id)
 
         if this == other:
@@ -93,7 +86,7 @@ class Economy(commands.Cog):
             await inter.send(embed=not_found)
 
         elif this.wallet >= amount:
-            this.wallet  -= amount
+            this.wallet -= amount
             other.wallet += amount
             await self.client.db.user_service.update(this)
             await self.client.db.user_service.update(other)
@@ -102,76 +95,66 @@ class Economy(commands.Cog):
         else:
             await inter.send(embed=fail)
 
-
     @commands.slash_command(name="rob", guild_ids=GUILD_IDS, description="გაძარცვე ვინმე, ან მოკვდი მცდელობისას")
     @commands.cooldown(1, 300, commands.BucketType.user)
     async def rob(self, inter: Aci, target: disnake.Member):
-        success = disnake.Embed(color=0x00ff00, title=f"წარმატებით გაძარცვე {target.name}")
-        died    = disnake.Embed(color=0xff0000, title=f"შენ მოკვდი {target.name}'ის ძარცვის დროს 🤣",
-                                description=f"შენი საფულე გადაეცა {target.name}'ს")
-        not_found = disnake.Embed(color = 0xff0000, title = f"{target.name} არ არსებობს?????")
-        same_user = disnake.Embed(color = 0xff0000, title = f"შიგ ხოარაგაქვს, ვის ძარცვავ??")
-        no_money  = disnake.Embed(color = 0xff0000, title = f"{target.name}'ს ჯიბეში კაპეიკი არ უდევს",
-                                  description = f"მგონი პირიქით იქით უნდა აძლევდე ფულს 🤔")
-
         this = await self.client.db.user_service.get(inter.author.id)
         other = await self.client.db.user_service.get(target.id)
 
         if other is None:
-            await inter.send(embed=not_found)
+            em = self.client.embed_service.rob_err(f"მომხმარებელი არ არის მონაცემების ბაზაში")
 
         elif this == other:
-            await inter.send(embed=same_user)
-
-        elif other.wallet <= 10:
-            await inter.send(embed=no_money)
+            em = self.client.embed_service.rob_err("შენ ვერ გაძარცვავ შენს თავს")
 
         elif not random.randint(0, 10):
             other.wallet += this.wallet
-            this.wallet   = 0
-            await inter.send(embed=died)
+            this.wallet = 0
+
             await self.client.db.user_service.update(this)
             await self.client.db.user_service.update(other)
 
+            em = self.client.embed_service.rob_success_died(target)
+
         else:
-            steal_percentage = random.randint(3, 10)
-            steal_amount  = int(other.wallet // steal_percentage)
-            this.wallet  += steal_amount
+            steal_amount = random.randint(other.wallet // 2, other.wallet)
+            this.wallet += steal_amount
             other.wallet -= steal_amount
             await self.client.db.user_service.update(other)
             await self.client.db.user_service.update(this)
-            success.description = f"შენ წარმატებულად მოპარე {other.username}'ს {steal_amount} ₾არი"
-            await inter.send(embed=success)
 
+            em = self.client.embed_service.rob_success(target, steal_amount)
+
+        await inter.send(embed=em)
 
     @rob.error
     async def _rob_error(self, ctx: commands.Context, _error: errors.CommandError):
         if isinstance(_error, errors.CommandOnCooldown):
-            embed = disnake.Embed(
-                title=f"ნელა ზვიადი", color=0xFF0000,
-                description=f"შენ უკვე გაძარცვე ვიღაცა ბოლო ხუთი წუთის განმავლობაში, "
-                            f"შენ ისევ შეძლებ ქურდობას {round(_error.retry_after // 60)} წუთში")
-            await ctx.send(embed=embed)
+            em = self.client.embed_service.cooldown("გაძარცვე ვიღაცა", "ქურდობას", _error.retry_after)
+            await ctx.send(embed=em)
         else:
             await self.client.log(_error, priority=1)
 
-
-    @commands.slash_command(name="work", guild_ids=GUILD_IDS, description="იმუშავე და გააკეთე 100 ₾არი")
-    @commands.cooldown(1, 3600, commands.BucketType.user)
+    @commands.slash_command(name="work", guild_ids=GUILD_IDS, description="იმუშავე და გააკეთე 10 ₾არი")
+    @commands.cooldown(1, 600, commands.BucketType.user)
     async def work(self, inter: Aci):
+        pay = 10
+
         user = await self.client.db.user_service.get(inter.author.id)
         user.experience += 1
-        user.wallet     += 10
+        user.wallet += pay
         await self.client.db.user_service.update(user)
-        await inter.send("> შენ იმუშავე და გააკეთე 10 ₾არი <:hammercampfire:960423335437680692>")
 
+        em = disnake.Embed(color=0x00FF00,
+                           description=f"შენ იმუშავე და გააკეთეთ {pay} ₾ <:hammercampfire:960423335437680692>")
+
+        await inter.send(embed=em)
 
     @work.error
     async def _work_error(self, ctx: commands.Context, _error: errors.CommandError):
         if isinstance(_error, errors.CommandOnCooldown):
-            embed = disnake.Embed(
-                description=f"> ნელა ძვიადი! შენ უკვე იმუშავე, შენ შეძლებ ისევ მუშაობას {round(_error.retry_after // 60)} წუთში")
-            await ctx.send(embed=embed)
+            em = self.client.embed_service.cooldown("იმუშავე", "მუშაობას", _error.retry_after)
+            await ctx.send(embed=em)
         else:
             await self.client.log(_error, priority=1)
 

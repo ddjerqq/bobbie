@@ -17,7 +17,7 @@ class User(object):
 
 
     @classmethod
-    def create(cls, snowflake: int, username: str) -> User:
+    def new(cls, snowflake: int, username: str) -> User:
         """
         create users with this
         :param snowflake: id of the user
@@ -32,7 +32,7 @@ class User(object):
         """
         (snowflake, username, experience, bank, wallet)
         """
-        return self.snowflake, self.username, self.experience, self.bank, self.wallet
+        return self.snowflake, self.username, int(self.experience), int(self.bank), int(self.wallet)
 
 
     @classmethod
@@ -42,7 +42,7 @@ class User(object):
         :param data: tuple(id, username, joindate, experience, wallet, bank)
         :return: User
         """
-        return cls(data[0], data[1], data[2], data[3], data[4])
+        return cls(int(data[0]), data[1], int(data[2]), int(data[3]), int(data[4]))
 
 
     def __eq__(self, other: User):

@@ -6,12 +6,9 @@ class UserRepository:
     def __init__(self, connection: aiosqlite.Connection, cursor: aiosqlite.Cursor):
         self._connection = connection
         self._cursor     = cursor
-        self._queue      = 0
 
-    async def _commit(self):
-        if not self._queue % 5:
-            await self._connection.commit()
-        self._queue += 1
+    async def save_changes(self):
+        await self._connection.commit()
 
     async def get(self, id: int) -> User | None:
         await self._cursor.execute("""
@@ -29,15 +26,13 @@ class UserRepository:
 
     async def add(self, user: User) -> None:
         exists = await self.get(user.id)
-        if exists is not None:
+        if isinstance(exists, User):
             return
 
         await self._cursor.execute("""
         INSERT INTO users
         VALUES(?, ?, ?, ?, ?)
         """, user.to_database)
-
-        await self._commit()
 
     async def update(self, user: User) -> None:
         old = await self.get(user.id)
@@ -75,12 +70,8 @@ class UserRepository:
             WHERE snowflake=?
             """, (user.wallet, user.id))
 
-        await self._commit()
-
     async def delete(self, user: User) -> None:
         await self._cursor.execute("""
         DELETE FROM users
         WHERE snowflake=?
         """, user.id)
-
-        await self._commit()

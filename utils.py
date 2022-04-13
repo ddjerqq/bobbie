@@ -1,6 +1,7 @@
 import os
 
 TOKEN = "OTU4MTA3OTA1NzkyNTQ0ODA5.YkIhhQ.YduxqTYY1SVVhQ84C_Ev_WBVC1M"
+DEV_TEST_TOKEN = "OTYzNDU3MTI4MzM1NTUyNTUy.YlWXXw.n7uo7VtPt_4VRUDMiaqYYlzWUx0"
 PREFIX = "!"
 
 DELETE_MESSAGE_LOG    = 939534645798793247
@@ -14,3 +15,12 @@ _LOG_FILE = r".\logs\logs.yandr"
 
 GUILD_IDS = [935886444109631510]
 
+STATUSES = [
+    "მიეც გლახაკთა საჭურჭლე,",
+    "ათავისუფლე მონები.",
+    "ddjerqq#2005",
+    "სიკვდილი ყველას გვაშინებს,",
+    "სხვას თუ ჰკვლენ, ცქერა გვწადიან.",
+    "დღეს სტუმარია ეგ ჩემი,",
+    "თუნდ ზღვა ემართოს სისხლისა.",
+]

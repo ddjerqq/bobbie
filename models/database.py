@@ -3,6 +3,7 @@ import aiosqlite
 
 from utils import PROJECT_PATH
 from services.user_service import UserService
+from services.item_service import ItemService
 
 
 class Database:
@@ -12,11 +13,14 @@ class Database:
         self._connection: aiosqlite.Connection | None = None
         self._cursor: aiosqlite.Cursor | None = None
         self.user_service: UserService | None = None
+        self.item_service: ItemService | None = None
 
     async def ainit(self):
         self._connection = await aiosqlite.connect(self._db_path)
         self._cursor     = await self._connection.cursor()
+
         self.user_service = UserService(self._connection, self._cursor)
+        self.item_service = ItemService(self._connection, self._cursor)
 
         await self._regenerate_tables()
 
@@ -38,6 +42,24 @@ class Database:
         CREATE UNIQUE INDEX IF NOT EXISTS 
         users_snowflake_uindex 
         ON users (snowflake);
+        """)
+
+        # items
+        await self._cursor.executescript("""
+        CREATE TABLE IF NOT EXISTS items
+        (
+            id       INTEGER     NOT NULL 
+                CONSTRAINT items_pk PRIMARY KEY,
+            type     VARCHAR(32) NOT NULL,
+            rarity   REAL        NOT NULL,
+            owner_id INTEGER     DEFAULT NULL
+                CONSTRAINT items_users_snowflake_fk
+                    REFERENCES users
+        );
+        
+        CREATE UNIQUE INDEX IF NOT EXISTS 
+        items_id_uindex
+        ON items (id);
         """)
 
     async def close(self):

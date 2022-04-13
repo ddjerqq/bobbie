@@ -1,14 +1,16 @@
+import asyncio
+
 import disnake
 from itertools import cycle
 from disnake.ext import tasks
 from disnake.ext import commands
 from models.client import Client
+from models.user import User
+from utils import STATUSES
 
 
 class Tasks(commands.Cog):
-    statuses = cycle(["მიეც გლახაკთა საჭურჭლე",
-                      "ათავისუფლე მონები",
-                      "ddjerqq#2005"])
+    statuses = cycle(STATUSES)
 
     def __init__(self, client: Client):
         self.client = client
@@ -17,7 +19,7 @@ class Tasks(commands.Cog):
         self.username_updater.start()
 
 
-    @tasks.loop(seconds=10)
+    @tasks.loop(seconds=5)
     async def status_changer(self):
         await self.client.change_presence(
             activity=disnake.Game(name=next(self.statuses)))
@@ -36,16 +38,21 @@ class Tasks(commands.Cog):
 
                 user = await self.client.db.user_service.get(member.id)
 
-                if user is None:
+                if isinstance(user, User):
+                    if member.name != user.username:
+                        await self.client.log(f"changed name for {user.username:<32} to {member.name:<32}")
+                        user.username = member.name
+                        await self.client.db.user_service.update(user)
+                elif user is None:
+                    await self.client.db.user_service.add(member.id, member.name)
+                    await self.client.log(f"added ({member.id}) {member.name}")
+                else:
                     continue
 
-                if member.name != user.username:
-                    await self.client.log(f"changed name for {user.username:<32} to {member.name:<32}")
-                    user.username = member.name
-                    await self.client.db.user_service.update(user)
 
     @username_updater.before_loop
     async def _usernamewait(self):
+        await asyncio.sleep(10)
         await self.client.wait_until_ready()
 
 
