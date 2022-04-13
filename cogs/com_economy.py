@@ -159,5 +159,6 @@ class Economy(commands.Cog):
             await self.client.log(_error, priority=1)
 
 
+
 def setup(client):
     client.add_cog(Economy(client))
