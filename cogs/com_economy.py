@@ -14,13 +14,13 @@ class Economy(commands.Cog):
     def __init__(self, client: Client):
         self.client = client
 
-    @commands.slash_command(name="balance", guild_ids=GUILD_IDS, description="გაიგე რამდენი ფული გაქვს")
+    @commands.slash_command(name="balance", guild_ids=GUILD_IDS, description="გაიგე რამდენი ფული გაქვს საფულეში და ბანკში")
     async def balance(self, inter: Aci, target: disnake.Member = None):
         target = target or inter.author
         em = await self.client.embed_service.econ_util_balance(target)
         await inter.send(embed=em)
 
-    @commands.slash_command(name="deposit", guild_ids=GUILD_IDS, description="გადარიცხეთ თანხა საფულიდან ბანკში")
+    @commands.slash_command(name="deposit", guild_ids=GUILD_IDS, description="შეიტანე ფული შენი ბანკის აქაუნთში")
     async def deposit(self, inter: Aci, amount: str):
         this = await self.client.db.user_service.get(inter.author.id)
 
@@ -74,7 +74,7 @@ class Economy(commands.Cog):
         fail = disnake.Embed(color=0xff0000, title=f"შენ ვერ მისცემ {target.name}'ს {amount} ₾ს",
                              description="სავარაუდოდ ჯიბეში არასაკმარისი ფული გიდევს")
         not_found = disnake.Embed(color=0xff0000, title=f"{target.name} არ არსებობს?????")
-        same_user = disnake.Embed(color=0xff0000, title=f"შიგ ხოარაგაქვს, ფულს ვის აძლევ??")
+        same_user = disnake.Embed(color=0xff0000, title=f"შენ შიგხოარგაქვს, ფულს ვის აძლევ?!")
 
         this = await self.client.db.user_service.get(inter.author.id)
         other = await self.client.db.user_service.get(target.id)
@@ -102,7 +102,7 @@ class Economy(commands.Cog):
         other = await self.client.db.user_service.get(target.id)
 
         if other is None:
-            em = self.client.embed_service.rob_err(f"მომხმარებელი არ არის მონაცემების ბაზაში")
+            em = self.client.embed_service.rob_err(f"მომხმარებელი არ არის მონაცემთა ბაზაში")
 
         elif this == other:
             em = self.client.embed_service.rob_err("შენ ვერ გაძარცვავ შენს თავს")
@@ -146,7 +146,7 @@ class Economy(commands.Cog):
         await self.client.db.user_service.update(user)
 
         em = disnake.Embed(color=0x00FF00,
-                           description=f"შენ იმუშავე და გააკეთეთ {pay} ₾ <:hammercampfire:960423335437680692>")
+                           description=f"შენ წახვედი სამსახურში და გამოიმუშავე {pay} ₾ <:hammercampfire:960423335437680692>")
 
         await inter.send(embed=em)
 
