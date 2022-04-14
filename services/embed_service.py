@@ -140,7 +140,7 @@ class EmbedService:
         return em
 
     def fish(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ წახვდედი სათევზაოდ და დაიჭირე {item.type} {EMOJIS[1]}",
+        em = disnake.Embed(description=f"შენ წახვდედი სათევზაოდ და დაიჭირე {item.type} {list(EMOJIS.items)[0][1]}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი ანკესი" if broken else ""
         em.add_field(name="ღირებულება",
