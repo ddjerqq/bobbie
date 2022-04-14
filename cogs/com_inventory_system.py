@@ -68,21 +68,21 @@ class InventorySystemCommands(commands.Cog):
 
     async def _use(self, inter: Aci, item_type: str):
         items = await self.client.db.item_service.get_all_by_owner_id(inter.author.id)
-        items = list(filter(lambda x: x.type == item_type, items))
-        items = sorted(items, key=lambda x: x.rarity)
+        tools = list(filter(lambda x: x.type == item_type, items))
+        tools = sorted(tools, key=lambda x: x.rarity)
 
-        if not items:
+        if len(tools) == 0:
             em = self.client.embed_service.inv_err_item_not_in_inventory(item_type)
             await inter.send(embed=em)
             return
 
         user = await self.client.db.user_service.get(inter.author.id)
 
-        tool = items[-1]
+        tool = tools[-1]
         broken = random.random() ** 0.2 < tool.rarity
 
         if broken:
-            await self.client.db.item_service.delete(tool.id)
+            await self.client.db.item_service.delete(tool)
 
 
         groups = {
@@ -120,7 +120,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="fish", guild_ids=GUILD_IDS, description="წადი სათევზაოდ, იქნებ თევზმა ჩაგითრიოს და დაიხრჩო")
-    @commands.cooldown(1, 300, commands.BucketType.user)
+    # @commands.cooldown(1, 300, commands.BucketType.user)
     async def fish(self, inter: Aci):
         await self._use(inter, "fishing_rod")
 
@@ -130,11 +130,11 @@ class InventorySystemCommands(commands.Cog):
             em = self.client.embed_service.cooldown("ითევზავე", "თევზაობას", _error.retry_after)
             await ctx.send(embed=em)
         else:
-            await self.client.log(_error, priority=1)
+            await self.client.log(f"{_error}\n{_error.args}", priority=1)
 
 
     @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ და შეეცადე შენი თავი არჩინო")
-    @commands.cooldown(1, 300, commands.BucketType.user)
+    # @commands.cooldown(1, 300, commands.BucketType.user)
     async def hunt(self, inter: Aci):
         await self._use(inter, "hunting_rifle")
 
@@ -144,11 +144,11 @@ class InventorySystemCommands(commands.Cog):
             em = self.client.embed_service.cooldown("ინადირე", "ნადირობას", _error.retry_after)
             await ctx.send(embed=em)
         else:
-            await self.client.log(_error, priority=1)
+            await self.client.log(f"{_error}\n{_error.args}", priority=1)
 
 
     @commands.slash_command(name="dig", guild_ids=GUILD_IDS, description="გათხარე მიწა")
-    @commands.cooldown(1, 300, commands.BucketType.user)
+    # @commands.cooldown(1, 300, commands.BucketType.user)
     async def dig(self, inter: Aci):
         await self._use(inter, "shovel")
 
@@ -158,7 +158,7 @@ class InventorySystemCommands(commands.Cog):
             em = self.client.embed_service.cooldown("გათხარე მიწა", "მიწის გათხრას", _error.retry_after)
             await ctx.send(embed=em)
         else:
-            await self.client.log(_error, priority=1)
+            await self.client.log(f"{_error}\n{_error.args}", priority=1)
 
 
     @commands.slash_command(name="sell", guild_ids=GUILD_IDS, description="გაყიდე ნივთი")

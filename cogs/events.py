@@ -39,7 +39,7 @@ class Events(commands.Cog):
         if message.author == self.client.user: return
 
         user = await self.client.db.user_service.get(message.author.id)
-        if user is not None:
+        if isinstance(user, User):
             user.experience += 1
             await self.client.db.user_service.update(user)
 
@@ -48,7 +48,7 @@ class Events(commands.Cog):
 
             embed = disnake.Embed(color=0x2d56a9, description=message.content)
             id = random.randint(1_000_000_000, 9_999_999_999)
-            embed.set_footer(text = f"confession ID: {id}")
+            embed.set_footer(text=f"confession ID: {id}")
             await self.client.log(f"confession with id: {id} was sent by: {user.username}:{user.id}")
             await message.channel.send(embed=embed)
 
@@ -93,6 +93,7 @@ class Events(commands.Cog):
     async def on_member_remove(self, member: disnake.Member):
         user = await self.client.db.user_service.get(member.id)
         await self.client.db.user_service.delete(user)
+        await self.client.db.item_service.del_all_by_owner_id(member.id)
         await self.client.log(f"deleted ({member.id}) {member.name}")
 
         embed = disnake.Embed(color=0x2d56a9)

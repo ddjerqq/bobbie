@@ -28,7 +28,7 @@ class User(object):
 
 
     @property
-    def to_database(self) -> tuple:
+    def to_database(self) -> tuple[int, str, int, int, int]:
         """
         (snowflake, username, experience, bank, wallet)
         """
@@ -42,7 +42,8 @@ class User(object):
         :param data: tuple(id, username, joindate, experience, wallet, bank)
         :return: User
         """
-        return cls(int(data[0]), data[1], int(data[2]), int(data[3]), int(data[4]))
+        user = cls(int(data[0]), data[1], int(data[2]), int(data[3]), int(data[4]))
+        return user
 
 
     def __eq__(self, other: User):

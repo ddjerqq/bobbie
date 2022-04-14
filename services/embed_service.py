@@ -110,7 +110,7 @@ class EmbedService:
         em.set_footer(text=f"Item ID: {item.id}")
         return em
 
-    async def inv_util_inventory(self, target: User) -> disnake.Embed:
+    async def inv_util_inventory(self, target: disnake.Member) -> disnake.Embed:
         user = await self._database.user_service.get(target.id)
         items = await self._database.item_service.get_all_by_owner_id(user.id)
 

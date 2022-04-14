@@ -25,8 +25,7 @@ class UserRepository:
         return None
 
     async def add(self, user: User) -> None:
-        exists = await self.get(user.id)
-        if isinstance(exists, User):
+        if await self.get(user.id) is not None:
             return
 
         await self._cursor.execute("""
@@ -36,10 +35,6 @@ class UserRepository:
 
     async def update(self, user: User) -> None:
         old = await self.get(user.id)
-
-        if old is None:
-            await self.add(user)
-            return
 
         if user.username != old.username:
             await self._cursor.execute("""
@@ -54,7 +49,6 @@ class UserRepository:
             SET experience=?
             WHERE snowflake=?
             """, (user.experience, user.id))
-
 
         if user.bank != old.bank:
             await self._cursor.execute("""

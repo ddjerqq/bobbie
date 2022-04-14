@@ -33,5 +33,5 @@ if __name__ == "__main__":
         rgbprint(f"[!!!] {type(e)}\n{e}", color="red")
 
     finally:
-        loop.run_until_complete(asyncio.sleep(1))
+        loop.run_until_complete(asyncio.sleep(0.25))  # allow tasks to finish properly
         loop.close()

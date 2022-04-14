@@ -10,7 +10,7 @@ class ItemRepository:
     async def save_changes(self):
         await self._connection.commit()
 
-    async def get_all_by_owner_id(self, owner_id) -> list[Item]:
+    async def get_all_by_owner_id(self, owner_id: int) -> list[Item]:
         await self._cursor.execute("""
         SELECT * FROM items
         WHERE owner_id=?
@@ -19,6 +19,12 @@ class ItemRepository:
         items = await self._cursor.fetchall()
 
         return [Item.from_database(tuple(item)) for item in items]
+
+    async def del_all_by_owner_id(self, owner_id: int) -> None:
+        await self._cursor.execute("""
+        DELETE FROM items
+        where owner_id=?
+        """, (owner_id,))
 
     async def get(self, id: int) -> Item | None:
         await self._cursor.execute("SELECT * FROM items WHERE id=?", (id,))
