@@ -42,6 +42,12 @@ ITEMS_AND_PRICES = {
     "shovel": 15,
 }
 
+EMOJIS = {
+    "fishing_rod": "<:fishingrod:963895429248999454>",
+    "hunting_rifle": "<:huntingrifle:963895472286756945>",
+    "shovel": "<:shovel:964200167001686016>"
+}
+
 ITEMS_AND_PRICES.update(FISHES)
 ITEMS_AND_PRICES.update(ANIMALS)
 ITEMS_AND_PRICES.update(DUG_ITEMS)
