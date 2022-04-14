@@ -84,15 +84,16 @@ class InventorySystemCommands(commands.Cog):
         if broken:
             await self.client.db.item_service.delete(tool.id)
 
-        group = None
-        for g in [ANIMALS, FISHES, DUG_ITEMS]:
-            if item_type in g:
-                group = g
-                break
 
-        total_price = sum(group.values())
+        groups = {
+            "fishing_rod": FISHES,
+            "hunting_rifle": ANIMALS,
+            "shovel": DUG_ITEMS
+        }
+
+        total_price = sum(groups[tool.type].values())
         item_random_weights = {
-            i: total_price // p for i, p in group.items()
+            i: total_price // p for i, p in groups[tool.type].items()
         }
 
         item = random.choices(list(item_random_weights.keys()),
@@ -135,7 +136,7 @@ class InventorySystemCommands(commands.Cog):
     @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ")
     @commands.cooldown(1, 300, commands.BucketType.user)
     async def hunt(self, inter: Aci):
-        await self._use(inter, "fishing_rod")
+        await self._use(inter, "hunting_rifle")
 
     @hunt.error
     async def _hunt_error(self, ctx: commands.Context, _error: errors.CommandError):
