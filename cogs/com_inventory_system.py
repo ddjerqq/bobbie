@@ -9,7 +9,7 @@ from utils import *
 from models.client import Client
 from models.user import User
 from models.item import (Item, ITEMS_AND_PRICES, TOOL_BUY_PRICES,
-                         ITEM_ENUM, BUYABLE, FISHES, ANIMALS, DUG_ITEMS)
+                         ITEM_ENUM, BUYABLE, FISHES, ANIMALS, DUG_ITEMS, EMOJIS)
 
 
 class InventorySystemCommands(commands.Cog):
@@ -119,7 +119,7 @@ class InventorySystemCommands(commands.Cog):
         await inter.send(embed=em)
 
 
-    @commands.slash_command(name="fish", guild_ids=GUILD_IDS, description="წადი სათევზაოდ")
+    @commands.slash_command(name="fish", guild_ids=GUILD_IDS, description="წადი სათევზაოდ, იქნებ თევზმა ჩაგითრიოს და დაიხრჩო")
     @commands.cooldown(1, 300, commands.BucketType.user)
     async def fish(self, inter: Aci):
         await self._use(inter, "fishing_rod")
@@ -133,7 +133,7 @@ class InventorySystemCommands(commands.Cog):
             await self.client.log(_error, priority=1)
 
 
-    @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ")
+    @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ და შეეცადე შენი თავი არჩინო")
     @commands.cooldown(1, 300, commands.BucketType.user)
     async def hunt(self, inter: Aci):
         await self._use(inter, "hunting_rifle")
