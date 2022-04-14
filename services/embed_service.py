@@ -1,7 +1,7 @@
 from datetime import datetime
 import disnake
 
-from models.item import Item, ITEMS_AND_PRICES
+from models.item import Item, ITEMS_AND_PRICES, EMOJIS
 from models.user import User
 from models.database import Database
 
@@ -140,7 +140,7 @@ class EmbedService:
         return em
 
     def fish(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ დაიჭირე {item.type}",
+        em = disnake.Embed(description=f"შენ წახვდედი სათევზაოდ და დაიჭირე {item.type} {EMOJIS[1]}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი ანკესი" if broken else ""
         em.add_field(name="ღირებულება",
@@ -150,7 +150,7 @@ class EmbedService:
         return em
 
     def hunt(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ მოინადირე {item.type}",
+        em = disnake.Embed(description=f"შენ წახვედი სანადიროდ ტყეში და მოინადირე {item.type}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი სანადირო თოფი" if broken else ""
         em.add_field(name="ღირებულება",
@@ -160,7 +160,7 @@ class EmbedService:
         return em
 
     def dig(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ ამოთხარე {item.type}",
+        em = disnake.Embed(description=f"შენ გადაწყვიტე ამოგეთხრა სადმე და იპოვე {item.type}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი ნიჩაბი" if broken else ""
         em.add_field(name="ღირებულება",
@@ -170,7 +170,7 @@ class EmbedService:
         return em
 
     def sell(self, item: Item) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ გაყიდე შენი {item.type}",
+        em = disnake.Embed(description=f"შენ წახვედი მარკეტში და გაყიდე შენი {item.type}",
                            color=0x00ff00)
         em.add_field(name="ღირებულება",
                      value=f"`{item.price}` ₾")
