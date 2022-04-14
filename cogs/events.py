@@ -92,7 +92,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_member_remove(self, member: disnake.Member):
         user = await self.client.db.user_service.get(member.id)
-        await self.client.db.user_service.delete(member.id)
+        await self.client.db.user_service.delete(user)
         await self.client.log(f"deleted ({member.id}) {member.name}")
 
         embed = disnake.Embed(color=0x2d56a9)
