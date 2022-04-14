@@ -120,7 +120,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="fish", guild_ids=GUILD_IDS, description="წადი სათევზაოდ, იქნებ თევზმა ჩაგითრიოს და დაიხრჩო")
-    # @commands.cooldown(1, 300, commands.BucketType.user)
+    @commands.cooldown(1, 300, commands.BucketType.user)
     async def fish(self, inter: Aci):
         await self._use(inter, "fishing_rod")
 
@@ -134,7 +134,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ და შეეცადე შენი თავი არჩინო")
-    # @commands.cooldown(1, 300, commands.BucketType.user)
+    @commands.cooldown(1, 300, commands.BucketType.user)
     async def hunt(self, inter: Aci):
         await self._use(inter, "hunting_rifle")
 
@@ -148,7 +148,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="dig", guild_ids=GUILD_IDS, description="გათხარე მიწა")
-    # @commands.cooldown(1, 300, commands.BucketType.user)
+    @commands.cooldown(1, 300, commands.BucketType.user)
     async def dig(self, inter: Aci):
         await self._use(inter, "shovel")
 
