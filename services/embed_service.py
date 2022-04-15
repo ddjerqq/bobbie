@@ -131,7 +131,7 @@ class EmbedService:
             avg_rarity = sum(i.rarity for i in items) / len(items)
             avg_price  = sum(i.price for i in items) // len(items)
 
-            em.add_field(name=f"{item_type}: {len(item_types[item_type])}",
+            em.add_field(name=f"{EMOJIS.get(item_type, '')}{item_type}: {len(item_types[item_type])}",
                          value=f"`{top.rarity_string}` - `{top.rarity:.8f}`\n"
                                f"`საშუალო იშვიათობა`: `{avg_rarity:.4f}`\n"
                                f"`საშუალო ფასი`: `{avg_price}` ₾/",
