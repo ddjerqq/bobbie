@@ -12,7 +12,7 @@ _GIO_EPOCH = 107691120000
 FISHES = {
     "common_fish": 5,
     "rare_fish": 10,
-    "tropical_fish": 20,
+    "tropical_fish_": 20,
     "shark": 40,
     "golden_fish": 50,
 }
@@ -45,7 +45,49 @@ ITEMS_AND_PRICES = {
 EMOJIS = {
     "fishing_rod": "<:fishingrod:963895429248999454>",
     "hunting_rifle": "<:huntingrifle:963895472286756945>",
-    "shovel": "<:shovel:964200167001686016>"
+    "shovel": "<:shovel:964200167001686016>",
+    "common_fish" : "<:common_fish:964635049859371049>",
+    "rare_fish" : "<:rare_fish:964635026534842418>",
+    "tropical_fish_" : "<:tropical_fish_:964634994742005770>",
+    "shark" : "<:shark_:964635075922759680>",
+    "golden_fish" : "<:goldenfish:964514375027286056>",
+    "pig" : "",
+    "deer" : "",
+    "bear" : "",
+    "wolf" : "",
+    "tiger" : "",
+    "lion" : "",
+    "elephant": "",
+    "copper_coin" : "",
+    "emerald" : "",
+    "ruby" : "",
+    "sapphire" : "",
+    "amethyst" : "",
+    "diamond" : ""
+}
+
+EMOJI_THUMBNAILS = {
+    "fishing_rod" : "https://i.imgur.com/m7HBPHl.png",
+    "hunting rifle" : "https://i.imgur.com/pjtWTSg.png",
+    "shovel" : "https://i.imgur.com/Dod0FE4.png",
+    "common_fish" : "",
+    "rare_fish" : "",
+    "tropical_fish" : "",
+    "shark" : "",
+    "golden_fish" : "",
+    "pig" : "",
+    "deer" : "",
+    "bear" : "",
+    "wolf" : "",
+    "tiger" : "",
+    "lion" : "",
+    "elephant": "",
+    "copper_coin" : "",
+    "emerald" : "",
+    "ruby" : "",
+    "sapphire" : "",
+    "amethyst" : "",
+    "diamond" : ""
 }
 
 ITEMS_AND_PRICES.update(FISHES)
