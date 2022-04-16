@@ -1,7 +1,7 @@
 from datetime import datetime
 import disnake
 
-from models.item import Item, ITEMS_AND_PRICES, EMOJIS
+from models.item import Item, ITEMS_AND_PRICES, EMOJIS, EMOJI_THUMBNAILS
 from models.user import User
 from models.database import Database
 
@@ -131,9 +131,9 @@ class EmbedService:
             avg_rarity = sum(i.rarity for i in items) / len(items)
             avg_price  = sum(i.price for i in items) // len(items)
 
-            em.add_field(name=f"{EMOJIS.get(item_type, '')}{item_type}: {len(item_types[item_type])}",
-                         value=f"`{top.rarity_string}` - `{top.rarity:.8f}`\n"
-                               f"`საშუალო იშვიათობა`: `{avg_rarity:.4f}`\n"
+            em.add_field(name=f"{EMOJIS.get(item_type, '')}{item_type}─ {len(item_types[item_type])}",
+                         value=# f"`{top.rarity_string}` - `{top.rarity:.8f}`\n"
+                               # f"`საშუალო იშვიათობა`: `{avg_rarity:.4f}`\n"
                                f"`საშუალო ფასი`: `{avg_price}` ₾/",
                          inline=False)
 
@@ -147,6 +147,7 @@ class EmbedService:
                      value=f"`{item.price}` ₾")
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
+        em.set_thumbnail(url=f"{EMOJI_THUMBNAILS.get(item.type)}")
         return em
 
     def hunt(self, item: Item, broken: bool) -> disnake.Embed:
@@ -157,6 +158,7 @@ class EmbedService:
                      value=f"`{item.price}` ₾")
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
+        em.set_thumbnail(url=EMOJI_THUMBNAILS.get(item.type, None))
         return em
 
     def dig(self, item: Item, broken: bool) -> disnake.Embed:
