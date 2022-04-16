@@ -140,14 +140,14 @@ class EmbedService:
         return em
 
     def fish(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ წახვდედი სათევზაოდ და დაიჭირე {item.type} {EMOJIS['fishing_rod']}",
+        em = disnake.Embed(description=f"შენ დაიჭირე {item.type} {EMOJIS['fishing_rod']}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი ანკესი" if broken else ""
         em.add_field(name="ღირებულება",
                      value=f"`{item.price}` ₾")
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
-        em.set_thumbnail(url=f"{EMOJI_THUMBNAILS.get(item.type)}")
+        em.set_thumbnail(url=f"{EMOJI_THUMBNAILS.get(item.type, None)}")
         return em
 
     def hunt(self, item: Item, broken: bool) -> disnake.Embed:
