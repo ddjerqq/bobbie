@@ -134,7 +134,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ და შეეცადე შენი თავი არჩინო")
-    @commands.cooldown(1, 300, commands.BucketType.user)
+    # @commands.cooldown(1, 300, commands.BucketType.user)
     async def hunt(self, inter: Aci):
         await self._use(inter, "hunting_rifle")
 

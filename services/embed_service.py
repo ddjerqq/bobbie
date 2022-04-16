@@ -151,7 +151,7 @@ class EmbedService:
         return em
 
     def hunt(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ წახვედი სანადიროდ ტყეში და მოინადირე {item.type} {EMOJIS['hunting_rifle']}",
+        em = disnake.Embed(description=f"{item.type} {EMOJIS['hunting_rifle']}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი სანადირო თოფი" if broken else ""
         em.add_field(name="ღირებულება",
