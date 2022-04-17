@@ -106,12 +106,12 @@ ITEM_NAMES = {
     "tiger" : "ვეფხვი",
     "lion" : "ლომი",
     "elephant": "სპილო",
-    "copper_coin" : "",
-    "emerald" : "",
-    "ruby" : "",
-    "sapphire" : "",
-    "amethyst" : "",
-    "diamond" : ""
+    "copper_coin" : "სპილენძის მონეტა",
+    "emerald" : "ზურმუხტი",
+    "ruby" : "ლალი",
+    "sapphire" : "ფირუზი",
+    "amethyst" : "ამეთვისტო",
+    "diamond" : "ბრილიანი"
 }
 
 ITEMS_AND_PRICES.update(FISHES)
