@@ -7,9 +7,7 @@ from disnake import ApplicationCommandInteraction as Aci
 
 from utils import *
 from models.client import Client
-from models.user import User
-from models.item import (Item, ITEMS_AND_PRICES, TOOL_BUY_PRICES,
-                         ITEM_ENUM, BUYABLE, FISHES, ANIMALS, DUG_ITEMS, EMOJIS)
+from models.item import Item
 
 
 class InventorySystemCommands(commands.Cog):
@@ -18,36 +16,30 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="buy", guild_ids=GUILD_IDS, description="იყიდე რაიმე ნივთი მაღაზიიდან")
-    @commands.cooldown(3, 600, commands.BucketType.user)
-    async def buy(self, inter: Aci, item: TOOL_BUY_PRICES):
-        if item not in ITEMS_AND_PRICES:
-            em = self.client.embed_service.inv_err_item_not_in_shop(item)
-            await inter.send(embed=em)
-            return
+    @commands.cooldown(3, 600 if not DEV_TEST else 1, commands.BucketType.user)
+    async def buy(self, inter: Aci, item: Item.tool_buy_prices()):
 
-        elif item not in BUYABLE:
-            em = self.client.embed_service.inv_err_item_not_buyable(item)
-            await inter.send(embed=em)
-            return
-
-        price = ITEMS_AND_PRICES[item]
         user = await self.client.db.user_service.get(inter.author.id)
+        price = Item.PRICES.get(item)
+        item = Item.new(item)
 
-        if user.wallet < price:
-            em = self.client.embed_service.econ_err_not_enough_money("ბანკში", f"{item} ის საყიდლად", price)
+        if user.wallet + user.bank < price:
+            em = self.client.embed_service.econ_err_not_enough_money("რათა", f"იყიდო {item.name}", price)
             await inter.send(embed=em)
             return
 
-        user.wallet -= price
         user.experience += 3
-        item = Item.new(item)
         item.owner_id = inter.author.id
-
         await self.client.db.item_service.add(item)
+
+        if user.wallet <= price:
+            user.wallet -= price
+        elif user.wallet + user.bank <= price:
+            price -= user.wallet
+            user.wallet = 0
+            user.bank -= price
+
         await self.client.db.user_service.update(user)
-
-        # await self.client.log(f"({inter.author.id}) {inter.author.name} bought ({item.id}) {item.type}")
-
         em = self.client.embed_service.inv_success_bought_item(item)
         await inter.send(embed=em)
 
@@ -64,7 +56,6 @@ class InventorySystemCommands(commands.Cog):
     async def inventory(self, inter: Aci):
         em = await self.client.embed_service.inv_util_inventory(inter.author)
         await inter.send(embed=em)
-
 
     async def _use(self, inter: Aci, item_type: str):
         items = await self.client.db.item_service.get_all_by_owner_id(inter.author.id)
@@ -84,22 +75,7 @@ class InventorySystemCommands(commands.Cog):
         if broken:
             await self.client.db.item_service.delete(tool)
 
-
-        groups = {
-            "fishing_rod": FISHES,
-            "hunting_rifle": ANIMALS,
-            "shovel": DUG_ITEMS
-        }
-
-        total_price = sum(groups[tool.type].values())
-        item_random_weights = {
-            i: total_price // p for i, p in groups[tool.type].items()
-        }
-
-        item = random.choices(list(item_random_weights.keys()),
-                              weights=list(item_random_weights.values()),
-                              k=1)[0]
-        item = Item.new(item)
+        item = Item.random_item(item_type)
         item.owner_id = inter.author.id
         user.experience += 3
 
@@ -118,9 +94,9 @@ class InventorySystemCommands(commands.Cog):
                 await self.client.log(f"{inter.author.id} tried to use {item_type}", priority=1)
         await inter.send(embed=em)
 
-
-    @commands.slash_command(name="fish", guild_ids=GUILD_IDS, description="წადი სათევზაოდ, იქნებ თევზმა ჩაგითრიოს და დაიხრჩო")
-    @commands.cooldown(1, 300, commands.BucketType.user)
+    @commands.slash_command(name="fish", guild_ids=GUILD_IDS,
+                            description="წადი სათევზაოდ, იქნებ თევზმა ჩაგითრიოს და დაიხრჩო")
+    @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def fish(self, inter: Aci):
         await self._use(inter, "fishing_rod")
 
@@ -134,7 +110,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ და შეეცადე შენი თავი არჩინო")
-    # @commands.cooldown(1, 300, commands.BucketType.user)
+    @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def hunt(self, inter: Aci):
         await self._use(inter, "hunting_rifle")
 
@@ -148,7 +124,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="dig", guild_ids=GUILD_IDS, description="გათხარე მიწა")
-    @commands.cooldown(1, 300, commands.BucketType.user)
+    @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def dig(self, inter: Aci):
         await self._use(inter, "shovel")
 
@@ -162,7 +138,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="sell", guild_ids=GUILD_IDS, description="გაყიდე ნივთი")
-    async def sell(self, inter: Aci, item: ITEM_ENUM):
+    async def sell(self, inter: Aci, item: Item.item_sell_prices()):
         user = await self.client.db.user_service.get(inter.author.id)
         user_items = await self.client.db.item_service.get_all_by_owner_id(user.id)
 
@@ -175,7 +151,7 @@ class InventorySystemCommands(commands.Cog):
         items = sorted(items, key=lambda x: x.rarity)
         item  = items[-1]
 
-        user.wallet += item.price
+        user.wallet += item.sell_price
         user.experience += 5
         await self.client.db.user_service.update(user)
         await self.client.db.item_service.delete(item)

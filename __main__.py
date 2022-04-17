@@ -21,7 +21,7 @@ if __name__ == "__main__":
     try:
         loop.run_until_complete(client.db.ainit())
 
-        if len(sys.argv) == 2 and sys.argv[1] == "--dev-test":
+        if DEV_TEST:
             loop.run_until_complete(client.start(DEV_TEST_TOKEN))
         else:
             loop.run_until_complete(client.start(TOKEN))

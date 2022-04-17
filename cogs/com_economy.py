@@ -7,14 +7,13 @@ from disnake import ApplicationCommandInteraction as Aci
 
 from utils import *
 from models.client import Client
-from services.embed_service import EmbedService
 
 
 class Economy(commands.Cog):
     def __init__(self, client: Client):
         self.client = client
 
-    @commands.slash_command(name="balance", guild_ids=GUILD_IDS, description="გაიგე რამდენი ფული გაქვს საფულეში და ბანკში")
+    @commands.slash_command(name="balance", guild_ids=GUILD_IDS, description="გაიგე რამდენი ფული გაქვს")
     async def balance(self, inter: Aci, target: disnake.Member = None):
         target = target or inter.author
         em = await self.client.embed_service.econ_util_balance(target)
@@ -70,30 +69,41 @@ class Economy(commands.Cog):
 
     @commands.slash_command(name="give", guild_ids=GUILD_IDS, description="მიეც გლახაკთა საჭურჭლე, ათავისუფლე მონები")
     async def give(self, inter: Aci, target: disnake.Member, amount: int):
-        success = disnake.Embed(color=0x00ff00, title=f"წარმატებით მიეცი {target.name}'ს {amount} ₾")
-        fail = disnake.Embed(color=0xff0000, title=f"შენ ვერ მისცემ {target.name}'ს {amount} ₾ს",
-                             description="სავარაუდოდ ჯიბეში არასაკმარისი ფული გიდევს")
-        not_found = disnake.Embed(color=0xff0000, title=f"{target.name} არ არსებობს?????")
-        same_user = disnake.Embed(color=0xff0000, title=f"შენ შიგხოარგაქვს, ფულს ვის აძლევ?!")
+        if inter.author == target:
+            em = self.client.embed_service.econ_err_self_give()
+            await inter.send(embed=em)
 
-        this = await self.client.db.user_service.get(inter.author.id)
+        this  = await self.client.db.user_service.get(inter.author.id)
         other = await self.client.db.user_service.get(target.id)
 
-        if this == other:
-            await inter.send(embed=same_user)
+        if this is None or other is None:
+            em = self.client.embed_service.econ_err_user_not_found(inter.author.name)
+            await inter.send(embed=em)
+            return
 
-        elif other is None:
-            await inter.send(embed=not_found)
+        if this.wallet + this.bank < amount:
+            em = self.client.embed_service.econ_err_not_enough_money(
+                where="რათა",
+                _for=f"მიცე {other.username}'ს ფული",
+                needs=amount)
+            await inter.send(embed=em)
+            return
 
-        elif this.wallet >= amount:
+        if this.wallet >= amount:
             this.wallet -= amount
             other.wallet += amount
-            await self.client.db.user_service.update(this)
-            await self.client.db.user_service.update(other)
-            await inter.send(embed=success)
+            em = self.client.embed_service.econ_success_give(this, other, amount)
 
-        else:
-            await inter.send(embed=fail)
+        elif this.wallet + this.bank >= amount:
+            amount -= this.wallet
+            this.wallet = 0
+            this.bank -= amount
+            other.wallet = amount
+            em = self.client.embed_service.econ_success_give(this, other, amount)
+
+        await self.client.db.user_service.update(this)
+        await self.client.db.user_service.update(other)
+        await inter.send(embed=em)
 
     @commands.slash_command(name="rob", guild_ids=GUILD_IDS, description="გაძარცვე ვინმე, ან მოკვდი მცდელობისას")
     @commands.cooldown(1, 3600, commands.BucketType.user)
@@ -145,8 +155,9 @@ class Economy(commands.Cog):
         user.wallet += pay
         await self.client.db.user_service.update(user)
 
-        em = disnake.Embed(color=0x00FF00,
-                           description=f"შენ წახვედი სამსახურში და გამოიმუშავე {pay} ₾ <:hammercampfire:960423335437680692>")
+        em = disnake.Embed(
+            color=0x00FF00,
+            description=f"შენ წახვედი სამსახურში და გამოიმუშავე {pay} ₾ <:hammercampfire:960423335437680692>")
 
         await inter.send(embed=em)
 
