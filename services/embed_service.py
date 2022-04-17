@@ -41,7 +41,6 @@ class EmbedService:
                            color=0xff0000)
         return em
 
-
     @staticmethod
     def econ_err_not_enough_money(where: str = "", _for: str = "", needs: int = "") -> disnake.Embed:
         """
@@ -127,7 +126,6 @@ class EmbedService:
                      value=f"{target.experience}")
         return em
 
-
     @staticmethod
     def inv_err_item_not_in_shop(item_slug: str) -> disnake.Embed:
         item = Item.new(item_slug)
@@ -175,13 +173,12 @@ class EmbedService:
 
         for item_type, items in item_types.items():
             item_types[item_type].sort(key=lambda x: x.rarity)
-            tot_price  = sum(i.price for i in items)
+            tot_price = sum(i.price for i in items)
 
             em.add_field(name=f"{items[0].emoji} - {items[0].name} ─ {len(item_types[item_type])}",
                          value=f"`ჯამური ფასი`: `{tot_price}` ₾")
 
         return em
-
 
     @staticmethod
     def fish(item: Item, broken: bool) -> disnake.Embed:
