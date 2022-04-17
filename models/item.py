@@ -77,7 +77,7 @@ EMOJI_THUMBNAILS = {
     "golden_fish" : "https://i.imgur.com/o2m9RkM.png",
     "pig" : "https://i.imgur.com/v1Qa101.png",
     "deer" : "https://i.imgur.com/fGl3N7s.png",
-    "bear" : "",
+    "bear" : "https://i.imgur.com/v757ocX.png",
     "wolf" : "https://i.imgur.com/k0fRgHl.png",
     "tiger" : "",
     "lion" : "",
