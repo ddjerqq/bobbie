@@ -90,6 +90,30 @@ EMOJI_THUMBNAILS = {
     "diamond" : ""
 }
 
+ITEM_NAMES = {
+    "fishing_rod": "ანკესი",
+    "hunting_rifle": "სანადირო თოფი",
+    "shovel": "ნიჩაბი",
+    "common_fish" : "უბრალო თევზი",
+    "rare_fish" : "წითელი თევზი",
+    "tropical_fish_" : "ტროპიკული თევზი",
+    "shark" : "ზვიგენი",
+    "golden_fish" : "ოქროს თევზი",
+    "pig" : "გოჭი",
+    "deer" : "ირემი",
+    "bear" : "დათვი",
+    "wolf" : "მგელი",
+    "tiger" : "ვეფხვი",
+    "lion" : "ლომი",
+    "elephant": "სპილო",
+    "copper_coin" : "",
+    "emerald" : "",
+    "ruby" : "",
+    "sapphire" : "",
+    "amethyst" : "",
+    "diamond" : ""
+}
+
 ITEMS_AND_PRICES.update(FISHES)
 ITEMS_AND_PRICES.update(ANIMALS)
 ITEMS_AND_PRICES.update(DUG_ITEMS)
