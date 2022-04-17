@@ -7,7 +7,6 @@ from datetime import datetime
 import disnake.utils
 from disnake.ext.commands import option_enum
 
-
 # 2004/02/16 10 am
 _GIO_EPOCH = 107691120000
 
@@ -25,108 +24,110 @@ class Item:
     """
 
     PRICES = {
-        "fishing_rod"  : 15,
-        "common_fish"  : 5,
-        "rare_fish"    : 10,
+        "fishing_rod": 15,
+        "common_fish": 5,
+        "rare_fish": 10,
         "tropical_fish": 20,
-        "shark"        : 40,
-        "golden_fish"  : 50,
+        "shark": 40,
+        "golden_fish": 50,
 
         "hunting_rifle": 20,
-        "pig"          : 5,
-        "deer"         : 10,
-        "bear"         : 20,
-        "wolf"         : 30,
-        "tiger"        : 40,
-        "lion"         : 50,
-        "elephant"     : 60,
+        "pig": 5,
+        "deer": 10,
+        "bear": 20,
+        "wolf": 30,
+        "tiger": 40,
+        "lion": 50,
+        "elephant": 60,
 
-        "shovel"       : 15,
-        "copper_coin"  : 1,
-        "emerald"      : 10,
-        "ruby"         : 20,
-        "sapphire"     : 30,
-        "amethyst"     : 40,
-        "diamond"      : 50,
+        "shovel": 15,
+        "copper_coin": 1,
+        "emerald": 10,
+        "ruby": 20,
+        "sapphire": 30,
+        "amethyst": 40,
+        "diamond": 50,
     }
 
     _FISHABLE_WEIGHTS = {
-        "common_fish"   : 25,
-        "rare_fish"     : 12,
-        "tropical_fish" : 6,
-        "shark"         : 3,
-        "golden_fish"   : 2,
+        "common_fish": 25,
+        "rare_fish": 12,
+        "tropical_fish": 6,
+        "shark": 3,
+        "golden_fish": 2,
     }
 
     _HUNTABLE_WEIGHTS = {
-        "pig"           : 30,
-        "deer"          : 20,
-        "bear"          : 15,
-        "wolf"          : 10,
-        "tiger"         : 5,
-        "lion"          : 2,
-        "elephant"      : 1,
+        "pig": 30,
+        "deer": 20,
+        "bear": 15,
+        "wolf": 10,
+        "tiger": 5,
+        "lion": 2,
+        "elephant": 1,
     }
 
     _DIGABLE_WEIGHTS = {
-        "copper_coin"   : 30,
-        "emerald"       : 20,
-        "ruby"          : 15,
-        "sapphire"      : 10,
-        "amethyst"      : 5,
-        "diamond"       : 2,
+        "copper_coin": 30,
+        "emerald": 20,
+        "ruby": 15,
+        "sapphire": 10,
+        "amethyst": 5,
+        "diamond": 2,
     }
 
     _ITEM_NAMES = {
-        "fishing_rod"   : "ანკესი",
-        "hunting_rifle" : "სანადირო თოფი",
-        "shovel"        : "ნიჩაბი",
-        "common_fish"   : "უბრალო თევზი",
-        "rare_fish"     : "წითელი თევზი",
-        "tropical_fish" : "ტროპიკული თევზი",
-        "shark"         : "ზვიგენი",
-        "golden_fish"   : "ოქროს თევზი",
-        "pig"           : "გოჭი",
-        "deer"          : "ირემი",
-        "bear"          : "დათვი",
-        "wolf"          : "მგელი",
-        "tiger"         : "ვეფხვი",
-        "lion"          : "ლომი",
-        "elephant"      : "სპილო",
-        "copper_coin"   : "სპილენძის მონეტა",
-        "emerald"       : "ზურმუხტი",
-        "ruby"          : "ლალი",
-        "sapphire"      : "ფირუზი",
-        "amethyst"      : "ამეთვისტო",
-        "diamond"       : "ბრილიანი"
+        "fishing_rod": "ანკესი",
+        "hunting_rifle": "სანადირო თოფი",
+        "shovel": "ნიჩაბი",
+        "common_fish": "უბრალო თევზი",
+        "rare_fish": "წითელი თევზი",
+        "tropical_fish": "ტროპიკული თევზი",
+        "shark": "ზვიგენი",
+        "golden_fish": "ოქროს თევზი",
+        "pig": "გოჭი",
+        "deer": "ირემი",
+        "bear": "დათვი",
+        "wolf": "მგელი",
+        "tiger": "ვეფხვი",
+        "lion": "ლომი",
+        "elephant": "სპილო",
+        "copper_coin": "სპილენძის მონეტა",
+        "emerald": "ზურმუხტი",
+        "ruby": "ლალი",
+        "sapphire": "ფირუზი",
+        "amethyst": "ამეთვისტო",
+        "diamond": "ბრილიანი"
     }
 
     _THUMBNAILS = {
-        "fishing_rod"  : "https://i.imgur.com/m7HBPHl.png",
+        "fishing_rod": "https://i.imgur.com/m7HBPHl.png",
         "hunting_rifle": "https://i.imgur.com/pjtWTSg.png",
-        "shovel"       : "https://i.imgur.com/Dod0FE4.png",
-        "common_fish"  : "https://i.imgur.com/I3jU3p7.png",
-        "rare_fish"    : "https://i.imgur.com/7f90E9p.png",
+        "shovel": "https://i.imgur.com/Dod0FE4.png",
+        "common_fish": "https://i.imgur.com/I3jU3p7.png",
+        "rare_fish": "https://i.imgur.com/7f90E9p.png",
         "tropical_fish": "https://i.imgur.com/ZBVZRXw.png",
-        "shark"        : "https://i.imgur.com/NMeTrjK.png",
-        "golden_fish"  : "https://i.imgur.com/o2m9RkM.png",
-        "pig"          : "https://i.imgur.com/v1Qa101.png",
-        "deer"         : "https://i.imgur.com/fGl3N7s.png",
-        "wolf"         : "https://i.imgur.com/k0fRgHl.png",
+        "shark": "https://i.imgur.com/NMeTrjK.png",
+        "golden_fish": "https://i.imgur.com/o2m9RkM.png",
+        "pig": "https://i.imgur.com/v1Qa101.png",
+        "deer": "https://i.imgur.com/fGl3N7s.png",
+        "wolf": "https://i.imgur.com/k0fRgHl.png",
+        "lion": "https://i.imgur.com/FBOyDvA.png"
     }
 
     _EMOJI = {
-        "fishing_rod"   : "<:fishingrod:963895429248999454>",
-        "hunting_rifle" : "<:huntingrifle:963895472286756945>",
-        "shovel"        : "<:shovel:964200167001686016>",
-        "common_fish"   : "<:common_fish:964635049859371049>",
-        "rare_fish"     : "<:rare_fish:964635026534842418>",
+        "fishing_rod": "<:fishingrod:963895429248999454>",
+        "hunting_rifle": "<:huntingrifle:963895472286756945>",
+        "shovel": "<:shovel:964200167001686016>",
+        "common_fish": "<:common_fish:964635049859371049>",
+        "rare_fish": "<:rare_fish:964635026534842418>",
         "tropical_fish_": "<:tropical_fish_:964634994742005770>",
-        "shark"         : "<:shark_:964635075922759680>",
-        "golden_fish"   : "<:goldenfish:964514375027286056>",
-        "pig"           : "<:pig_:965295197586079774>",
-        "deer"          : "<:deer_:965295197783203870>",
-        "wolf"          : "<:wolf_:964201606763651112>",
+        "shark": "<:shark_:964635075922759680>",
+        "golden_fish": "<:goldenfish:964514375027286056>",
+        "pig": "<:pig_:965295197586079774>",
+        "deer": "<:deer_:965295197783203870>",
+        "wolf": "<:wolf_:964201606763651112>",
+        "lion": "<:lion_:965363845075980308>"
     }
 
     TOOLS = {"fishing_rod", "hunting_rifle", "shovel"}
