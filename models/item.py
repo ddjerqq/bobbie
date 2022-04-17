@@ -72,7 +72,7 @@ EMOJI_THUMBNAILS = {
     "shovel" : "https://i.imgur.com/Dod0FE4.png",
     "common_fish" : "https://i.imgur.com/I3jU3p7.png",
     "rare_fish" : "https://i.imgur.com/7f90E9p.png",
-    "tropical_fish" : "",
+    "tropical_fish" : "https://i.imgur.com/ZBVZRXw.png",
     "shark" : "https://i.imgur.com/NMeTrjK.png",
     "golden_fish" : "https://i.imgur.com/o2m9RkM.png",
     "pig" : "https://i.imgur.com/v1Qa101.png",
