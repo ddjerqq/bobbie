@@ -151,7 +151,7 @@ class InventorySystemCommands(commands.Cog):
         items = sorted(items, key=lambda x: x.rarity)
         item  = items[-1]
 
-        user.wallet += item.sell_price
+        user.wallet += item.price
         user.experience += 5
         await self.client.db.user_service.update(user)
         await self.client.db.item_service.delete(item)
