@@ -163,8 +163,7 @@ class EmbedService:
         total_price = sum(item.price for item in items)
 
         em = disnake.Embed(title=f"{user.username}'ის ინვენტარი",
-                           description=f"{len(items)} ნივთი, სულ {total_price} ₾",
-                           color=0x00ff00)
+                           description=f"{len(items)} ნივთი, სულ {total_price} ₾",)
 
         item_types: dict[str, list[Item]] = {i: [] for i in set(map(lambda x: x.type, items))}
 
