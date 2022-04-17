@@ -1,7 +1,7 @@
 from datetime import datetime
 import disnake
 
-from models.item import Item, ITEMS_AND_PRICES, EMOJIS, EMOJI_THUMBNAILS
+from models.item import Item, ITEMS_AND_PRICES, EMOJIS, EMOJI_THUMBNAILS, ITEM_NAMES
 from models.user import User
 from models.database import Database
 
@@ -140,7 +140,7 @@ class EmbedService:
         return em
 
     def fish(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ წახვედი სათევზაოდ და დაიჭირე {item.type} {EMOJIS['fishing_rod']}",
+        em = disnake.Embed(description=f"შენ წახვედი სათევზაოდ და დაიჭირე {ITEM_NAMES.get(item.type)} {EMOJIS['fishing_rod']}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი ანკესი" if broken else ""
         em.add_field(name="ღირებულება",
@@ -151,7 +151,7 @@ class EmbedService:
         return em
 
     def hunt(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ წახვედი სანადიროდ და მოინადირე {item.type} {EMOJIS['hunting_rifle']}",
+        em = disnake.Embed(description=f"შენ წახვედი სანადიროდ და მოინადირე {ITEM_NAMES.get(item.type)} {EMOJIS['hunting_rifle']}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი სანადირო თოფი" if broken else ""
         em.add_field(name="ღირებულება",
