@@ -175,7 +175,7 @@ class EmbedService:
             item_types[item_type].sort(key=lambda x: x.rarity)
             tot_price = sum(i.price for i in items)
 
-            em.add_field(name=f"{items[0].emoji} - {items[0].name} ─ {len(item_types[item_type])}",
+            em.add_field(name=f"{items[0].emoji}{items[0].name} ─ {len(item_types[item_type])}",
                          value=f"`ჯამური ფასი`: `{tot_price}` ₾")
 
         return em
