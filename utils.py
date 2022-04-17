@@ -1,4 +1,5 @@
 import os
+import sys
 
 TOKEN = "OTU4MTA3OTA1NzkyNTQ0ODA5.YkIhhQ.YduxqTYY1SVVhQ84C_Ev_WBVC1M"
 DEV_TEST_TOKEN = "OTYzNDU3MTI4MzM1NTUyNTUy.YlWXXw.n7uo7VtPt_4VRUDMiaqYYlzWUx0"
@@ -13,7 +14,9 @@ PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 _LOG_FILE = r".\logs\logs.yandr"
 
-GUILD_IDS = [935886444109631510]
+DEV_TEST = len(sys.argv) == 2 and sys.argv[1] == "--dev-test"
+
+GUILD_IDS = [935886444109631510, 965308417185021982]  # campfire, dev-test
 
 STATUSES = [
     "მიეც გლახაკთა საჭურჭლე,",

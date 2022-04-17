@@ -1,7 +1,6 @@
-from datetime import datetime
 import disnake
 
-from models.item import Item, ITEMS_AND_PRICES, EMOJIS, EMOJI_THUMBNAILS, ITEM_NAMES
+from models.item import Item
 from models.user import User
 from models.database import Database
 
@@ -10,7 +9,8 @@ class EmbedService:
     def __init__(self, database: Database):
         self._database = database
 
-    def cooldown(self, action: str, reason: str, retry_after: float | int) -> disnake.Embed:
+    @staticmethod
+    def cooldown(action: str, reason: str, retry_after: float | int) -> disnake.Embed:
         """
         :param action: შენ უკვე {action}
         :param reason: შენ ისევ შეძლებ {reason}
@@ -22,24 +22,31 @@ class EmbedService:
                                           f"შენ ისევ შეძლებ {reason} {(retry_after // 60):.0f} წუთში")
         return embed
 
-    def rob_success(self, target: disnake.Member, stolen: int) -> disnake.Embed:
+    @staticmethod
+    def rob_success(target: disnake.Member, stolen: int) -> disnake.Embed:
         em = disnake.Embed(color=0x00ff00,
                            description=f"წარმატებით გაძარცვე {target.name}")
         em.description += f"\nმოპარე {stolen} ₾"
         return em
 
-    def rob_success_died(self, target: disnake.Member) -> disnake.Embed:
+    @staticmethod
+    def rob_success_died(target: disnake.Member) -> disnake.Embed:
         em = disnake.Embed(color=0xff0000, title=f"შენ მოკვდი {target.name}'ის ძარცვის დროს 🤣",
                            description=f"შენი საფულე გადაეცა {target.name}'ს")
         return em
 
-    def rob_err(self, reason: str) -> disnake.Embed:
+    @staticmethod
+    def rob_err(reason: str) -> disnake.Embed:
         em = disnake.Embed(description=reason,
                            color=0xff0000)
         return em
 
-    def econ_err_not_enough_money(self, where: str = "", _for: str = "", needs: int = "") -> disnake.Embed:
+
+    @staticmethod
+    def econ_err_not_enough_money(where: str = "", _for: str = "", needs: int = "") -> disnake.Embed:
         """
+        შენ არ გაქვს საკმარისი ფული {where} {_for} \n
+        შენ გჭირდება {needs} ₾ \n
         :param where: wallet or bank
         :param _for: what you are trying to buy
         :param needs: how much money the user needs
@@ -47,6 +54,18 @@ class EmbedService:
         em = disnake.Embed(description=f"შენ არ გაქვს საკმარისი ფული {where} {_for}",
                            color=0xff0000)
         em.description += f"\nშენ გჭირდება {needs} ₾"
+        return em
+
+    @staticmethod
+    def econ_err_self_give():
+        em = disnake.Embed(color=0xff0000,
+                           description="შენ ვერ მიცემ შენს თავს ფულს")
+        return em
+
+    @staticmethod
+    def econ_err_user_not_found(username: str) -> disnake.Embed:
+        em = disnake.Embed(color=0xff0000,
+                           description=f"მომხმარებელი სახელით '{username}' არ არის ბაზაში")
         return em
 
     async def econ_util_balance(self, target: disnake.Member) -> disnake.Embed:
@@ -65,49 +84,78 @@ class EmbedService:
 
         return em
 
-    def econ_err_invalid_amount(self) -> disnake.Embed:
+    @staticmethod
+    def econ_err_invalid_amount() -> disnake.Embed:
         em = disnake.Embed(description=f"შეიყვანე რაოდენობა როგორც რიცხვი, \n"
                                        f"ან დაწერე [max, all, სულ]",
                            color=0xff0000)
         return em
 
-    def econ_success_deposit(self, user: User, amount) -> disnake.Embed:
+    @staticmethod
+    def econ_success_deposit(user: User, amount) -> disnake.Embed:
         em = disnake.Embed(description=f"წარმატებით შეიტანე ბანკში {amount} ₾",
                            color=0x00ff00)
         em.add_field(name="ბანკი", value=f"{user.bank}")
         em.add_field(name="საფულე", value=f"{user.wallet}")
         return em
 
-    def econ_success_withdraw(self, user: User, amount: int) -> disnake.Embed:
+    @staticmethod
+    def econ_success_withdraw(user: User, amount: int) -> disnake.Embed:
         em = disnake.Embed(description=f"წარმატებით გამოიტანე {amount} ₾ ბანკიდან",
                            color=0x00ff00)
         em.add_field(name="ბანკი", value=f"{user.bank}")
         em.add_field(name="საფულე", value=f"{user.wallet}")
         return em
 
-    def inv_err_item_not_in_shop(self, item_slug: str) -> disnake.Embed:
-        em = disnake.Embed(description=f"{item_slug} არ არსებობს",
+    @staticmethod
+    def econ_success_give(user: User, target: User, amount: int):
+        em = disnake.Embed(color=0x00ff00,
+                           description=f"წარმატებით მიეცი {target.username}'ს {amount} ₾")
+
+        em.add_field(name="შები ბანკი",
+                     value=f"{user.bank}")
+        em.add_field(name="შენი საფულე",
+                     value=f"{user.wallet}")
+        em.add_field(name="შენი XP",
+                     value=f"{user.experience}")
+
+        em.add_field(name=f"{target.username}'ს ბანკი",
+                     value=f"{target.bank}")
+        em.add_field(name=f"{target.username}'ს საფულე",
+                     value=f"{target.wallet}")
+        em.add_field(name=f"{target.username}'ს XP",
+                     value=f"{target.experience}")
+        return em
+
+
+    @staticmethod
+    def inv_err_item_not_in_shop(item_slug: str) -> disnake.Embed:
+        item = Item.new(item_slug)
+        em = disnake.Embed(description=f"{item.name} არ იყიდება",
                            color=0xff0000)
         return em
 
-    def inv_err_item_not_buyable(self, item_slug: str) -> disnake.Embed:
+    @staticmethod
+    def inv_err_item_not_buyable(item_slug: str) -> disnake.Embed:
+        item = Item.new(item_slug)
         em = disnake.Embed(color=0xff0000,
-                           description=f"შენ ვერ იყიდი {item_slug}ს, მხოლოდ გაყიდვაა შესაძლებელი")
+                           description=f"შენ ვერ იყიდი {item.name}ს, მხოლოდ გაყიდვაა შესაძლებელი")
         return em
 
-    def inv_err_item_not_in_inventory(self, item: str):
-        em = disnake.Embed(description=f"შენ არ გაქვს {item}",
+    @staticmethod
+    def inv_err_item_not_in_inventory(item: str):
+        item = Item.new(item)
+        em = disnake.Embed(description=f"შენ არ გაქვს {item.name}",
                            colour=0xff0000)
         return em
 
-    def inv_success_bought_item(self, item: Item) -> disnake.Embed:
-        em = disnake.Embed(description=f"წარმაბით იყიდე {item.type}",
+    @staticmethod
+    def inv_success_bought_item(item: Item) -> disnake.Embed:
+        em = disnake.Embed(description=f"წარმაბით იყიდე {item.name}",
                            color=0x00ff00)
-
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
-
-        em.set_footer(text=f"Item ID: {item.id}")
+        em.set_footer(text=f"ID: {item.id}")
         return em
 
     async def inv_util_inventory(self, target: disnake.Member) -> disnake.Embed:
@@ -127,58 +175,72 @@ class EmbedService:
 
         for item_type, items in item_types.items():
             item_types[item_type].sort(key=lambda x: x.rarity)
+            tot_price  = sum(i.price for i in items)
+
+            em.add_field(name=f"{items[0].emoji} {items[0].name} ─ {len(item_types[item_type])}",
+                         value=f"`ჯამური ფასი`: `{tot_price}` ₾",
             top = item_types[item_type][0]
-            avg_rarity = sum(i.rarity for i in items) / len(items)
-            avg_price  = sum(i.price for i in items) // len(items)
 
             em.add_field(name=f"{EMOJIS.get(item_type, '')}{ITEM_NAMES.get(item_type)}─ {len(item_types[item_type])}",
-                         value=# f"`{top.rarity_string}` - `{top.rarity:.8f}`\n"
-                               # f"`საშუალო იშვიათობა`: `{avg_rarity:.4f}`\n"
-                               f"`საშუალო ფასი`: `{avg_price}` ₾/",
+                         value=f"`ჯამური ფასი`: `{tot_price}` ₾",
                          inline=False)
 
         return em
 
-    def fish(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ წახვედი სათევზაოდ და დაიჭირე {ITEM_NAMES.get(item.type)} {EMOJIS['fishing_rod']}",
+
+    @staticmethod
+    def fish(item: Item, broken: bool) -> disnake.Embed:
+        tool = Item.new("fishing_rod")
+        em = disnake.Embed(description=f"შენ წახვედი სათევზაოდ და დაიჭირე ***{item.name}*** {tool.emoji}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი ანკესი" if broken else ""
         em.add_field(name="ღირებულება",
                      value=f"`{item.price}` ₾")
         em.add_field(name="იშვიათობა",
-                     value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
-        em.set_thumbnail(url=f"{EMOJI_THUMBNAILS.get(item.type, disnake.utils.MISSING)}")
+                     value=f"`{item.rarity_string}`\n")
+        em.add_field(name="იშვიათობა",
+                     value=f"`{item.rarity:.8f}`")
+        em.set_thumbnail(url=item.thumbnail or tool.thumbnail)
         return em
 
-    def hunt(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ წახვედი სანადიროდ და მოინადირე {ITEM_NAMES.get(item.type)} {EMOJIS['hunting_rifle']}",
+    @staticmethod
+    def hunt(item: Item, broken: bool) -> disnake.Embed:
+        tool = Item.new("hunting_rifle")
+        em = disnake.Embed(description=f"შენ წახვედი სანადიროდ და მოინადირე ***{item.name}*** {tool.emoji}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი სანადირო თოფი" if broken else ""
         em.add_field(name="ღირებულება",
                      value=f"`{item.price}` ₾")
         em.add_field(name="იშვიათობა",
-                     value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
-        em.set_thumbnail(url=EMOJI_THUMBNAILS.get(item.type, disnake.utils.MISSING))
+                     value=f"`{item.rarity_string}`\n")
+        em.add_field(name="იშვიათობა",
+                     value=f"`{item.rarity:.8f}`")
+        em.set_thumbnail(url=item.thumbnail or tool.thumbnail)
         return em
 
-    def dig(self, item: Item, broken: bool) -> disnake.Embed:
+    @staticmethod
+    def dig(item: Item, broken: bool) -> disnake.Embed:
+        tool = Item.new("shovel")
         em = disnake.Embed(description=f"შენ გადაწყვიტე ამოგეთხრა სადმე მიწა, ბევრი ოფლის დაღვრის მერე შენ იპოვე "
-                                       f"{item.type} {EMOJIS['shovel']}",
+                                       f"***{item.name}*** {tool.emoji}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი ნიჩაბი" if broken else ""
         em.add_field(name="ღირებულება",
                      value=f"`{item.price}` ₾")
         em.add_field(name="იშვიათობა",
-                     value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
+                     value=f"`{item.rarity_string}`\n")
+        em.add_field(name="იშვიათობა",
+                     value=f"`{item.rarity:.8f}`")
+        em.set_thumbnail(url=item.thumbnail or tool.thumbnail)
         return em
 
-    def sell(self, item: Item) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ წახვედი მარკეტში და გაყიდე შენი {item.type}",
+    @staticmethod
+    def sell(item: Item) -> disnake.Embed:
+        em = disnake.Embed(description=f"შენ გაყიდე {item.type}",
                            color=0x00ff00)
         em.add_field(name="ღირებულება",
                      value=f"`{item.price}` ₾")
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
-        creation_date = datetime.fromtimestamp(item.creation_date).strftime("%d/%m/%Y %H:%M:%S")
-        em.set_footer(text=f"ID: {item.id} | created at: {creation_date}")
+        em.set_footer(text=f"ID: {item.id} | Created at: {item.creation_date}")
         return em

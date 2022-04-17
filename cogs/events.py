@@ -1,4 +1,5 @@
-import random
+import time
+
 import disnake
 from utils import *
 from disnake.ext import commands
@@ -47,10 +48,11 @@ class Events(commands.Cog):
             await message.delete()
 
             embed = disnake.Embed(color=0x2d56a9, description=message.content)
-            id = random.randint(1_000_000_000, 9_999_999_999)
-            embed.set_footer(text=f"confession ID: {id}")
+            id = int(time.time())
+            embed.set_footer(text=f"{id}")
             await self.client.log(f"confession with id: {id} was sent by: {user.username}:{user.id}")
             await message.channel.send(embed=embed)
+            await self.deleted_messages_channel.send(f"confession with id: {id} was sent by: {user.username}:{user.id}")
 
 
     @commands.Cog.listener()
