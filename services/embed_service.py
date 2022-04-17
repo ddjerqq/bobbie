@@ -178,10 +178,11 @@ class EmbedService:
             tot_price  = sum(i.price for i in items)
 
             em.add_field(name=f"{items[0].emoji} {items[0].name} ─ {len(item_types[item_type])}",
-                         value=f"`ჯამური ფასი`: `{tot_price}` ₾",
+                         value=f"`ჯამური ფასი`: `{tot_price}` ₾")
+
             top = item_types[item_type][0]
 
-            em.add_field(name=f"{EMOJIS.get(item_type, '')}{ITEM_NAMES.get(item_type)}─ {len(item_types[item_type])}",
+            em.add_field(name=f"{top.emoji} - {top.name} ─ {len(item_types[item_type])}",
                          value=f"`ჯამური ფასი`: `{tot_price}` ₾",
                          inline=False)
 
