@@ -156,7 +156,7 @@ class Economy(commands.Cog):
         await self.client.db.user_service.update(user)
 
         em = disnake.Embed(
-            description=f"შენ წახვედი სამსახურში და გამოიმუშავე {pay} ₾ <:hammercampfire:960423335437680692>")
+            description=f"წარმატებული დღე!\nშენ წახვედი სამსახურში და გამოიმუშავე `{pay}` ₾ <:hammercampfire:960423335437680692>")
 
         await inter.send(embed=em)
 
