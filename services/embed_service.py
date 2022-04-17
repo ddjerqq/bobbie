@@ -162,7 +162,7 @@ class EmbedService:
         return em
 
     def dig(self, item: Item, broken: bool) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ გადაწყვიტე ამოგეთხრა სადმე და იპოვე {item.type} {EMOJIS['shovel']}",
+        em = disnake.Embed(description=f"შენ გადაწყვიტე ამოგეთხრა სადმე მიწა, ბევრი ოფლის დაღვრის მერე შენ იპოვე {item.type} {EMOJIS['shovel']}",
                            color=0x00ff00 if not broken else 0xff0000)
         em.description += "\nშენ გატეხე შენი ნიჩაბი" if broken else ""
         em.add_field(name="ღირებულება",
