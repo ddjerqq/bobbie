@@ -227,7 +227,7 @@ class EmbedService:
 
     @staticmethod
     def sell(item: Item) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ გაყიდე {item.type}",
+        em = disnake.Embed(description=f"შენ გაყიდე {item.name}{item.emoji}",
                            color=0x00ff00)
         em.add_field(name="ღირებულება",
                      value=f"`{item.price}` ₾")
