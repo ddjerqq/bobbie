@@ -141,7 +141,7 @@ class Item:
     @classmethod
     def item_sell_prices(cls):
         return option_enum({
-            v: k for k, v in cls._ITEM_NAMES.items()
+            f"{v} {cls.PRICES.get(k, 'undefined')} ₾": k for k, v in cls._ITEM_NAMES.items()
         })
 
     def __init__(self, id: int, type: str, rarity: float, owner_id: int | None):
@@ -199,9 +199,9 @@ class Item:
         if 0.0 <= self._rarity <= 0.07:
             return "სულ ახალი"
         elif 0.07 < self._rarity <= 0.15:
-            return "მინიმალურად ნახმარი"
+            return "მინიმალურად გამოყენებული"
         elif 0.15 < self._rarity <= 0.38:
-            return "გამოცდილი"
+            return "ოდნავ გამოყენებული"
         elif 0.38 < self._rarity <= 0.45:
             return "კარგად ნახმარი"
         elif 0.45 < self._rarity <= 1.00:

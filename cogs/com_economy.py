@@ -28,7 +28,7 @@ class Economy(commands.Cog):
         elif amount in ["max", "all", "სულ"]:
             amount = this.wallet
         else:
-            em = self.client.embed_service.econ_err_invalid_amount()
+            em = self.client.embed_service.err_invalid_amount()
             await inter.send(embed=em)
             return
 
@@ -52,7 +52,7 @@ class Economy(commands.Cog):
         elif amount in ["max", "all", "სულ"]:
             amount = this.wallet
         else:
-            em = self.client.embed_service.econ_err_invalid_amount()
+            em = self.client.embed_service.err_invalid_amount()
             await inter.send(embed=em)
             return
 
