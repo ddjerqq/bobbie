@@ -188,11 +188,11 @@ class EmbedService:
 
     @staticmethod
     def inv_success_bought_item(item: Item) -> disnake.Embed:
-        em = disnake.Embed(description=f"წარმტებით იყიდე {item.name}",
+        em = disnake.Embed(description=f"შენ წარმატებით იყიდე {item.name}",
                            color=0x2b693a)
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
-        em.set_footer(text=f"ID: {item.id}")
+        # em.set_footer(text=f"ID: {item.id}")
         return em
 
     async def inv_util_inventory(self, target: disnake.Member) -> disnake.Embed:
