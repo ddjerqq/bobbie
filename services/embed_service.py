@@ -88,13 +88,12 @@ class EmbedService:
 
         em = disnake.Embed(
             title=f"{target.name}'ს ბალანსი")
-        em.set_thumbnail(url=target.avatar.url)
-
+        em.set_thumbnail(url="https://i.imgur.com/7mN9tDJ.png")
         em.add_field(name="ბანკი",
                      value=f"{user.bank}")
         em.add_field(name="საფულე",
                      value=f"{user.wallet}")
-        em.set_footer(text=f"Exp: {user.experience}")
+        em.set_footer(icon_url=target.avatar.url, text=f"Exp: {user.experience}")
 
         return em
 
@@ -239,7 +238,7 @@ class EmbedService:
         tool = Item.new("hunting_rifle")
         em = disnake.Embed(description=f"შენ წახვედი სანადიროდ და მოინადირე **{item.name}** {tool.emoji}",
                            color=0x2b693a if not broken else 0x692b2b)
-        em.description += "\nშენ გატეხე შენი სანადირო თოფი" if broken else ""
+        em.description += "\n**შენ გატეხე შენი სანადირო თოფი! არ დაგავიწყდეს ახლის ყიდვა მაღაზიაში!**" if broken else ""
         em.add_field(name="ღირებულება",
                      value=f"`{item.price}` ₾")
         em.add_field(name="იშვიათობა",
@@ -255,7 +254,7 @@ class EmbedService:
         em = disnake.Embed(description=f"შენ გადაწყვიტე ამოგეთხრა სადმე მიწა, ბევრი ოფლის დაღვრის მერე შენ იპოვე "
                                        f"**{item.name}** {tool.emoji}",
                            color=0x2b693a if not broken else 0x692b2b)
-        em.description += "\nშენ გატეხე შენი ნიჩაბი" if broken else ""
+        em.description += "\n**შენ გატეხე შენი ნიჩაბი! არ დაგავიწყდეს ახლის ყიდვა მაღაზიაში!**" if broken else ""
         em.add_field(name="ღირებულება",
                      value=f"`{item.price}` ₾")
         em.add_field(name="იშვიათობა",
