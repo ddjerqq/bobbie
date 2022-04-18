@@ -10,6 +10,24 @@ class EmbedService:
         self._database = database
 
     @staticmethod
+    def confirmation_needed(action: str) -> disnake.Embed:
+        """
+        გსურთ {action}?
+        ----------------
+        | კი |    | არა |
+        ----------------
+        """
+        em = disnake.Embed(color=0xFFFF00,
+                           description=f"გსურს {action}?")
+        return em
+
+    @staticmethod
+    def cancelled(text: str = "ტრანზაქცია გაუქმდა") -> disnake.Embed:
+        em = disnake.Embed(color=0xff0000,
+                           description=text)
+        return em
+
+    @staticmethod
     def cooldown(action: str, reason: str, retry_after: float | int) -> disnake.Embed:
         """
         :param action: შენ უკვე {action}
@@ -84,7 +102,7 @@ class EmbedService:
         return em
 
     @staticmethod
-    def econ_err_invalid_amount() -> disnake.Embed:
+    def err_invalid_amount() -> disnake.Embed:
         em = disnake.Embed(description=f"შეიყვანე რაოდენობა როგორც რიცხვი, \n"
                                        f"ან დაწერე [max, all, სულ]",
                            color=0xff0000)
@@ -141,15 +159,39 @@ class EmbedService:
         return em
 
     @staticmethod
-    def inv_err_item_not_in_inventory(item: str):
+    def inv_err_item_not_in_inventory(item: str) -> disnake.Embed:
         item = Item.new(item)
         em = disnake.Embed(description=f"შენ არ გაქვს {item.name}",
                            colour=0xff0000)
         return em
 
     @staticmethod
+    def inv_err_not_enough_items(item_type: str, amount_needs: int, amount_has: int) -> disnake.Embed:
+        item = Item.new(item_type)
+        em = disnake.Embed(color=0xff0000,
+                           description=f"შენ არ გაქვს {amount_needs} {item.name},\n"
+                                       f"შენ გაქვს - {amount_has}")
+        return em
+
+    @staticmethod
+    def inv_success_sold_item(item_type: str, amount: int, total_price: int) -> disnake.Embed:
+        item = Item.new(item_type)
+        em = disnake.Embed(color=0x00ff00,
+                           description=f"შენ გაყიდე {amount} ცალი {item.name} {item.emoji}\n"
+                                       f"***ღირებულება*** __{total_price}__ ₾")
+        em.set_thumbnail(item.thumbnail or None)
+        return em
+
+    @staticmethod
+    def inv_success_sold_all_sellables(amount: int, total_price: int) -> disnake.Embed:
+        em = disnake.Embed(color=0x00ff00,
+                           description=f"შენ გაყიდე {amount} ნივთი\n"
+                                       f"***ღირებულება*** __{total_price}__ ₾")
+        return em
+
+    @staticmethod
     def inv_success_bought_item(item: Item) -> disnake.Embed:
-        em = disnake.Embed(description=f"წარმაბით იყიდე {item.name}",
+        em = disnake.Embed(description=f"წარმტებით იყიდე {item.name}",
                            color=0x00ff00)
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
@@ -162,8 +204,9 @@ class EmbedService:
 
         total_price = sum(item.price for item in items)
 
-        em = disnake.Embed(title=f"{user.username}'ის ინვენტარი",
-                           description=f"{len(items)} ნივთი, სულ {total_price} ₾",)
+        em = disnake.Embed(color=0x00ff00,
+                           title=f"{user.username}'ის ინვენტარი",
+                           description=f"__{len(items)}__ ნივთი, სულ __**`{total_price}`**__ ₾",)
 
         item_types: dict[str, list[Item]] = {i: [] for i in set(map(lambda x: x.type, items))}
 
@@ -173,9 +216,9 @@ class EmbedService:
         for item_type, items in item_types.items():
             item_types[item_type].sort(key=lambda x: x.rarity)
             tot_price = sum(i.price for i in items)
-
-            em.add_field(name=f"{items[0].emoji}{items[0].name} ─ {len(item_types[item_type])}",
-                         value=f"`ჯამური ფასი`: `{tot_price}` ₾")
+            tot = len(item_types[item_type])
+            em.add_field(name=f"{items[0].emoji} {items[0].name} ─ {tot}",
+                         value=f"**ფასი ჯამში**: __`{tot_price}`__ ₾")
 
         return em
 
@@ -223,15 +266,4 @@ class EmbedService:
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity:.8f}`")
         em.set_thumbnail(url=item.thumbnail or tool.thumbnail)
-        return em
-
-    @staticmethod
-    def sell(item: Item) -> disnake.Embed:
-        em = disnake.Embed(description=f"შენ გაყიდე {item.name}{item.emoji}",
-                           color=0x00ff00)
-        em.add_field(name="ღირებულება",
-                     value=f"`{item.price}` ₾")
-        em.add_field(name="იშვიათობა",
-                     value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
-        em.set_footer(text=f"ID: {item.id} | Created at: {item.creation_date}")
         return em

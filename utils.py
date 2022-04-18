@@ -16,7 +16,7 @@ _LOG_FILE = r".\logs\logs.yandr"
 
 DEV_TEST = len(sys.argv) == 2 and sys.argv[1] == "--dev-test"
 
-GUILD_IDS = [935886444109631510, 965308417185021982]  # campfire, dev-test
+GUILD_IDS = [965308417185021982 if DEV_TEST else 935886444109631510]  # campfire, dev-test
 
 STATUSES = [
     "მიეც გლახაკთა საჭურჭლე,",

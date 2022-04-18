@@ -32,9 +32,9 @@ class InventorySystemCommands(commands.Cog):
         item.owner_id = inter.author.id
         await self.client.db.item_service.add(item)
 
-        if user.wallet <= price:
+        if user.wallet >= price:
             user.wallet -= price
-        elif user.wallet + user.bank <= price:
+        else:
             price -= user.wallet
             user.wallet = 0
             user.bank -= price
@@ -70,7 +70,7 @@ class InventorySystemCommands(commands.Cog):
         user = await self.client.db.user_service.get(inter.author.id)
 
         tool = tools[-1]
-        broken = random.random() ** 0.2 < tool.rarity
+        broken = random.random() < tool.rarity ** 2
 
         if broken:
             await self.client.db.item_service.delete(tool)
@@ -137,27 +137,78 @@ class InventorySystemCommands(commands.Cog):
             await self.client.log(f"{_error}\n{_error.args}", priority=1)
 
 
-    @commands.slash_command(name="sell", guild_ids=GUILD_IDS, description="გაყიდე ნივთი")
-    async def sell(self, inter: Aci, item: Item.item_sell_prices()):
+    @commands.slash_command(name="sell", guild_ids=GUILD_IDS, description="გაყიდე რაიმე ნივთი")
+    async def sell(self, inter: Aci, item_type: Item.item_sell_prices(), amount: str = "1"):
         user = await self.client.db.user_service.get(inter.author.id)
-        user_items = await self.client.db.item_service.get_all_by_owner_id(user.id)
+        items = await self.client.db.item_service.get_all_by_owner_id(user.id)
+        items = sorted(filter(lambda x: x.type == item_type, items),
+                       key=lambda x: x.rarity, reverse=True)
 
-        if item not in list(map(lambda x: x.type, user_items)):
-            em = self.client.embed_service.inv_err_item_not_in_inventory(item)
+        if not items:
+            em = self.client.embed_service.inv_err_item_not_in_inventory(item_type)
             await inter.send(embed=em)
             return
 
-        items = list(filter(lambda x: x.type == item, user_items))
-        items = sorted(items, key=lambda x: x.rarity)
-        item  = items[-1]
+        if amount.isnumeric():
+            amount = int(amount)
+        elif amount in ["max", "all", "სულ"]:
+            amount = len(items)
+        else:
+            em = self.client.embed_service.err_invalid_amount()
+            await inter.send(embed=em)
+            return
 
-        user.wallet += item.price
-        user.experience += 5
+        if amount > len(items):
+            em = self.client.embed_service.inv_err_not_enough_items(item_type, amount, len(items))
+            await inter.send(embed=em)
+            return
+
+        total_price = 0
+        for idx in range(amount):
+            total_price += items[idx].price
+            await self.client.db.item_service.delete(items[idx])
+
+        user.wallet     += total_price
+        user.experience += 3 * amount
         await self.client.db.user_service.update(user)
-        await self.client.db.item_service.delete(item)
 
-        em = self.client.embed_service.sell(item)
+        em = self.client.embed_service.inv_success_sold_item(item_type, amount, total_price)
+        await inter.send(embed=em)
 
+        em = await self.client.embed_service.econ_util_balance(inter.author)
+        await inter.send(embed=em)
+
+
+    @commands.slash_command(name="sell_all", guild_ids=GUILD_IDS, description="გაყიდე ყველაფერი რაც გასაყიდი გაქვს")
+    async def sell_all(self, inter: Aci):
+        user = await self.client.db.user_service.get(inter.author.id)
+        items = await self.client.db.item_service.get_all_by_owner_id(user.id)
+        items = list(filter(lambda i: not i.buyable, items))
+
+        confirmation_em = self.client.embed_service.confirmation_needed("ყველა ნივთის გაყიდვა?")
+        confirmation = self.client.button_service.YesNoButton(intended_user=inter.author)
+        await inter.send(embed=confirmation_em, view=confirmation)
+        await confirmation.wait()
+
+        if not confirmation.choice:
+            cancelled = self.client.embed_service.cancelled("შენ გააუქმე ყველა ნივთის გაყიდვა")
+            await inter.edit_original_message(embed=cancelled, view=None)
+            return
+
+        total_price = 0
+        for item in items:
+            total_price += item.price
+            await self.client.db.item_service.delete(item)
+
+        user.experience += 3 * len(items)
+        user.wallet += total_price
+
+        await self.client.db.user_service.update(user)
+
+        em = self.client.embed_service.inv_success_sold_all_sellables(len(items), total_price)
+        await inter.edit_original_message(embed=em, view=None)
+
+        em = await self.client.embed_service.econ_util_balance(inter.author)
         await inter.send(embed=em)
 
 

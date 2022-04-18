@@ -7,6 +7,7 @@ from disnake.ext import commands
 from models.database import Database
 
 from services.embed_service import EmbedService
+from services.button_service import Buttons
 
 
 class Client(commands.Bot):
@@ -14,7 +15,9 @@ class Client(commands.Bot):
         super().__init__(*args, **kwargs)
         self._load_extensions()
         self.db = Database()
+        # inject dependencies
         self.embed_service = EmbedService(self.db)
+        self.button_service = Buttons()
 
         self.log_channel: disnake.TextChannel | None  = None
 
