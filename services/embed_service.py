@@ -41,8 +41,7 @@ class EmbedService:
 
     @staticmethod
     def rob_success(target: disnake.Member, stolen: int) -> disnake.Embed:
-        em = disnake.Embed(color=0x00ff00,
-                           description=f"*შენ წარმატებით გაძარცვე* {target.mention}")
+        em = disnake.Embed(color=0x2b693a, description=f"**შენ წარმატებით გაძარცვე** {target.mention}")
         em.description += f"\nმას მოპარე {stolen}₾"
         return em
 
@@ -222,7 +221,7 @@ class EmbedService:
     @staticmethod
     def fish(item: Item, broken: bool) -> disnake.Embed:
         tool = Item.new("fishing_rod")
-        em = disnake.Embed(description=f"შენ წახვედი სათევზაოდ და დაიჭირე ***{item.name}*** {tool.emoji}",
+        em = disnake.Embed(description=f"შენ წახვედი სათევზაოდ და დაიჭირე **{item.name}** {tool.emoji}",
                            color=0x2b693a if not broken else 0x692b2b)
         em.description += "\nშენ გატეხე შენი ანკესი" if broken else ""
         em.add_field(name="ღირებულება",
@@ -237,7 +236,7 @@ class EmbedService:
     @staticmethod
     def hunt(item: Item, broken: bool) -> disnake.Embed:
         tool = Item.new("hunting_rifle")
-        em = disnake.Embed(description=f"შენ წახვედი სანადიროდ და მოინადირე ***{item.name}*** {tool.emoji}",
+        em = disnake.Embed(description=f"შენ წახვედი სანადიროდ და მოინადირე **{item.name}** {tool.emoji}",
                            color=0x2b693a if not broken else 0x692b2b)
         em.description += "\nშენ გატეხე შენი სანადირო თოფი" if broken else ""
         em.add_field(name="ღირებულება",
@@ -253,7 +252,7 @@ class EmbedService:
     def dig(item: Item, broken: bool) -> disnake.Embed:
         tool = Item.new("shovel")
         em = disnake.Embed(description=f"შენ გადაწყვიტე ამოგეთხრა სადმე მიწა, ბევრი ოფლის დაღვრის მერე შენ იპოვე "
-                                       f"***{item.name}*** {tool.emoji}",
+                                       f"**{item.name}** {tool.emoji}",
                            color=0x2b693a if not broken else 0x692b2b)
         em.description += "\nშენ გატეხე შენი ნიჩაბი" if broken else ""
         em.add_field(name="ღირებულება",
