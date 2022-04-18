@@ -119,7 +119,6 @@ class Economy(commands.Cog):
         else:
             await inter.send(embed=em)
 
-
     @commands.slash_command(name="rob", guild_ids=GUILD_IDS, description="გაძარცვე ვინმე, ან მოკვდი მცდელობისას")
     @commands.cooldown(1, 3600, commands.BucketType.user)
     async def rob(self, inter: Aci, target: disnake.Member):
