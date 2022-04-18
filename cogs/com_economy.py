@@ -171,7 +171,7 @@ class Economy(commands.Cog):
 
         em = disnake.Embed(
             description=f"**წარმატებული დღე!**\nშენ წახვედი სამსახურში და გამოიმუშავე `{pay}` ₾ <:hammercampfire"
-                        f":960423335437680692>")
+                        f":960423335437680692>", color=0x2b693a)
         em.set_footer(text="(არ დაგავიწყდეს ფულის ბანკში შეტანა, ბევრი ქურდი დახეტიალობს გარეთ)")
 
         await inter.send(embed=em)
