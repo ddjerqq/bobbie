@@ -10,6 +10,24 @@ class EmbedService:
         self._database = database
 
     @staticmethod
+    def confirmation_needed(action: str) -> disnake.Embed:
+        """
+        გსურთ {action}?
+        ----------------
+        | კი |    | არა |
+        ----------------
+        """
+        em = disnake.Embed(color=0xFFFF00,
+                           description=f"გსურს {action}?")
+        return em
+
+    @staticmethod
+    def cancelled(text: str = "ტრანზაქცია გაუქმდა") -> disnake.Embed:
+        em = disnake.Embed(color=0xff0000,
+                           description=text)
+        return em
+
+    @staticmethod
     def cooldown(action: str, reason: str, retry_after: float | int) -> disnake.Embed:
         """
         :param action: შენ უკვე {action}
@@ -165,7 +183,7 @@ class EmbedService:
         return em
 
     @staticmethod
-    def inv_success_sold_all_sellables(amount: int, total_price: int):
+    def inv_success_sold_all_sellables(amount: int, total_price: int) -> disnake.Embed:
         em = disnake.Embed(color=0x00ff00,
                            description=f"შენ გაყიდე {amount} ნივთი\n"
                                        f"***ღირებულება*** __{total_price}__ ₾")
@@ -173,7 +191,7 @@ class EmbedService:
 
     @staticmethod
     def inv_success_bought_item(item: Item) -> disnake.Embed:
-        em = disnake.Embed(description=f"წარმაბით იყიდე {item.name}",
+        em = disnake.Embed(description=f"წარმტებით იყიდე {item.name}",
                            color=0x00ff00)
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity_string}` - `{item.rarity:.8f}`")
@@ -188,7 +206,7 @@ class EmbedService:
 
         em = disnake.Embed(color=0x00ff00,
                            title=f"{user.username}'ის ინვენტარი",
-                           description=f"__{len(items)}__ ნივთი, სულ __**{total_price}**__ ₾",)
+                           description=f"__{len(items)}__ ნივთი, სულ __**`{total_price}`**__ ₾",)
 
         item_types: dict[str, list[Item]] = {i: [] for i in set(map(lambda x: x.type, items))}
 
@@ -198,9 +216,9 @@ class EmbedService:
         for item_type, items in item_types.items():
             item_types[item_type].sort(key=lambda x: x.rarity)
             tot_price = sum(i.price for i in items)
-
-            em.add_field(name=f"{len(item_types[item_type])} - {items[0].emoji} {items[0].name}",
-                         value=f"**ფასი**: __{tot_price}__ ₾")
+            tot = len(item_types[item_type])
+            em.add_field(name=f"{items[0].emoji} {items[0].name} ─ {tot}",
+                         value=f"**ფასი ჯამში**: __`{tot_price}`__ ₾")
 
         return em
 

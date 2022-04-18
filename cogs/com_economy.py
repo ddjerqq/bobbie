@@ -89,21 +89,36 @@ class Economy(commands.Cog):
             await inter.send(embed=em)
             return
 
+        if amount > 100:
+            em = self.client.embed_service.confirmation_needed(f"{amount} ₾-ის {target.name}-ისთვის მიცემა?")
+            confirmation = self.client.button_service.YesNoButton(intended_user=inter.author)
+            await inter.send(embed=em, view=confirmation)
+            await confirmation.wait()
+
+            if not confirmation.choice:
+                em = self.client.embed_service.cancelled(f"შენ გადაიფიქრე {target.name}'ისთვის {amount} ის მიცემა")
+                await inter.edit_original_message(embed=em, view=None)
+
         if this.wallet >= amount:
             this.wallet -= amount
             other.wallet += amount
-            em = self.client.embed_service.econ_success_give(this, other, amount)
 
         elif this.wallet + this.bank >= amount:
             amount -= this.wallet
             this.wallet = 0
             this.bank -= amount
             other.wallet = amount
-            em = self.client.embed_service.econ_success_give(this, other, amount)
+
 
         await self.client.db.user_service.update(this)
         await self.client.db.user_service.update(other)
-        await inter.send(embed=em)
+
+        em = self.client.embed_service.econ_success_give(this, other, amount)
+        if amount > 100:
+            await inter.edit_original_message(embed=em, view=None)
+        else:
+            await inter.send(embed=em)
+
 
     @commands.slash_command(name="rob", guild_ids=GUILD_IDS, description="გაძარცვე ვინმე, ან მოკვდი მცდელობისას")
     @commands.cooldown(1, 3600, commands.BucketType.user)

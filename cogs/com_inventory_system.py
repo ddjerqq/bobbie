@@ -32,9 +32,9 @@ class InventorySystemCommands(commands.Cog):
         item.owner_id = inter.author.id
         await self.client.db.item_service.add(item)
 
-        if user.wallet <= price:
+        if user.wallet >= price:
             user.wallet -= price
-        elif user.wallet + user.bank <= price:
+        else:
             price -= user.wallet
             user.wallet = 0
             user.bank -= price
@@ -70,7 +70,7 @@ class InventorySystemCommands(commands.Cog):
         user = await self.client.db.user_service.get(inter.author.id)
 
         tool = tools[-1]
-        broken = random.random() ** 3 < tool.rarity
+        broken = random.random() < tool.rarity ** 2
 
         if broken:
             await self.client.db.item_service.delete(tool)
@@ -185,6 +185,16 @@ class InventorySystemCommands(commands.Cog):
         items = await self.client.db.item_service.get_all_by_owner_id(user.id)
         items = list(filter(lambda i: not i.buyable, items))
 
+        confirmation_em = self.client.embed_service.confirmation_needed("ყველა ნივთის გაყიდვა?")
+        confirmation = self.client.button_service.YesNoButton(intended_user=inter.author)
+        await inter.send(embed=confirmation_em, view=confirmation)
+        await confirmation.wait()
+
+        if not confirmation.choice:
+            cancelled = self.client.embed_service.cancelled("შენ გააუქმე ყველა ნივთის გაყიდვა")
+            await inter.edit_original_message(embed=cancelled, view=None)
+            return
+
         total_price = 0
         for item in items:
             total_price += item.price
@@ -196,7 +206,7 @@ class InventorySystemCommands(commands.Cog):
         await self.client.db.user_service.update(user)
 
         em = self.client.embed_service.inv_success_sold_all_sellables(len(items), total_price)
-        await inter.send(embed=em)
+        await inter.edit_original_message(embed=em, view=None)
 
         em = await self.client.embed_service.econ_util_balance(inter.author)
         await inter.send(embed=em)
