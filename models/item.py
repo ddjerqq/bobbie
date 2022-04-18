@@ -121,7 +121,7 @@ class Item:
         "shovel": "<:shovel:964200167001686016>",
         "common_fish": "<:common_fish:964635049859371049>",
         "rare_fish": "<:rare_fish:964635026534842418>",
-        "tropical_fish_": "<:tropical_fish_:964634994742005770>",
+        "tropical_fish": "<:tropical_fish_:964634994742005770>",
         "shark": "<:shark_:964635075922759680>",
         "golden_fish": "<:goldenfish:964514375027286056>",
         "pig": "<:pig_:965295197586079774>",
