@@ -156,7 +156,9 @@ class Economy(commands.Cog):
         await self.client.db.user_service.update(user)
 
         em = disnake.Embed(
-            description=f"წარმატებული დღე!\nშენ წახვედი სამსახურში და გამოიმუშავე `{pay}` ₾ <:hammercampfire:960423335437680692>")
+            description=f"**წარმატებული დღე!**\nშენ წახვედი სამსახურში და გამოიმუშავე `{pay}` ₾ <:hammercampfire"
+                        f":960423335437680692>")
+        em.set_footer(text="(არ დაგავიწყდეს ფულის ბანკში შეტანა, ბევრი ქურდი დახეტიალობს გარეთ)")
 
         await inter.send(embed=em)
 
