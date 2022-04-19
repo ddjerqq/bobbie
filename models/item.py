@@ -112,7 +112,11 @@ class Item:
         "pig": "https://i.imgur.com/v1Qa101.png",
         "deer": "https://i.imgur.com/fGl3N7s.png",
         "wolf": "https://i.imgur.com/k0fRgHl.png",
-        "lion": "https://i.imgur.com/FBOyDvA.png"
+        "lion": "https://i.imgur.com/FBOyDvA.png",
+        "elephant": "https://i.imgur.com/qchItpk.png",
+        "ruby": "https://i.imgur.com/rqOuL5x.png",
+        "sapphire": "https://i.imgur.com/9zrHNnb.png",
+        "amethyst": "https://i.imgur.com/cookhhr.png",
     }
 
     _EMOJI = {
