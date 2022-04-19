@@ -29,7 +29,7 @@ class UserRepository:
             return
 
         await self._cursor.execute("""
-        INSERT INTO users
+        INSERT or IGNORE INTO users
         VALUES(?, ?, ?, ?, ?)
         """, user.to_database)
 
