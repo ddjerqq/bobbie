@@ -48,7 +48,7 @@ class FunCommands(commands.Cog):
             value=f"ID: {target.id}")
         embed.add_field(
             name="დაჯოინდა",
-            value=target.joined_at.strftime("%d-%M-%Y"))
+            value=target.joined_at.strftime("%d-%m-%Y"))
         embed.add_field(
             name=f"{target.name}'ს როლები",
             value=", ".join(map(lambda r: r.name, target.roles)),
