@@ -131,7 +131,10 @@ class Item:
         "pig": "<:pig_:965295197586079774>",
         "deer": "<:deer_:965295197783203870>",
         "wolf": "<:wolf_:964201606763651112>",
-        "lion": "<:lion_:965363845075980308>"
+        "lion": "<:lion_:965363845075980308>",
+        "ruby": "<:ruby_:965920123481358376>",
+        "sapphire": "<:sapphire_:965920195577253888",
+        "amethyst:": ":amethyst_:965922934369681448>"
     }
 
     TOOLS = {"fishing_rod", "hunting_rifle", "shovel"}
