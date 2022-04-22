@@ -47,6 +47,187 @@ class TestView(ui.View):
 
 
 
+class TicTacToeView(ui.View):
+    def __init__(self, player_one: disnake.Member, player_two: disnake.Member, *, timeout: float = 180):
+        super().__init__(timeout=timeout)
+        self._player_one = player_one
+        self._player_two = player_two
+        self.board = [[-1, -1, -1],
+                      [-1, -1, -1],
+                      [-1, -1, -1]]  # type: list[list[int]]
+
+    @ui.button(label=".", style=disnake.ButtonStyle.gray, row=1)
+    async def _button1(self, button: disnake.Button, inter: Mi):
+        if inter.author != self._player_one and inter.author != self._player_two:
+            await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+            return
+        for row in self.board:
+            for cell in row:
+                if cell is None:
+                    continue
+        if inter.author == self._player_one:
+            self.board[0][0] = 0
+            button.label = "X"
+            button.style = disnake.ButtonStyle.green
+        else:
+            self.board[0][0] = 1
+            button.label = "O"
+            button.style = disnake.ButtonStyle.danger
+        button.disabled = True
+
+    @ui.button(label=".", style=disnake.ButtonStyle.gray, row=1)
+    async def _button2(self, button: disnake.Button, inter: Mi):
+        if inter.author != self._player_one and inter.author != self._player_two:
+            await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+            return
+        for row in self.board:
+            for cell in row:
+                if cell is None:
+                    continue
+        if inter.author == self._player_one:
+            self.board[0][1] = 0
+            button.label = "X"
+            button.style = disnake.ButtonStyle.green
+        else:
+            self.board[0][1] = 1
+            button.label = "O"
+            button.style = disnake.ButtonStyle.danger
+        button.disabled = True
+
+    @ui.button(label=".", style=disnake.ButtonStyle.gray, row=1)
+    async def _button3(self, button: disnake.Button, inter: Mi):
+        if inter.author != self._player_one and inter.author != self._player_two:
+            await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+            return
+        for row in self.board:
+            for cell in row:
+                if cell is None:
+                    continue
+        if inter.author == self._player_one:
+            self.board[0][2] = 0
+            button.label = "X"
+            button.style = disnake.ButtonStyle.green
+        else:
+            self.board[0][2] = 1
+            button.label = "O"
+            button.style = disnake.ButtonStyle.danger
+        button.disabled = True
+
+
+    @ui.button(label=".", style=disnake.ButtonStyle.gray, row=2)
+    async def _button4(self, button: disnake.Button, inter: Mi):
+        if inter.author != self._player_one and inter.author != self._player_two:
+            await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+            return
+        for row in self.board:
+            for cell in row:
+                if cell is None:
+                    continue
+        if inter.author == self._player_one:
+            self.board[1][0] = 0
+            button.label = "X"
+            button.style = disnake.ButtonStyle.green
+        else:
+            self.board[1][0] = 1
+            button.label = "O"
+            button.style = disnake.ButtonStyle.danger
+        button.disabled = True
+
+    @ui.button(label=".", style=disnake.ButtonStyle.gray, row=2)
+    async def _button5(self, button: disnake.Button, inter: Mi):
+        if inter.author != self._player_one and inter.author != self._player_two:
+            await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+            return
+        for row in self.board:
+            for cell in row:
+                if cell is None:
+                    continue
+        if inter.author == self._player_one:
+            self.board[1][1] = 0
+            button.label = "X"
+            button.style = disnake.ButtonStyle.green
+        else:
+            self.board[1][1] = 1
+            button.label = "O"
+            button.style = disnake.ButtonStyle.danger
+        button.disabled = True
+
+    @ui.button(label=".", style=disnake.ButtonStyle.gray, row=2)
+    async def _button6(self, button: disnake.Button, inter: Mi):
+        if inter.author != self._player_one and inter.author != self._player_two:
+            await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+            return
+        for row in self.board:
+            for cell in row:
+                if cell is None:
+                    continue
+        if inter.author == self._player_one:
+            self.board[1][2] = 0
+            button.label = "X"
+            button.style = disnake.ButtonStyle.green
+        else:
+            self.board[1][2] = 1
+            button.label = "O"
+            button.style = disnake.ButtonStyle.danger
+        button.disabled = True
+
+
+    @ui.button(label=".", style=disnake.ButtonStyle.gray, row=3)
+    async def _button7(self, button: disnake.Button, inter: Mi):
+        if inter.author != self._player_one and inter.author != self._player_two:
+            await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+            return
+        for row in self.board:
+            for cell in row:
+                if cell is None:
+                    continue
+        if inter.author == self._player_one:
+            self.board[2][0] = 0
+            button.label = "X"
+            button.style = disnake.ButtonStyle.green
+        else:
+            self.board[2][0] = 1
+            button.label = "O"
+            button.style = disnake.ButtonStyle.danger
+        button.disabled = True
+
+    @ui.button(label=".", style=disnake.ButtonStyle.gray, row=3)
+    async def _button8(self, button: disnake.Button, inter: Mi):
+        if inter.author != self._player_one and inter.author != self._player_two:
+            await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+            return
+        for row in self.board:
+            for cell in row:
+                if cell is None:
+                    continue
+        if inter.author == self._player_one:
+            self.board[2][1] = 0
+            button.label = "X"
+            button.style = disnake.ButtonStyle.green
+        else:
+            self.board[2][1] = 1
+            button.label = "O"
+            button.style = disnake.ButtonStyle.danger
+        button.disabled = True
+
+    @ui.button(label=".", style=disnake.ButtonStyle.gray, row=3)
+    async def _button9(self, button: disnake.Button, inter: Mi):
+        if inter.author != self._player_one and inter.author != self._player_two:
+            await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+            return
+        for row in self.board:
+            for cell in row:
+                if cell is None:
+                    continue
+        if inter.author == self._player_one:
+            self.board[2][2] = 0
+            button.label = "X"
+            button.style = disnake.ButtonStyle.green
+        else:
+            self.board[2][2] = 1
+            button.label = "O"
+            button.style = disnake.ButtonStyle.danger
+        button.disabled = True
 
 
 class MyModal(ui.Modal):
@@ -111,6 +292,14 @@ class FeatureTests(commands.Cog):
         modal = MyModal()
         await inter.response.send_modal(modal=modal)
 
+
+    @commands.slash_command(name="tictactoe", guild_ids=GUILD_IDS, description="test features")
+    async def tictactoe(self, inter: Aci, player: disnake.Member):
+        v = TicTacToeView(inter.author, player)
+        await inter.send(view=v)
+        await v.wait()
+
+        await inter.send(v.board)
 
 
 def setup(client):
