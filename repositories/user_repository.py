@@ -10,6 +10,11 @@ class UserRepository:
     async def save_changes(self):
         await self._connection.commit()
 
+    async def get_all(self) -> list[User | None]:
+        await self._cursor.execute("SELECT * FROM users")
+        users = await self._cursor.fetchall()
+        return [User.from_database(tuple(user)) for user in users]
+
     async def get(self, id: int) -> User | None:
         await self._cursor.execute("""
         SELECT * FROM users

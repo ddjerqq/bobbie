@@ -120,10 +120,11 @@ class Economy(commands.Cog):
             await inter.send(embed=em)
 
     @commands.slash_command(name="rob", guild_ids=GUILD_IDS, description="გაძარცვე ვინმე, ან მოკვდი მცდელობისას")
-    @commands.cooldown(1, 3600, commands.BucketType.user)
+    @commands.cooldown(1, 3600 if not DEV_TEST else 1, commands.BucketType.user)
     async def rob(self, inter: Aci, target: disnake.Member):
         this = await self.client.db.user_service.get(inter.author.id)
         other = await self.client.db.user_service.get(target.id)
+        items = await self.client.db.item_service.get_all_by_owner_id(inter.author.id)
 
         if other is None:
             em = self.client.embed_service.rob_err(f"მომხმარებელი არ არის მონაცემთა ბაზაში")
@@ -140,14 +141,23 @@ class Economy(commands.Cog):
 
             em = self.client.embed_service.rob_success_died(target)
 
-        else:
+        elif "knife" in [i.type for i in items]:
             steal_amount = random.randint(other.wallet // 2, other.wallet)
             this.wallet += steal_amount
             other.wallet -= steal_amount
             await self.client.db.user_service.update(other)
             await self.client.db.user_service.update(this)
 
+            knife = sorted(items, key=lambda i: i.rarity, reverse=True)[0]
+
+            if knife.will_break:
+                await self.client.db.item_service.delete(knife)
+
             em = self.client.embed_service.rob_success(target, steal_amount)
+
+        else:
+            em = self.client.embed_service.rob_err(f"შენ ცადე {target.name}'ს გაძარცვა, "
+                                                   f"მაგრამ დანის გარეშე მან სახეში გაგილაწუნა და გაიქცა ")
 
         await inter.send(embed=em)
 
@@ -184,6 +194,11 @@ class Economy(commands.Cog):
         else:
             await self.client.log(_error, priority=1)
 
+
+    @commands.slash_command(name="leaderboards", guild_ids=GUILD_IDS, description="Top 10 users")
+    async def leader_boards(self, inter: Aci):
+        em = await self.client.embed_service.econ_util_leaderboards()
+        await inter.send(embed=em)
 
 
 def setup(client):

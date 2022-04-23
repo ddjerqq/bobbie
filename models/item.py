@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-import time
 import random
+import time
 from datetime import datetime
 
-import disnake.utils
 from disnake.ext.commands import option_enum
 
 # 2004/02/16 10 am
@@ -24,29 +23,31 @@ class Item:
     """
 
     PRICES = {
-        "fishing_rod": 15,
-        "common_fish": 5,
-        "rare_fish": 10,
-        "tropical_fish": 20,
-        "shark": 40,
-        "golden_fish": 50,
+        "fishing_rod"   : 15,
+        "common_fish"   : 5,
+        "rare_fish"     : 10,
+        "tropical_fish" : 20,
+        "shark"         : 40,
+        "golden_fish"   : 50,
 
-        "hunting_rifle": 20,
-        "pig": 5,
-        "deer": 10,
-        "bear": 20,
-        "wolf": 30,
-        "tiger": 40,
-        "lion": 50,
-        "elephant": 60,
+        "hunting_rifle" : 20,
+        "pig"           : 5,
+        "deer"          : 10,
+        "bear"          : 20,
+        "wolf"          : 30,
+        "tiger"         : 40,
+        "lion"          : 50,
+        "elephant"      : 60,
 
-        "shovel": 15,
-        "copper_coin": 1,
-        "emerald": 10,
-        "ruby": 20,
-        "sapphire": 30,
-        "amethyst": 40,
-        "diamond": 50,
+        "shovel"        : 15,
+        "copper_coin"   : 1,
+        "emerald"       : 10,
+        "ruby"          : 20,
+        "sapphire"      : 30,
+        "amethyst"      : 40,
+        "diamond"       : 50,
+
+        "knife"         : 50,
     }
 
     _FISHABLE_WEIGHTS = {
@@ -77,71 +78,74 @@ class Item:
     }
 
     _ITEM_NAMES = {
-        "fishing_rod": "ანკესი",
-        "hunting_rifle": "სანადირო თოფი",
-        "shovel": "ნიჩაბი",
-        "common_fish": "უბრალო თევზი",
-        "rare_fish": "წითელი თევზი",
-        "tropical_fish": "ტროპიკული თევზი",
-        "shark": "ზვიგენი",
-        "golden_fish": "ოქროს თევზი",
-        "pig": "გოჭი",
-        "deer": "ირემი",
-        "bear": "დათვი",
-        "wolf": "მგელი",
-        "tiger": "ვეფხვი",
-        "lion": "ლომი",
-        "elephant": "სპილო",
-        "copper_coin": "სპილენძის მონეტა",
-        "emerald": "ზურმუხტი",
-        "ruby": "ლალი",
-        "sapphire": "ფირუზი",
-        "amethyst": "ამეთვისტო",
-        "diamond": "ბრილიანი"
+        "fishing_rod"   : "ანკესი",
+        "hunting_rifle" : "სანადირო თოფი",
+        "shovel"        : "ნიჩაბი",
+        "common_fish"   : "უბრალო თევზი",
+        "rare_fish"     : "წითელი თევზი",
+        "tropical_fish" : "ტროპიკული თევზი",
+        "shark"         : "ზვიგენი",
+        "golden_fish"   : "ოქროს თევზი",
+        "pig"           : "გოჭი",
+        "deer"          : "ირემი",
+        "bear"          : "დათვი",
+        "wolf"          : "მგელი",
+        "tiger"         : "ვეფხვი",
+        "lion"          : "ლომი",
+        "elephant"      : "სპილო",
+        "copper_coin"   : "სპილენძის მონეტა",
+        "emerald"       : "ზურმუხტი",
+        "ruby"          : "ლალი",
+        "sapphire"      : "ფირუზი",
+        "amethyst"      : "ამეთვისტო",
+        "diamond"       : "ბრილიანი",
+
+        "knife"         : "დანა",
     }
 
     _THUMBNAILS = {
-        "fishing_rod": "https://i.imgur.com/m7HBPHl.png",
-        "hunting_rifle": "https://i.imgur.com/pjtWTSg.png",
-        "shovel": "https://i.imgur.com/Dod0FE4.png",
-        "common_fish": "https://i.imgur.com/I3jU3p7.png",
-        "rare_fish": "https://i.imgur.com/7f90E9p.png",
-        "tropical_fish": "https://i.imgur.com/ZBVZRXw.png",
-        "shark": "https://i.imgur.com/NMeTrjK.png",
-        "golden_fish": "https://i.imgur.com/o2m9RkM.png",
-        "pig": "https://i.imgur.com/v1Qa101.png",
-        "deer": "https://i.imgur.com/fGl3N7s.png",
-        "wolf": "https://i.imgur.com/k0fRgHl.png",
-        "bear": "https://i.imgur.com/4CryBHi.png",
-        "lion": "https://i.imgur.com/FBOyDvA.png",
-        "copper_coin:": "https://i.imgur.com/BR73e8Q.png",
-        "elephant": "https://i.imgur.com/qchItpk.png",
-        "ruby": "https://i.imgur.com/rqOuL5x.png",
-        "sapphire": "https://i.imgur.com/9zrHNnb.png",
-        "amethyst": "https://i.imgur.com/cookhhr.png",
+        "fishing_rod"   : "https://i.imgur.com/m7HBPHl.png",
+        "hunting_rifle" : "https://i.imgur.com/pjtWTSg.png",
+        "shovel"        : "https://i.imgur.com/Dod0FE4.png",
+        "common_fish"   : "https://i.imgur.com/I3jU3p7.png",
+        "rare_fish"     : "https://i.imgur.com/7f90E9p.png",
+        "tropical_fish" : "https://i.imgur.com/ZBVZRXw.png",
+        "shark"         : "https://i.imgur.com/NMeTrjK.png",
+        "golden_fish"   : "https://i.imgur.com/o2m9RkM.png",
+        "pig"           : "https://i.imgur.com/v1Qa101.png",
+        "deer"          : "https://i.imgur.com/fGl3N7s.png",
+        "wolf"          : "https://i.imgur.com/k0fRgHl.png",
+        "bear"          : "https://i.imgur.com/4CryBHi.png",
+        "lion"          : "https://i.imgur.com/FBOyDvA.png",
+        "copper_coin"   : "https://i.imgur.com/BR73e8Q.png",
+        "elephant"      : "https://i.imgur.com/qchItpk.png",
+        "ruby"          : "https://i.imgur.com/rqOuL5x.png",
+        "sapphire"      : "https://i.imgur.com/9zrHNnb.png",
+        "amethyst"      : "https://i.imgur.com/cookhhr.png",
+
     }
 
     _EMOJI = {
-        "fishing_rod": "<:fishingrod:963895429248999454>",
-        "hunting_rifle": "<:huntingrifle:963895472286756945>",
-        "shovel": "<:shovel:964200167001686016>",
-        "common_fish": "<:common_fish:964635049859371049>",
-        "rare_fish": "<:rare_fish:964635026534842418>",
-        "tropical_fish": "<:tropical_fish_:964634994742005770>",
-        "shark": "<:shark_:964635075922759680>",
-        "golden_fish": "<:golden_fish:964514375027286056>",
-        "pig": "<:pig_:965295197586079774>",
-        "deer": "<:deer_:965295197783203870>",
-        "wolf": "<:wolf_:964201606763651112>",
-        "bear:": "<:bear_:965304095546150962>",
-        "lion": "<:lion_:965363845075980308>",
-        "copper_coin":"<:copper_coin_:967416432918933537>",
-        "ruby": "<:ruby_:965920123481358376>",
-        "sapphire": "<:sapphire_:965920195577253888>",
-        "amethyst:": ":amethyst_:965922934369681448>"
+        "fishing_rod"   : "<:fishingrod:963895429248999454>",
+        "hunting_rifle" : "<:huntingrifle:963895472286756945>",
+        "shovel"        : "<:shovel:964200167001686016>",
+        "common_fish"   : "<:common_fish:964635049859371049>",
+        "rare_fish"     : "<:rare_fish:964635026534842418>",
+        "tropical_fish" : "<:tropical_fish_:964634994742005770>",
+        "shark"         : "<:shark_:964635075922759680>",
+        "golden_fish"   : "<:golden_fish:964514375027286056>",
+        "pig"           : "<:pig_:965295197586079774>",
+        "deer"          : "<:deer_:965295197783203870>",
+        "wolf"          : "<:wolf_:964201606763651112>",
+        "bear:"         : "<:bear_:965304095546150962>",
+        "lion"          : "<:lion_:965363845075980308>",
+        "copper_coin"   : ":copper_coin_:967416432918933537>",
+        "ruby"          : "<:ruby_:965920123481358376>",
+        "sapphire"      : "<:sapphire_:965920195577253888>",
+        "amethyst:"     : "<:amethyst_:965922934369681448>"
     }
 
-    TOOLS = {"fishing_rod", "hunting_rifle", "shovel"}
+    TOOLS = {"fishing_rod", "hunting_rifle", "shovel", "knife"}
 
     @classmethod
     def tool_buy_prices(cls):
@@ -156,6 +160,7 @@ class Item:
         })
 
     def __init__(self, id: int, type: str, rarity: float, owner_id: int | None):
+        self._broken = None  # type: bool
         self._id = id
         self.type = type
         self._rarity = rarity
@@ -169,7 +174,7 @@ class Item:
         """
         ts = int(time.time() * 100)
         id = (ts - _GIO_EPOCH) << 22
-        rarity = (random.random() ** 1.5)
+        rarity = random.random() ** 2
 
         return cls(id, type, rarity, None)
 
@@ -230,12 +235,22 @@ class Item:
         return ((self.id >> 22) + _GIO_EPOCH) // 100
 
     @property
+    # TODO datetime and not str
     def creation_date(self) -> str:
         """
         get the creation date of Item, using _GIO_EPOCH as the base.
         :return: str in format YY-mm-dd HH:MM:SS
         """
         return datetime.fromtimestamp(self.creation_epoch).strftime("%Y-%m-%d %H:%M:%S")
+
+    @property
+    def will_break(self) -> bool:
+        """
+        try break the item, return True if the item broke
+        """
+        if self._broken is None:
+            self._broken = random.random() < self._rarity ** 2
+        return self._broken
 
     def __str__(self):
         return f"{self.type:<32} {self.rarity_string} owner: {self.owner_id}"

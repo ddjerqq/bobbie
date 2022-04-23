@@ -97,6 +97,14 @@ class EmbedService:
 
         return em
 
+    async def econ_util_leaderboards(self) -> disnake.Embed:
+        em = disnake.Embed(title="ლიდერბორდი", color=0x00ff00)
+        users = await self._database.user_service.get_all()
+        top_ten = sorted(users, key=lambda u: u.wallet + u.bank, reverse=True)[:10]
+        for idx, user in enumerate(top_ten):
+            em.add_field(name=f"[{idx:02}] {user.username}", value=f"net: {user.wallet + user.bank}", inline=False)
+        return em
+
     @staticmethod
     def err_invalid_amount() -> disnake.Embed:
         em = disnake.Embed(description=f"შეიყვანე რაოდენობა როგორც რიცხვი, \n"

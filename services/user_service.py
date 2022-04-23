@@ -17,7 +17,11 @@ class UserService:
         self._cursor = cursor
         self._user_repository = UserRepository(self._connection, self._cursor)
 
-    async def get(self, id: int) -> User:
+    async def get_all(self) -> list[User | None]:
+        users = await self._user_repository.get_all()
+        return users
+
+    async def get(self, id: int) -> User | None:
         user = await self._user_repository.get(id)
         return user
 
