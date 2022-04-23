@@ -114,6 +114,7 @@ class Item:
         "wolf": "https://i.imgur.com/k0fRgHl.png",
         "bear": "https://i.imgur.com/4CryBHi.png",
         "lion": "https://i.imgur.com/FBOyDvA.png",
+        "copper_coin:": "https://i.imgur.com/BR73e8Q.png",
         "elephant": "https://i.imgur.com/qchItpk.png",
         "ruby": "https://i.imgur.com/rqOuL5x.png",
         "sapphire": "https://i.imgur.com/9zrHNnb.png",
@@ -134,6 +135,7 @@ class Item:
         "wolf": "<:wolf_:964201606763651112>",
         "bear:": "<:bear_:965304095546150962>",
         "lion": "<:lion_:965363845075980308>",
+        "copper_coin":"<:copper_coin_:967416432918933537>",
         "ruby": "<:ruby_:965920123481358376>",
         "sapphire": "<:sapphire_:965920195577253888>",
         "amethyst:": ":amethyst_:965922934369681448>"
