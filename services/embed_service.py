@@ -68,7 +68,7 @@ class EmbedService:
         """
         em = disnake.Embed(description=f"შენ არ გაქვს საკმარისი ფული {where} {_for}",
                            color=0x692b2b)
-        em.description += f"\nშენ გჭირდება {needs} ₾"
+        em.description += f"\nშენ გჭირდება {needs}₾"
         return em
 
     @staticmethod
@@ -89,10 +89,10 @@ class EmbedService:
         em = disnake.Embed(
             title=f"{target.name}'ს ბალანსი")
         em.set_thumbnail(url="https://i.imgur.com/7mN9tDJ.png")
-        em.add_field(name="ბანკი",
-                     value=f"{user.bank}")
-        em.add_field(name="საფულე",
-                     value=f"{user.wallet}")
+        em.add_field(name="ბანკი:",
+                     value=f" {user.bank}₾")
+        em.add_field(name="საფულე:",
+                     value=f" {user.wallet}₾", inline=False)
         em.set_footer(icon_url=target.avatar.url, text=f"Exp: {user.experience}")
 
         return em
