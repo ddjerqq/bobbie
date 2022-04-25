@@ -52,7 +52,7 @@ class Events(commands.Cog):
             embed.set_footer(text=f"{id}")
             await self.client.log(f"confession with id: {id} was sent by: {user.username}:{user.id}")
             await message.channel.send(embed=embed)
-            await self.deleted_messages_channel.send(f"confession with id: {id} was sent by: {user.username}:{user.id}")
+            # await self.deleted_messages_channel.send(f"confession with id: {id} was sent by: {user.username}:{user.id}")
 
 
     @commands.Cog.listener()
