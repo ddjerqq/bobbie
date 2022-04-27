@@ -70,9 +70,8 @@ class InventorySystemCommands(commands.Cog):
         user = await self.client.db.user_service.get(inter.author.id)
 
         tool = tools[-1]
-        broken = random.random() < tool.rarity ** 2
 
-        if broken:
+        if tool.will_break:
             await self.client.db.item_service.delete(tool)
 
         item = Item.random_item(item_type)
@@ -84,11 +83,11 @@ class InventorySystemCommands(commands.Cog):
 
         match tool.type:
             case "fishing_rod":
-                em = self.client.embed_service.fish(item, broken)
+                em = self.client.embed_service.fish(item, tool.will_break)
             case "shovel":
-                em = self.client.embed_service.dig(item, broken)
+                em = self.client.embed_service.dig(item, tool.will_break)
             case "hunting_rifle":
-                em = self.client.embed_service.hunt(item, broken)
+                em = self.client.embed_service.hunt(item, tool.will_break)
             case _:
                 em = disnake.Embed(title="ამ მაგალითის გამოყენება ვერ მოხერხდა", color=0xFF0000)
                 await self.client.log(f"{inter.author.id} tried to use {item_type}", priority=1)

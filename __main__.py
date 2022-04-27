@@ -1,11 +1,11 @@
 # from templates import *  # THIS IS IMPORTANT WE NEED TO INITIALIZE THE OPTIONS FIRST
-import sys
-import disnake
 import asyncio
-from utils import *
-from rgbprint import rgbprint
-from models.client import Client
 
+import disnake
+from rgbprint import rgbprint
+
+from models.client import Client
+from utils import *
 
 client = Client(
     command_prefix=PREFIX,
