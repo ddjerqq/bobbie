@@ -37,23 +37,8 @@ class ApplicationCommands(commands.Cog):
 
     @commands.user_command(name="bal", guild_ids=GUILD_IDS, description="user-ის ბალანსი")
     async def balance(self, inter: Aci, target: disnake.Member):
-        user = await self.client.db.user_service.get(target.id)
-
-        embed = disnake.Embed(
-            title=f"{target.name}'ს ბალანსი",
-            color=0x2d56a9)
-
-        embed.set_thumbnail(url=target.avatar.url)
-
-        embed.add_field(
-            name="ბანკი",
-            value=f"{user.bank}")
-
-        embed.add_field(
-            name="საფულე",
-            value=f"{user.wallet}")
-
-        await inter.send(embed=embed)
+        em = await self.client.embed_service.econ_util_balance(target)
+        await inter.send(embed=em)
 
 
 def setup(client):

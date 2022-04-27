@@ -78,19 +78,26 @@ class EmbedService:
         return em
 
     @staticmethod
+    def econ_err_zero_give():
+        em = disnake.Embed(color=0x692b2b,
+                           description="შენ ვერ გასცემ 0 ₾არს")
+        return em
+
+    @staticmethod
     def econ_err_user_not_found(username: str) -> disnake.Embed:
         em = disnake.Embed(color=0x692b2b,
                            description=f"მომხმარებელი სახელით '{username}' ვერ მოიძებნა!")
         return em
 
-    async def econ_util_balance(self, target: disnake.Member) -> disnake.Embed:
+    async def econ_util_balance(self, target: disnake.Member, /, *, show_bank=False) -> disnake.Embed:
         user = await self._database.user_service.get(target.id)
 
         em = disnake.Embed(
             title=f"{target.name}'ს ბალანსი")
         em.set_thumbnail(url="https://i.imgur.com/7mN9tDJ.png")
-        em.add_field(name="ბანკი:",
-                     value=f" {user.bank}₾")
+        if show_bank:
+            em.add_field(name="ბანკი:",
+                         value=f" {user.bank}₾")
         em.add_field(name="საფულე:",
                      value=f" {user.wallet}₾", inline=False)
         em.set_footer(icon_url=target.avatar.url, text=f"Exp: {user.experience}")
@@ -171,6 +178,10 @@ class EmbedService:
 
     @staticmethod
     def inv_err_not_enough_items(item_type: str, amount_needs: int, amount_has: int) -> disnake.Embed:
+        """
+        შენ არ გაქვს {amount_needs} {item.name}
+        შენ გაქვს - {amount_has}
+        """
         item = Item.new(item_type)
         em = disnake.Embed(color=0x692b2b,
                            description=f"შენ არ გაქვს {amount_needs} {item.name},\n"

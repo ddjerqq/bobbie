@@ -142,6 +142,8 @@ class Item:
         "copper_coin"   : ":copper_coin_:967416432918933537>",
         "ruby"          : "<:ruby_:965920123481358376>",
         "sapphire"      : "<:sapphire_:965920195577253888>",
+        "elephant"      : "<:elephant_:967783490626134016>",
+        "bear"          : "<:bear_:965304095546150962>",
         "amethyst:"     : "<:amethyst_:965922934369681448>"
     }
 
@@ -160,7 +162,7 @@ class Item:
         })
 
     def __init__(self, id: int, type: str, rarity: float, owner_id: int | None):
-        self._broken = None  # type: bool
+        self._broken = None  # type: bool | None
         self._id = id
         self.type = type
         self._rarity = rarity
@@ -235,13 +237,13 @@ class Item:
         return ((self.id >> 22) + _GIO_EPOCH) // 100
 
     @property
-    # TODO datetime and not str
-    def creation_date(self) -> str:
+    def creation_date(self) -> datetime:
         """
         get the creation date of Item, using _GIO_EPOCH as the base.
+        .strftime("%Y-%m-%d %H:%M:%S")
         :return: str in format YY-mm-dd HH:MM:SS
         """
-        return datetime.fromtimestamp(self.creation_epoch).strftime("%Y-%m-%d %H:%M:%S")
+        return datetime.fromtimestamp(self.creation_epoch)
 
     @property
     def will_break(self) -> bool:

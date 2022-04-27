@@ -16,14 +16,14 @@ class Economy(commands.Cog):
     @commands.slash_command(name="balance", guild_ids=GUILD_IDS, description="გაიგე რამდენი ფული გაქვს")
     async def balance(self, inter: Aci, target: disnake.Member = None):
         target = target or inter.author
-        em = await self.client.embed_service.econ_util_balance(target)
+        em = await self.client.embed_service.econ_util_balance(target, show_bank=True)
         await inter.send(embed=em)
 
     @commands.slash_command(name="deposit", guild_ids=GUILD_IDS, description="შეიტანე ფული შენი ბანკის აქაუნთში")
     async def deposit(self, inter: Aci, amount: str):
         this = await self.client.db.user_service.get(inter.author.id)
 
-        if amount.isnumeric():
+        if amount.isnumeric() and int(amount):
             amount = int(amount)
         elif amount in ["max", "all", "სულ"]:
             amount = this.wallet
@@ -47,7 +47,7 @@ class Economy(commands.Cog):
     async def withdraw(self, inter: Aci, amount: str):
         this = await self.client.db.user_service.get(inter.author.id)
 
-        if amount.isnumeric():
+        if amount.isnumeric() and int(amount):
             amount = int(amount)
         elif amount in ["max", "all", "სულ"]:
             amount = this.wallet
@@ -78,6 +78,11 @@ class Economy(commands.Cog):
 
         if this is None or other is None:
             em = self.client.embed_service.econ_err_user_not_found(inter.author.name)
+            await inter.send(embed=em)
+            return
+
+        if amount == 0:
+            em = self.client.embed_service.econ_err_zero_give()
             await inter.send(embed=em)
             return
 
@@ -131,6 +136,9 @@ class Economy(commands.Cog):
 
         elif this == other:
             em = self.client.embed_service.rob_err("შენ ვერ გაძარცვავ შენს თავს")
+
+        elif other.wallet < 10:
+            em = self.client.embed_service.rob_err(f"შენ ვერ გაძარცვავ {target.name}'ს, რადგან მას ჯიბეში კაპეიკი არ უდევს")
 
         elif not random.randint(0, 10):
             other.wallet += this.wallet

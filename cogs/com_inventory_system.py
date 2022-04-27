@@ -1,5 +1,3 @@
-import random
-
 import disnake
 from disnake.ext import commands
 from disnake.ext.commands import errors
@@ -57,7 +55,8 @@ class InventorySystemCommands(commands.Cog):
         em = await self.client.embed_service.inv_util_inventory(inter.author)
         await inter.send(embed=em)
 
-    async def _use(self, inter: Aci, item_type: str):
+    async def _use(self, inter: Aci, item_type: str) -> bool:
+        """use item, return True on success, False on unused item"""
         items = await self.client.db.item_service.get_all_by_owner_id(inter.author.id)
         tools = list(filter(lambda x: x.type == item_type, items))
         tools = sorted(tools, key=lambda x: x.rarity)
@@ -65,7 +64,7 @@ class InventorySystemCommands(commands.Cog):
         if len(tools) == 0:
             em = self.client.embed_service.inv_err_item_not_in_inventory(item_type)
             await inter.send(embed=em)
-            return
+            return False
 
         user = await self.client.db.user_service.get(inter.author.id)
 
@@ -92,12 +91,15 @@ class InventorySystemCommands(commands.Cog):
                 em = disnake.Embed(title="ამ მაგალითის გამოყენება ვერ მოხერხდა", color=0xFF0000)
                 await self.client.log(f"{inter.author.id} tried to use {item_type}", priority=1)
         await inter.send(embed=em)
+        return True
 
     @commands.slash_command(name="fish", guild_ids=GUILD_IDS,
                             description="წადი სათევზაოდ, იქნებ თევზმა ჩაგითრიოს და დაიხრჩო")
     @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def fish(self, inter: Aci):
-        await self._use(inter, "fishing_rod")
+        res = await self._use(inter, "fishing_rod")
+        if not res:
+            self.fish.reset_cooldown(inter)
 
     @fish.error
     async def _fish_error(self, ctx: commands.Context, _error: errors.CommandError):
@@ -107,11 +109,12 @@ class InventorySystemCommands(commands.Cog):
         else:
             await self.client.log(f"{_error}\n{_error.args}", priority=1)
 
-
     @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ და შეეცადე შენი თავი არჩინო")
     @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def hunt(self, inter: Aci):
-        await self._use(inter, "hunting_rifle")
+        res = await self._use(inter, "hunting_rifle")
+        if not res:
+            self.hunt.reset_cooldown(inter)
 
     @hunt.error
     async def _hunt_error(self, ctx: commands.Context, _error: errors.CommandError):
@@ -121,11 +124,12 @@ class InventorySystemCommands(commands.Cog):
         else:
             await self.client.log(f"{_error}\n{_error.args}", priority=1)
 
-
     @commands.slash_command(name="dig", guild_ids=GUILD_IDS, description="გათხარე მიწა")
     @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def dig(self, inter: Aci):
-        await self._use(inter, "shovel")
+        res = await self._use(inter, "shovel")
+        if not res:
+            self.dig.reset_cooldown(inter)
 
     @dig.error
     async def _dig_error(self, ctx: commands.Context, _error: errors.CommandError):
@@ -139,7 +143,8 @@ class InventorySystemCommands(commands.Cog):
     @commands.slash_command(name="sell", guild_ids=GUILD_IDS, description="გაყიდე რაიმე ნივთი")
     async def sell(self, inter: Aci, item_type: Item.item_sell_prices(), amount: str = "1"):
         user = await self.client.db.user_service.get(inter.author.id)
-        items = await self.client.db.item_service.get_all_by_owner_id(user.id)
+        items = await self.client.db.item_service.get_all(user.id)
+        items = filter(lambda x: x.owner_id == inter.author.id, items)
         items = sorted(filter(lambda x: x.type == item_type, items),
                        key=lambda x: x.rarity, reverse=True)
 
@@ -148,7 +153,7 @@ class InventorySystemCommands(commands.Cog):
             await inter.send(embed=em)
             return
 
-        if amount.isnumeric():
+        if amount.isnumeric() and int(amount):
             amount = int(amount)
         elif amount in ["max", "all", "სულ"]:
             amount = len(items)
@@ -174,15 +179,19 @@ class InventorySystemCommands(commands.Cog):
         em = self.client.embed_service.inv_success_sold_item(item_type, amount, total_price)
         await inter.send(embed=em)
 
-        em = await self.client.embed_service.econ_util_balance(inter.author)
+        em = await self.client.embed_service.econ_util_balance(inter.author, show_bank=True)
         await inter.send(embed=em)
-
 
     @commands.slash_command(name="sell_all", guild_ids=GUILD_IDS, description="გაყიდე ყველაფერი რაც გასაყიდი გაქვს")
     async def sell_all(self, inter: Aci):
         user = await self.client.db.user_service.get(inter.author.id)
         items = await self.client.db.item_service.get_all_by_owner_id(user.id)
         items = list(filter(lambda i: not i.buyable, items))
+
+        if not items:
+            em = self.client.embed_service.inv_err_not_enough_items("გასაყიდი", "ნივთები", "0 ნივთი")
+            await inter.send(embed=em)
+            return
 
         confirmation_em = self.client.embed_service.confirmation_needed("ყველა ნივთის გაყიდვა?")
         confirmation = self.client.button_service.YesNoButton(intended_user=inter.author)
@@ -207,7 +216,7 @@ class InventorySystemCommands(commands.Cog):
         em = self.client.embed_service.inv_success_sold_all_sellables(len(items), total_price)
         await inter.edit_original_message(embed=em, view=None)
 
-        em = await self.client.embed_service.econ_util_balance(inter.author)
+        em = await self.client.embed_service.econ_util_balance(inter.author, show_bank=True)
         await inter.send(embed=em)
 
 
