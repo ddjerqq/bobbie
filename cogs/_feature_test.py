@@ -9,8 +9,6 @@ from utils import *
 from models.client import Client
 
 
-
-
 class TestView(ui.View):
     def __init__(self, *, timeout: float = 180, intended_user: disnake.Member = None):
         super().__init__(timeout=timeout)
