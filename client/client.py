@@ -33,7 +33,7 @@ class Client(commands.Bot):
 
 
     def _load_extensions(self) -> None:
-        for cog in os.listdir(f"{PROJECT_PATH}\\cogs"):
+        for cog in os.listdir(f"{PROJECT_PATH}/cogs"):
             if cog.endswith(".py") and not cog.startswith("_"):
                 self.load_extension(f"cogs.{cog[:-3]}")
 
