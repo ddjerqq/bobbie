@@ -1,8 +1,11 @@
 import aiosqlite
-from models.user import User
+from database.models.user import User
 
 
 class UserRepository:
+    """
+    it's your responsibility to commit the changes to the database
+    """
     def __init__(self, connection: aiosqlite.Connection, cursor: aiosqlite.Cursor):
         self._connection = connection
         self._cursor     = cursor
@@ -13,7 +16,7 @@ class UserRepository:
     async def get_all(self) -> list[User | None]:
         await self._cursor.execute("SELECT * FROM users")
         users = await self._cursor.fetchall()
-        return [User.from_database(tuple(user)) for user in users]
+        return [User.from_db(tuple(user)) for user in users]
 
     async def get(self, id: int) -> User | None:
         await self._cursor.execute("""
@@ -24,7 +27,7 @@ class UserRepository:
         data = await self._cursor.fetchone()
 
         if data is not None:
-            user = User.from_database(tuple(data))
+            user = User.from_db(data)
             return user
 
         return None
@@ -37,7 +40,7 @@ class UserRepository:
         await self._cursor.execute("""
         INSERT or IGNORE INTO users
         VALUES(?, ?, ?, ?, ?)
-        """, user.to_database)
+        """, user.db)
 
     async def update(self, user: User) -> None:
         old = await self.get(user.id)

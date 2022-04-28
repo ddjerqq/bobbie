@@ -1,10 +1,11 @@
 # from templates import *  # THIS IS IMPORTANT WE NEED TO INITIALIZE THE OPTIONS FIRST
 import asyncio
+import time
 
 import disnake
 from rgbprint import rgbprint
 
-from models.client import Client
+from client import Client
 from utils import *
 
 client = Client(
@@ -33,5 +34,6 @@ if __name__ == "__main__":
         rgbprint(f"[!!!] {type(e)}\n{e}", color="red")
 
     finally:
-        loop.run_until_complete(asyncio.sleep(0.25))  # allow tasks to finish properly
         loop.close()
+        time.sleep(0.2)
+        exit(0)

@@ -4,7 +4,7 @@ from disnake.ext import commands
 from disnake import ApplicationCommandInteraction as Aci
 
 from utils import *
-from models.client import Client
+from client import Client
 
 
 class FunCommands(commands.Cog):

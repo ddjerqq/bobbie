@@ -4,7 +4,7 @@ from disnake.ext import commands
 from disnake import ApplicationCommandInteraction as Aci
 
 from utils import *
-from models.client import Client
+from client import Client
 
 
 class ApplicationCommands(commands.Cog):
@@ -37,7 +37,7 @@ class ApplicationCommands(commands.Cog):
 
     @commands.user_command(name="bal", guild_ids=GUILD_IDS, description="user-ის ბალანსი")
     async def balance(self, inter: Aci, target: disnake.Member):
-        em = await self.client.embed_service.econ_util_balance(target)
+        em = await self.client.embeds.econ_util_balance(target)
         await inter.send(embed=em)
 
 

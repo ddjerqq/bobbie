@@ -12,18 +12,6 @@ LEAVE_CHANNEL_ID      = 942800528822370315
 
 PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
 
-_LOG_FILE = r".\logs\logs.yandr"
-
 DEV_TEST = len(sys.argv) == 2 and sys.argv[1] == "--dev-test"
 
 GUILD_IDS = [965308417185021982 if DEV_TEST else 935886444109631510]  # campfire, dev-test
-
-STATUSES = [
-    "მიეც გლახაკთა საჭურჭლე,",
-    "ათავისუფლე მონები.",
-    "ddjerqq#2005",
-    "სიკვდილი ყველას გვაშინებს,",
-    "სხვას თუ ჰკვლენ, ცქერა გვწადიან.",
-    "დღეს სტუმარია ეგ ჩემი,",
-    "თუნდ ზღვა ემართოს სისხლისა.",
-]

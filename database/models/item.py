@@ -1,13 +1,11 @@
 from __future__ import annotations
 
 import random
-import time
+import sqlite3
 from datetime import datetime
 
 from disnake.ext.commands import option_enum
-
-# 2004/02/16 10 am
-_GIO_EPOCH = 107691120000
+from database.models.gio_id import Id
 
 
 class Item:
@@ -139,7 +137,7 @@ class Item:
         "wolf"          : "<:wolf_:964201606763651112>",
         "bear:"         : "<:bear_:965304095546150962>",
         "lion"          : "<:lion_:965363845075980308>",
-        "copper_coin"   : ":copper_coin_:967416432918933537>",
+        "copper_coin"   : "<:copper_coin_:967416432918933537>",
         "ruby"          : "<:ruby_:965920123481358376>",
         "sapphire"      : "<:sapphire_:965920195577253888>",
         "elephant"      : "<:elephant_:967783490626134016>",
@@ -162,27 +160,22 @@ class Item:
         })
 
     def __init__(self, id: int, type: str, rarity: float, owner_id: int | None):
-        self._broken = None  # type: bool | None
-        self._id = id
+        self.__broken = None  # type: bool | None
+        self.__id = id
         self.type = type
-        self._rarity = rarity
+        self.__rarity = rarity
         self.owner_id = owner_id
 
     @classmethod
     def new(cls, type: str) -> Item:
-        """
-        Create an item, with a unique id which is generated depending on the timestamp
-        and _GIO_EPOCH, which is the author's birth time.
-        """
-        ts = int(time.time() * 100)
-        id = (ts - _GIO_EPOCH) << 22
+        id = Id.new()
         rarity = random.random() ** 2
 
         return cls(id, type, rarity, None)
 
     @property
     def id(self) -> int:
-        return self._id
+        return self.__id
 
     @property
     def price(self) -> int:
@@ -214,58 +207,60 @@ class Item:
 
     @property
     def rarity_string(self) -> str:
-        if 0.0 <= self._rarity <= 0.07:
+        if 0.0 <= self.__rarity <= 0.07:
             return "სულ ახალი"
-        elif 0.07 < self._rarity <= 0.15:
+        elif 0.07 < self.__rarity <= 0.15:
             return "მინიმალურად გამოყენებული"
-        elif 0.15 < self._rarity <= 0.38:
+        elif 0.15 < self.__rarity <= 0.38:
             return "ოდნავ გამოყენებული"
-        elif 0.38 < self._rarity <= 0.45:
+        elif 0.38 < self.__rarity <= 0.45:
             return "კარგად ნახმარი"
-        elif 0.45 < self._rarity <= 1.00:
+        elif 0.45 < self.__rarity <= 1.00:
             return "დაგლეჯილი"
         else:
-            raise ValueError(f"Invalid rarity: {self._rarity}")
+            raise ValueError(f"Invalid rarity: {self.__rarity}")
 
     @property
     def rarity(self) -> float:
-        return self._rarity
+        return self.__rarity
 
     @property
-    def creation_epoch(self) -> int:
-        """get the creation date of Item, using _GIO_EPOCH as the base."""
-        return ((self.id >> 22) + _GIO_EPOCH) // 100
-
-    @property
-    def creation_date(self) -> datetime:
+    def created_at(self) -> datetime:
         """
         get the creation date of Item, using _GIO_EPOCH as the base.
         .strftime("%Y-%m-%d %H:%M:%S")
-        :return: str in format YY-mm-dd HH:MM:SS
+        :return datetime:
         """
-        return datetime.fromtimestamp(self.creation_epoch)
+        ts = ((self.id >> 22) + Id.EPOCH) // 100
+        return datetime.fromtimestamp(ts)
 
     @property
     def will_break(self) -> bool:
         """
         try break the item, return True if the item broke
         """
-        if self._broken is None:
-            self._broken = random.random() < self._rarity ** 2
-        return self._broken
+        if self.__broken is None:
+            self.__broken = random.random() < self.__rarity ** 2.5
+        return self.__broken
+
+    def __hash__(self):
+        return hash(self.db)
+
+    def __eq__(self, other):
+        return isinstance(other, Item) and self.__id == other.__id
 
     def __str__(self):
         return f"{self.type:<32} {self.rarity_string} owner: {self.owner_id}"
 
     def __repr__(self):
-        return f"Item({self.id=}, {self.type=}, {self.owner_id=}, {self._rarity=}, {self.creation_epoch=})"
+        return f"<{self.__class__} {self.id=} {self.type=} {self.owner_id=} {self.__rarity=}>"
 
     @property
-    def to_database(self) -> tuple[int, str, float, int | None]:
-        return self._id, self.type, self._rarity, self.owner_id
+    def db(self) -> tuple:
+        return self.__id, self.type, self.__rarity, self.owner_id
 
     @classmethod
-    def from_database(cls, data: tuple[int, str, float, int | None]):
+    def from_db(cls, data: tuple | sqlite3.Row) -> Item:
         return cls(*data)
 
     @classmethod

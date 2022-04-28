@@ -1,13 +1,47 @@
 import disnake
 
-from models.item import Item
-from models.user import User
-from models.database import Database
+from database.models.item import Item
+from database.models.user import User
+from database.database import Database
 
 
 class EmbedService:
     def __init__(self, database: Database):
         self._database = database
+
+    @staticmethod
+    def message_delete(message: disnake.Message) -> disnake.Embed:
+        em = disnake.Embed(title=f"{message.author.name}\nID: {message.author.id}",
+                           color=0x2d56a9,
+                           timestamp=disnake.utils.utcnow())
+
+        em.set_thumbnail(url=message.author.avatar.url)
+        em.add_field(name="ჩანელი", value=message.channel.mention, inline=False)
+
+        if message.attachments:
+            em.add_field(
+                name="ათაჩმენტ(ებ)ი",
+                value="\n".join(map(lambda a: a.url, message.attachments)))
+
+        if message.content:
+            em.add_field(
+                name="მესიჯი",
+                value=message.content, inline=False)
+
+        return em
+
+    async def member_leave(self, member: disnake.Member) -> disnake.Embed:
+        user = await self._database.users.get(member.id)
+        em = disnake.Embed(color=0x2d56a9)
+        em.add_field(name="სახელი", value=member.name)
+        em.add_field(name="შემოვიდა", value=member.joined_at)
+        em.add_field(name="exp", value=user.experience)
+        em.add_field(name="bank", value=user.bank)
+        em.add_field(name="wallet", value=user.wallet)
+        em.set_thumbnail(url=member.avatar.url)
+        em.set_footer(text=f"ID {member.id}")
+        await self._database.users.delete(user)
+        return em
 
     @staticmethod
     def confirmation_needed(action: str) -> disnake.Embed:
@@ -34,25 +68,18 @@ class EmbedService:
         :param reason: შენ ისევ შეძლებ {reason}
         :param retry_after: seconds, _error.retry_after
         """
-        embed = disnake.Embed(color=0x692b2b,
-                              description=f"*შენ უკვე {action}*, \n"
-                                          f"შენ ისევ შეძლებ {reason} {(retry_after // 60):.0f} წუთში")
-        return embed
-
-    @staticmethod
-    def rob_success(target: disnake.Member, stolen: int) -> disnake.Embed:
-        em = disnake.Embed(color=0x2b693a, description=f"**შენ წარმატებით გაძარცვე** {target.mention}")
-        em.description += f"\nმას მოპარე {stolen}₾"
+        em = disnake.Embed(color=0x692b2b,
+                           description=f"*შენ უკვე {action}*, \n"
+                                       f"შენ ისევ შეძლებ {reason} {(retry_after // 60):.0f} წუთში")
         return em
 
     @staticmethod
-    def rob_success_died(target: disnake.Member) -> disnake.Embed:
-        em = disnake.Embed(color=0x692b2b, title=f"შენ მოკვდი {target.mention}'ის ძარცვის დროს🤣",
-                           description=f"შენი საფულე გადაეცა {target.name}'ს")
+    def generic_success(*, title: str = None, description: str = None) -> disnake.Embed:
+        em = disnake.Embed(color=0x2b693a, title=title, description=description)
         return em
 
     @staticmethod
-    def rob_err(reason: str) -> disnake.Embed:
+    def generic_error(reason: str) -> disnake.Embed:
         em = disnake.Embed(description=reason,
                            color=0x692b2b)
         return em
@@ -90,7 +117,7 @@ class EmbedService:
         return em
 
     async def econ_util_balance(self, target: disnake.Member, /, *, show_bank=False) -> disnake.Embed:
-        user = await self._database.user_service.get(target.id)
+        user = await self._database.users.get(target.id)
 
         em = disnake.Embed(
             title=f"{target.name}'ს ბალანსი")
@@ -106,10 +133,10 @@ class EmbedService:
 
     async def econ_util_leaderboards(self) -> disnake.Embed:
         em = disnake.Embed(title="ლიდერბორდი", color=0x00ff00)
-        users = await self._database.user_service.get_all()
+        users = await self._database.users.get_all()
         top_ten = sorted(users, key=lambda u: u.wallet + u.bank, reverse=True)[:10]
         for idx, user in enumerate(top_ten):
-            em.add_field(name=f"[{idx:02}] {user.username}", value=f"net: {user.wallet + user.bank}", inline=False)
+            em.add_field(name=f"[{idx + 1:02}] {user.username}", value=f"net: {user.wallet + user.bank}", inline=False)
         return em
 
     @staticmethod
@@ -194,7 +221,9 @@ class EmbedService:
         em = disnake.Embed(color=0x2b693a,
                            description=f"შენ გაყიდე {amount} ცალი {item.name}{item.emoji}\n"
                                        f"ღირებულება: `{total_price}`₾")
+        em.add_field(name="იშვიათობა", value=f"`{item.rarity:.4f} - {item.rarity_string}`")
         em.set_thumbnail(item.thumbnail or None)
+        em.set_footer(text=f"ID: {item.id}")
         return em
 
     @staticmethod
@@ -215,13 +244,13 @@ class EmbedService:
         return em
 
     async def inv_util_inventory(self, target: disnake.Member) -> disnake.Embed:
-        user = await self._database.user_service.get(target.id)
-        items = await self._database.item_service.get_all_by_owner_id(user.id)
+        user = await self._database.users.get(target.id)
+        items = user.items
 
         total_price = sum(item.price for item in items)
 
         em = disnake.Embed(title=f"{user.username}'ის ინვენტარი",
-                           description=f"{len(items)} ნივთი, სულ `{total_price}`₾",)
+                           description=f"{len(items)} ნივთი, სულ `{total_price}`₾", )
 
         item_types: dict[str, list[Item]] = {i: [] for i in set(map(lambda x: x.type, items))}
 

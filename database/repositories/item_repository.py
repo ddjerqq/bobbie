@@ -1,8 +1,11 @@
 import aiosqlite
-from models.item import Item
+from database.models.item import Item
 
 
 class ItemRepository:
+    """
+    it's your responsibility to commit the changes to the database
+    """
     def __init__(self, connection: aiosqlite.Connection, cursor: aiosqlite.Cursor):
         self._connection = connection
         self._cursor = cursor
@@ -13,19 +16,14 @@ class ItemRepository:
     async def get_all(self) -> list[Item | None]:
         await self._cursor.execute("SELECT * FROM items")
         items = await self._cursor.fetchall()
-        return [Item.from_database(tuple(item)) for item in items]
+        return [Item.from_db(tuple(item)) for item in items]
 
     async def get(self, id: int) -> Item | None:
         await self._cursor.execute("""
         SELECT * FROM items 
         WHERE id=?""", (id,))
-
-        item = await self._cursor.fetchone()
-
-        if item is None:
-            return None
-
-        return Item.from_database(tuple(item))
+        data = await self._cursor.fetchone()
+        return data if data is None else Item.from_db(data)
 
     async def add(self, item: Item) -> None:
         exists = await self.get(item.id)
@@ -35,21 +33,14 @@ class ItemRepository:
         await self._cursor.execute("""
         INSERT INTO items
         VALUES(?, ?, ?, ?)
-        """, item.to_database)
+        """, item.db)
 
     async def update(self, item: Item) -> None:
-        old = await self.get(item.id)
-
-        if old is None:
-            await self.add(item)
-            return
-
-        if item.owner_id != old.owner_id:
-            await self._cursor.execute("""
-            UPDATE items 
-            SET owner_id=?
-            WHERE id=?
-            """, (item.owner_id, item.id))
+        await self._cursor.execute("""
+        UPDATE items 
+        SET owner_id=?
+        WHERE id=?
+        """, (item.owner_id, item.id))
 
     async def delete(self, item: Item) -> None:
         await self._cursor.execute("""
