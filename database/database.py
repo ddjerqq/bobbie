@@ -6,7 +6,7 @@ from database.services.user_service import UserService
 
 
 class Database:
-    _db_path = PROJECT_PATH + "\\database\\database.db"
+    _db_path = PROJECT_PATH + "/database/database.db"
 
     def __init__(self):
         self._connection: aiosqlite.Connection | None = None
