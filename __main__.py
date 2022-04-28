@@ -1,6 +1,4 @@
-# from templates import *  # THIS IS IMPORTANT WE NEED TO INITIALIZE THE OPTIONS FIRST
 import asyncio
-import time
 
 import disnake
 from rgbprint import rgbprint
@@ -27,6 +25,8 @@ if __name__ == "__main__":
         else:
             loop.run_until_complete(client.start(TOKEN))
 
+        loop.run_forever()
+
     except KeyboardInterrupt:
         loop.run_until_complete(client.close())
 
@@ -34,6 +34,6 @@ if __name__ == "__main__":
         rgbprint(f"[!!!] {type(e)}\n{e}", color="red")
 
     finally:
+        loop.stop()
         loop.close()
-        time.sleep(0.2)
         exit(0)

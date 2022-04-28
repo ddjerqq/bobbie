@@ -22,11 +22,11 @@ class UserService:
         self._item_repository = ItemRepository(self._connection, self._cursor)
 
     async def get_all(self) -> list[User | None]:
-        items = await self._user_repository.get_all()
+        items = await self._item_repository.get_all()
         users = await self._user_repository.get_all()
 
         for user in users:
-            user.items = list(filter(lambda item: item.user_id == user.id, items))
+            user.items = list(filter(lambda item: item.owner_id == user.id, items))
 
         return users
 
