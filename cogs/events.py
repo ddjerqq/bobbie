@@ -20,7 +20,8 @@ class Events(commands.Cog):
                 user = await self.client.db.users.get(member.id)
 
                 if not isinstance(user, User):
-                    await self.client.db.users.add(member.id, member.name)
+                    user = User.new(member.id, member.name)
+                    await self.client.db.users.add(user)
                     await self.client.log(f"added ({member.id}) {member.name}")
 
     @commands.Cog.listener()
