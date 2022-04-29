@@ -55,14 +55,16 @@ class UserService:
 
         deleted_items = list(filter(lambda i: i not in user.items, old_items))
         new_items = set(user.items) - set(old_items)
+        update_me = set(old_items) - set(new_items) - set(deleted_items)
 
-        for item in old_items:
-            if item in new_items:
-                await self._item_repository.add(item)
-            elif item in deleted_items:
-                await self._item_repository.delete(item)
-            else:
-                await self._item_repository.update(item)
+        for item in deleted_items:
+            await self._item_repository.delete(item)
+
+        for item in new_items:
+            await self._item_repository.add(item)
+
+        for item in update_me:
+            await self._item_repository.update(item)
 
         await self._user_repository.save_changes()
         await self._item_repository.save_changes()

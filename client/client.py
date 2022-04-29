@@ -1,4 +1,5 @@
 import os
+import sys
 from itertools import cycle
 import disnake
 import asyncio
@@ -8,20 +9,29 @@ from disnake.ext import commands
 from database import Database
 from client.embed_service import EmbedService
 from client.button_service import Buttons
-from utils import PROJECT_PATH
+
+
+PROJECT_PATH = os.getcwd()
+DEV_TEST     = len(sys.argv) == 2 and sys.argv[1] == "--dev-test"
+GUILD_IDS    = [965308417185021982, 935886444109631510]
 
 
 class Client(commands.Bot):
+    __TOKEN          = "OTU4MTA3OTA1NzkyNTQ0ODA5.YkIhhQ.YduxqTYY1SVVhQ84C_Ev_WBVC1M"
+    __DEV_TEST_TOKEN = "OTYzNDU3MTI4MzM1NTUyNTUy.YlWXXw.n7uo7VtPt_4VRUDMiaqYYlzWUx0"
+    __PREFIX         = "!"
+
+    DELETE_MESSAGE_LOG    = 939534645798793247
+    CONFESSION_CHANNELS   = [958456199148343436]
+    LOG_CHANNEL_ID        = 958311400047001600
+    LEAVE_CHANNEL_ID      = 942800528822370315
+
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._load_extensions()
-
-        self.db = Database()
-        self.embeds  = EmbedService(self.db)
+        self.db             = Database()
+        self.embeds         = EmbedService(self.db)
         self.button_service = Buttons()
-
-        self.log_channel: disnake.TextChannel | None  = None
-        self.statuses = cycle([
+        self.log_channel    = None  # type: disnake.TextChannel
+        self.statuses       = cycle([
             "მიეც გლახაკთა საჭურჭლე,",
             "ათავისუფლე მონები.",
             "ddjerqq#2005",
@@ -30,7 +40,13 @@ class Client(commands.Bot):
             "დღეს სტუმარია ეგ ჩემი,",
             "თუნდ ზღვა ემართოს სისხლისა.",
         ])
+        self.command_prefix = self.__PREFIX
 
+        super().__init__(*args, **kwargs)
+        self._load_extensions()
+
+    async def start(self) -> None:
+        await super().start(self.__TOKEN if not DEV_TEST else self.__DEV_TEST_TOKEN)
 
     def _load_extensions(self) -> None:
         for cog in os.listdir(f"{PROJECT_PATH}/cogs"):

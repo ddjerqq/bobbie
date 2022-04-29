@@ -1,5 +1,4 @@
 import disnake
-from utils import *
 from disnake.ext import commands
 from client import Client
 from database.models.user import User
@@ -8,9 +7,9 @@ from database.models.user import User
 class Events(commands.Cog):
     def __init__(self, client: Client):
         self.client = client
-        self.confession_channel: disnake.TextChannel | None = None
-        self.deleted_messages_channel: disnake.TextChannel | None = None
-        self.leave_channel: disnake.TextChannel | None = None
+        self.confession_channels      = None  # type: list[disnake.TextChannel]
+        self.deleted_messages_channel = None  # type: disnake.TextChannel
+        self.leave_channel            = None  # type: disnake.TextChannel
 
 
     async def add_or_update_new_users(self):
@@ -28,16 +27,16 @@ class Events(commands.Cog):
     async def on_ready(self):
         await self.client.log("bobbi online")
 
-        self.confession_channel       = self.client.get_channel(CONFESSION_CHANNEL_ID)
-        self.deleted_messages_channel = self.client.get_channel(DELETE_MESSAGE_LOG)
-        self.client.log_channel       = self.client.get_channel(LOG_CHANNEL_ID)
-        self.leave_channel            = self.client.get_channel(LEAVE_CHANNEL_ID)
+        self.confession_channels      = [self.client.get_channel(id) for id in self.client.CONFESSION_CHANNELS]
+        self.deleted_messages_channel = self.client.get_channel(self.client.DELETE_MESSAGE_LOG)
+        self.client.log_channel       = self.client.get_channel(self.client.LOG_CHANNEL_ID)
+        self.leave_channel            = self.client.get_channel(self.client.LEAVE_CHANNEL_ID)
 
         await self.add_or_update_new_users()
 
     @commands.Cog.listener()
     async def on_message(self, message: disnake.Message):
-        if message.channel.id == CONFESSION_CHANNEL_ID:
+        if message.channel.id in self.client.CONFESSION_CHANNELS:
             await message.delete()
             embed = disnake.Embed(color=0x2d56a9, description=message.content)
             await message.channel.send(embed=embed)
@@ -53,8 +52,8 @@ class Events(commands.Cog):
                      "!slap", "!popcorn"]
 
         if message.author == self.client.user: return
-        if message.channel.id == CONFESSION_CHANNEL_ID: return
-        if message.channel.id == DELETE_MESSAGE_LOG: return
+        if message.channel.id in self.client.CONFESSION_CHANNELS: return
+        if message.channel.id == self.client.DELETE_MESSAGE_LOG: return
         if any(message.content.startswith(w) for w in whitelist): return
 
         em = self.client.embeds.message_delete(message)

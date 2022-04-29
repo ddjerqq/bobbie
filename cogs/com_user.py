@@ -3,8 +3,7 @@ import disnake
 from disnake.ext import commands
 from disnake import ApplicationCommandInteraction as Aci
 
-from utils import *
-from client import Client
+from client import *
 
 
 class ApplicationCommands(commands.Cog):

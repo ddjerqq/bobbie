@@ -4,10 +4,8 @@ import disnake
 from rgbprint import rgbprint
 
 from client import Client
-from utils import *
 
 client = Client(
-    command_prefix=PREFIX,
     help_command=None,
     intents=disnake.Intents.all(),
     case_insensitive=True,
@@ -20,10 +18,7 @@ if __name__ == "__main__":
     try:
         loop.run_until_complete(client.db.ainit())
 
-        if DEV_TEST:
-            loop.run_until_complete(client.start(DEV_TEST_TOKEN))
-        else:
-            loop.run_until_complete(client.start(TOKEN))
+        loop.run_until_complete(client.start())
 
         loop.run_forever()
 

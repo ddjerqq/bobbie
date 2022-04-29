@@ -253,7 +253,7 @@ class Item:
         return f"{self.type:<32} {self.rarity_string} owner: {self.owner_id}"
 
     def __repr__(self):
-        return f"<{self.__class__} {self.id=} {self.type=} {self.owner_id=} {self.__rarity=}>"
+        return f"<Item id={self.id} type={self.type} owner={self.owner_id} rarity={self.__rarity}>"
 
     @property
     def db(self) -> tuple:

@@ -39,7 +39,8 @@ class Tasks(commands.Cog):
                         user.username = member.name
                         await self.client.db.users.update(user)
                 elif user is None:
-                    await self.client.db.users.add(member.id, member.name)
+                    user = User.new(member.id, member.name)
+                    await self.client.db.users.add(user)
                     await self.client.log(f"added ({member.id}) {member.name}")
 
 

@@ -3,8 +3,7 @@ from disnake.ext import commands
 from disnake.ext.commands import errors
 from disnake import ApplicationCommandInteraction as Aci
 
-from utils import *
-from client import Client
+from client import *
 from database.models.item import Item
 
 

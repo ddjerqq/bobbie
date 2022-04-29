@@ -5,8 +5,7 @@ from disnake.ext import commands
 from disnake.ext.commands import errors
 from disnake import ApplicationCommandInteraction as Aci
 
-from utils import *
-from client import Client
+from client import *
 
 
 class Economy(commands.Cog):
@@ -166,7 +165,7 @@ class Economy(commands.Cog):
             knife = sorted(items, key=lambda i: i.rarity, reverse=True)[0]
 
             if knife.will_break:
-                await self.client.db.item_service.delete(knife)
+                this.items.remove(knife)
 
             em = self.client.embeds.generic_success(
                 description=f"**შენ წარმატებით გაძარცვე** {target.mention}\nმას მოპარე {steal_amount}₾"
