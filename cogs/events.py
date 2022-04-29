@@ -57,7 +57,10 @@ class Events(commands.Cog):
         if any(message.content.startswith(w) for w in whitelist): return
 
         em = self.client.embeds.message_delete(message)
-        await self.deleted_messages_channel.send(embed=em)
+        try:
+            await self.deleted_messages_channel.send(embed=em)
+        except AttributeError:
+            pass
 
     @commands.Cog.listener()
     async def on_member_remove(self, member: disnake.Member):
