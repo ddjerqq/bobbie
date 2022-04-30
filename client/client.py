@@ -13,7 +13,11 @@ from client.button_service import Buttons
 
 PROJECT_PATH = os.getcwd()
 DEV_TEST     = len(sys.argv) == 2 and sys.argv[1] == "--dev-test"
-GUILD_IDS    = [965308417185021982, 935886444109631510]
+GUILD_IDS    = None if not DEV_TEST else [965308417185021982]
+# 965308417185021982
+# 935886444109631510
+# 840836206483734530
+# 913003554225131530
 
 
 class Client(commands.Bot):
