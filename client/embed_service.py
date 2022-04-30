@@ -31,16 +31,18 @@ class EmbedService:
         return em
 
     async def member_leave(self, member: disnake.Member) -> disnake.Embed:
-        user = await self._database.users.get(member.id)
         em = disnake.Embed(color=0x2d56a9)
         em.add_field(name="სახელი", value=member.name)
         em.add_field(name="შემოვიდა", value=member.joined_at)
-        em.add_field(name="exp", value=user.experience)
-        em.add_field(name="bank", value=user.bank)
-        em.add_field(name="wallet", value=user.wallet)
         em.set_thumbnail(url=member.avatar.url)
-        em.set_footer(text=f"ID {member.id}")
-        await self._database.users.delete(user)
+        em.set_footer(text=f"ID: {member.id}")
+
+        user = await self._database.users.get(member.id)
+        if user is not None:
+            em.add_field(name="exp", value=user.experience)
+            em.add_field(name="bank", value=user.bank)
+            em.add_field(name="wallet", value=user.wallet)
+            await self._database.users.delete(user)
         return em
 
     @staticmethod
