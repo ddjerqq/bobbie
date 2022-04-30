@@ -37,7 +37,7 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: disnake.Message):
-        if message.channel.id in self.client.CONFESSION_CHANNELS:
+        if message.channel.id in self.client.CONFESSION_CHANNELS and message.author != self.client.user:
             await message.delete()
             embed = disnake.Embed(color=0x2d56a9, description=message.content)
             await message.channel.send(embed=embed)
