@@ -23,7 +23,7 @@ GUILD_IDS    = None if not DEV_TEST else [965308417185021982]
 class Client(commands.Bot):
     __TOKEN          = "OTU4MTA3OTA1NzkyNTQ0ODA5.YkIhhQ.YduxqTYY1SVVhQ84C_Ev_WBVC1M"
     __DEV_TEST_TOKEN = "OTYzNDU3MTI4MzM1NTUyNTUy.YlWXXw.n7uo7VtPt_4VRUDMiaqYYlzWUx0"
-    __PREFIX         = "!"
+    PREFIX           = "!"
 
     DELETE_MESSAGE_LOG    = 939534645798793247
     CONFESSION_CHANNELS   = [958456199148343436]
@@ -44,10 +44,12 @@ class Client(commands.Bot):
             "დღეს სტუმარია ეგ ჩემი,",
             "თუნდ ზღვა ემართოს სისხლისა.",
         ])
-        self.command_prefix = self.__PREFIX
+        self.command_prefix = self.PREFIX
+        self.wordle_words   = []  # type: list[str]
 
         super().__init__(*args, **kwargs)
         self._load_extensions()
+        self._load_words()
 
     async def start(self) -> None:
         await super().start(self.__TOKEN if not DEV_TEST else self.__DEV_TEST_TOKEN)
@@ -57,6 +59,9 @@ class Client(commands.Bot):
             if cog.endswith(".py") and not cog.startswith("_"):
                 self.load_extension(f"cogs.{cog[:-3]}")
 
+    def _load_words(self) -> None:
+        with open(f"{PROJECT_PATH}/assets/unverified_words.txt", encoding="utf-8") as f:
+            self.wordle_words = [w.strip() for w in f.readlines() if w]
 
     async def close(self):
         await self.log("cancelling tasks")

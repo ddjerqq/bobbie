@@ -1,9 +1,13 @@
 import asyncio
+import warnings
 
 import disnake
 from rgbprint import rgbprint
 
 from client import Client
+
+
+warnings.filterwarnings("ignore")
 
 client = Client(
     help_command=None,

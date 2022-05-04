@@ -313,3 +313,48 @@ class EmbedService:
                      value=f"`{item.rarity:.8f}`")
         em.set_thumbnail(url=item.thumbnail or tool.thumbnail)
         return em
+
+
+    @staticmethod
+    def wordle_grid(grid: list[list[int]],
+                    /,
+                    *,
+                    has: set[str] = None,
+                    hasnt: set[str] = None,
+                    index: dict[int, str] = None,
+                    author: disnake.Member = None) -> disnake.Embed:
+        grid_emoji = {
+            -1: "🔳",
+            0: "⬛",
+            1: "🟨",
+            2: "🟩",
+        }
+
+        em = disnake.Embed(color=0x0f0f0f, title=f"GeoWordle {author.name}")
+        desc = ""
+
+        for row in grid:
+            for cell in row:
+                desc += grid_emoji[cell]
+            desc += "\n"
+
+        em.description = desc + "\n"
+
+        if has:
+            em.add_field(name="სიტყვას აქვს:",
+                         value='`' + ', '.join(has) + '`',
+                         inline=False)
+        if hasnt:
+            em.add_field(name="სიტყვას არ აქვს:",
+                         value='`' + ', '.join(hasnt) + '`',
+                         inline=False)
+        if index:
+            footer = ["_", "_", "_", "_", "_"]
+            for idx, char in index.items():
+                footer[idx] = char
+
+            em.add_field(name="სიტყვა: ",
+                         value='`' + " ".join(footer) + '`',
+                         inline=False)
+
+        return em

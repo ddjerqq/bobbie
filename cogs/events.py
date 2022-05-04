@@ -3,6 +3,8 @@ from disnake.ext import commands
 from client import Client
 from database.models.user import User
 
+from string import punctuation
+
 
 class Events(commands.Cog):
     def __init__(self, client: Client):
@@ -44,7 +46,8 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: disnake.Member):
-        await self.client.db.users.add(member.id, member.name)
+        user = User.new(member.id, member.name)
+        await self.client.db.users.add(user)
         await self.client.log(f"added ({member.id}) {member.name}")
 
     @commands.Cog.listener()

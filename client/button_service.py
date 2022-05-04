@@ -34,3 +34,42 @@ class Buttons:
                     self.choice = False
                     self.stop()
 
+
+    class YesNoIdk(ui.View):
+        """
+        Yes Idk No Button \n
+        False - No \n
+        None  - Idk \n
+        True  - Yes \n
+        """
+        def __init__(self, *, timeout: float = 180, intended_user: disnake.Member = None):
+            super().__init__(timeout=timeout)
+            self._intended_user = intended_user
+            self.choice = None
+
+        @ui.button(label="კი", style=disnake.ButtonStyle.green)
+        async def _yes(self, _: disnake.Button, inter: Mi):
+            if self._intended_user is not None:
+                if inter.author != self._intended_user:
+                    await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+                else:
+                    self.choice = True
+                    self.stop()
+
+        @ui.button(label="არვიცი", style=disnake.ButtonStyle.blurple)
+        async def _idk(self, _: disnake.Button, inter: Mi):
+            if self._intended_user is not None:
+                if inter.author != self._intended_user:
+                    await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+                else:
+                    self.choice = None
+                    self.stop()
+
+        @ui.button(label="არა", style=disnake.ButtonStyle.danger)
+        async def _no(self, _: disnake.Button, inter: Mi):
+            if self._intended_user is not None:
+                if inter.author != self._intended_user:
+                    await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
+                else:
+                    self.choice = False
+                    self.stop()

@@ -196,6 +196,16 @@ class Item:
         return self._EMOJI.get(self.type, "")
 
     @property
+    def emoji_id(self) -> int | None:
+        """get the emoji id of this item type, if it is missing, then this will return None"""
+        em = self._EMOJI.get(self.type, None)
+        if em is not None:
+            em = em.split(":")[3]
+            em = em.split(">")[0]
+            em = int(em)
+        return em
+
+    @property
     def thumbnail(self) -> str | None:
         """get the item's thumbnail. if its missing, returns None"""
         return self._THUMBNAILS.get(self.type, None)
