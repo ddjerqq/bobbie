@@ -33,12 +33,8 @@ class UserRepository:
         return None
 
     async def add(self, user: User) -> None:
-        old = await self.get(user.id)
-        if old is not None:
-            return
-
         await self._cursor.execute("""
-        INSERT or IGNORE INTO users
+        INSERT OR IGNORE INTO users
         VALUES(?, ?, ?, ?, ?)
         """, user.db)
 

@@ -6,6 +6,7 @@ from disnake.ext.commands import errors
 from disnake import ApplicationCommandInteraction as Aci
 
 from client import *
+from database.models.item import Item
 
 
 class Economy(commands.Cog):
@@ -151,7 +152,7 @@ class Economy(commands.Cog):
             await self.client.db.users.update(other)
 
             em = self.client.embeds.generic_success(
-                title=f"შენ მოკვდი {target.mention}'ის ძარცვის დროს🤣",
+                title=f"შენ მოკვდი {target.name}'ის ძარცვის დროს🤣",
                 description=f"შენი საფულე გადაეცა {target.name}'ს"
             )
 
@@ -168,7 +169,7 @@ class Economy(commands.Cog):
                 this.items.remove(knife)
 
             em = self.client.embeds.generic_success(
-                description=f"**შენ წარმატებით გაძარცვე** {target.mention}\nმას მოპარე {steal_amount}₾"
+                description=f"**შენ გაძარცვე** {target.mention}\nმას მოპარე {steal_amount}₾"
             )
 
         else:
@@ -216,6 +217,29 @@ class Economy(commands.Cog):
     async def leader_boards(self, inter: Aci):
         em = await self.client.embeds.econ_util_leaderboards()
         await inter.send(embed=em)
+
+
+    @commands.slash_command(name="starter_pack", guild_ids=GUILD_IDS, description="მიიღე დამწყების პეკი")
+    async def starter_pack(self, inter: Aci):
+        user = await self.client.db.users.get(inter.author.id)
+
+        if user.experience > 50:
+            em = self.client.embeds.generic_error("შენ უკვე გაქვს მიღებული დამწყების პეკი")
+            await inter.send(embed=em)
+            return
+
+        user.bank += random.randint(1_000, 10_000)
+        user.experience += 50
+        items = [Item.random_item() for _ in range(5)]
+        user.items = items
+
+        await self.client.db.users.update(user)
+
+        em1 = self.client.embeds.generic_success(title="კეთილი იყოს შენი მოსვლა!",
+                                                 description="შენ მიიღე დამწყების პეკი")
+
+        em2 = await self.client.embeds.econ_util_balance(inter.author, show_bank=True)
+        await inter.send(embeds=[em1, em2])
 
 
 def setup(client):

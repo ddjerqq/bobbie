@@ -37,12 +37,12 @@ class EmbedService:
         em.set_thumbnail(url=member.avatar.url)
         em.set_footer(text=f"ID: {member.id}")
 
-        user = await self._database.users.get(member.id)
-        if user is not None:
-            em.add_field(name="exp", value=user.experience)
-            em.add_field(name="bank", value=user.bank)
-            em.add_field(name="wallet", value=user.wallet)
-            await self._database.users.delete(user)
+        # user = await self._database.users.get(member.id)
+        # if user is not None:
+        #     em.add_field(name="exp", value=user.experience)
+        #     em.add_field(name="bank", value=user.bank)
+        #     em.add_field(name="wallet", value=user.wallet)
+        #     await self._database.users.delete(user)
         return em
 
     @staticmethod
@@ -76,7 +76,7 @@ class EmbedService:
         return em
 
     @staticmethod
-    def generic_success(*, title: str = None, description: str = None) -> disnake.Embed:
+    def generic_success(*, title: str = "წარმატება!", description: str = None) -> disnake.Embed:
         em = disnake.Embed(color=0x2b693a, title=title, description=description)
         return em
 

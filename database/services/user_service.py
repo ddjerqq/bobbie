@@ -32,7 +32,7 @@ class UserService:
 
     async def get(self, id: int) -> User | None:
         items = await self._item_repository.get_all()
-        user = await self._user_repository.get(id)
+        user  = await self._user_repository.get(id)
 
         if user is not None:
             user.items = list(filter(lambda item: item.owner_id == user.id, items))

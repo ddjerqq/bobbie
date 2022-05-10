@@ -1,3 +1,5 @@
+import random
+
 import disnake
 from disnake.ext import commands
 from disnake.ext.commands import errors
@@ -70,7 +72,7 @@ class InventorySystemCommands(commands.Cog):
         if tool.will_break:
             user.items.remove(tool)
 
-        item = Item.random_item(item_type)
+        item = Item.tool_use_result(item_type)
         item.owner_id = inter.author.id
         user.experience += 3
         user.items.append(item)

@@ -274,7 +274,7 @@ class Item:
         return cls(*data)
 
     @classmethod
-    def random_item(cls, tool_type: str) -> Item:
+    def tool_use_result(cls, tool_type: str) -> Item:
         """
         generate a random item from the given type of the tool.
         :param tool_type: the type of the tool which is used to acquire the item
@@ -290,8 +290,14 @@ class Item:
             case _:
                 raise ValueError(f"item type '{tool_type}' is not a valid too, must be one of {cls.TOOLS}")
 
-        random_type = random.choices(list(group.keys()),
-                                     weights=list(group.values()),
-                                     k=1)[0]
+        random_type = random.choice(list(group.keys()))
 
+        return cls.new(random_type)
+
+    @classmethod
+    def random_item(cls) -> Item:
+        """
+        generate a random item
+        """
+        random_type = random.choice(list(cls.PRICES.keys()))
         return cls.new(random_type)
