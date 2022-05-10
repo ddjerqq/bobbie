@@ -15,7 +15,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="buy", guild_ids=GUILD_IDS, description="იყიდე რაიმე ნივთი მაღაზიიდან")
-    @commands.cooldown(3, 600 if not DEV_TEST else 1, commands.BucketType.user)
+    @commands.cooldown(5, 600 if not DEV_TEST else 1, commands.BucketType.user)
     async def buy(self, inter: Aci, item: Item.tool_buy_prices()):
         user = await self.client.db.users.get(inter.author.id)
         item = Item.new(item)
@@ -94,7 +94,7 @@ class InventorySystemCommands(commands.Cog):
 
     @commands.slash_command(name="fish", guild_ids=GUILD_IDS,
                             description="წადი სათევზაოდ, იქნებ თევზმა ჩაგითრიოს და დაიხრჩო")
-    @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
+    @commands.cooldown(3, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def fish(self, inter: Aci):
         res = await self._use(inter, "fishing_rod")
         if not res:
@@ -109,7 +109,7 @@ class InventorySystemCommands(commands.Cog):
             await self.client.log(f"{_error}\n{_error.args}", priority=1)
 
     @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ და შეეცადე შენი თავი არჩინო")
-    @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
+    @commands.cooldown(3, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def hunt(self, inter: Aci):
         res = await self._use(inter, "hunting_rifle")
         if not res:
@@ -124,7 +124,7 @@ class InventorySystemCommands(commands.Cog):
             await self.client.log(f"{_error}\n{_error.args}", priority=1)
 
     @commands.slash_command(name="dig", guild_ids=GUILD_IDS, description="გათხარე მიწა")
-    @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
+    @commands.cooldown(3, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def dig(self, inter: Aci):
         res = await self._use(inter, "shovel")
         if not res:
