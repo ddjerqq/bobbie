@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import random
-import sqlite3
 from datetime import datetime
 
 from database.id import Id
@@ -22,9 +20,9 @@ class Item:
     """
 
     def __init__(self, id: int, type: ItemType, rarity: Rarity, owner_id: int | None):
-        self.__id = id
-        self.type = type
-        self.rarity = rarity
+        self.__id     = id
+        self.type     = type
+        self.rarity   = rarity
         self.owner_id = owner_id
 
     @property
@@ -33,8 +31,8 @@ class Item:
 
     @property
     def price(self) -> int:
-        p = ItemPrice[self.type.name].value
-        p += 1 / self.rarity
+        p  = ItemPrice[self.type.name].value
+        p += 1 / self.rarity.value
         return round(p)
 
     @property
@@ -70,20 +68,23 @@ class Item:
 
     @property
     def name(self) -> str:
-        """get the item's name"""
+        """get the item's name ქართულად"""
         return ItemName[self.type.name].value
 
     @property
     def created_at(self) -> datetime:
         """
         get the creation datetime of Item.
-        .strftime("%Y-%m-%d %H:%M:%S")
-        :return datetime:
+        use user.created_at.strftime("%Y-%m-%d %H:%M:%S")
         """
         return Id.created_at(self.__id)
 
+    @property
+    def db_dict(self) -> dict:
+        return {"id": self.id, "type": self.type.name.lower(), "rarity": self.rarity.value, "owner_id": self.owner_id}
+
     def __hash__(self):
-        return hash(self.db)
+        return hash(self.__id)
 
     def __eq__(self, other):
         return isinstance(other, Item) and self.__id == other.__id
@@ -93,15 +94,3 @@ class Item:
 
     def __repr__(self):
         return f"<Item id={self.id} type={self.type.name} owner={self.owner_id} rarity={self.rarity!r}>"
-
-    # TODO make this return a dict
-    @property
-    def db(self) -> tuple:
-        return self.__id, self.type, self.__rarity, self.owner_id
-
-    # TODO factory pattern
-    @classmethod
-    def random_item(cls) -> Item:
-        """generate a random item"""
-        random_type = random.choice(list(iter(ItemType)))
-        return cls.new(random_type)

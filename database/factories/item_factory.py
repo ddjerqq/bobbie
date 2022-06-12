@@ -11,6 +11,9 @@ from database.rarity import Rarity
 class ItemFactory:
     @classmethod
     def new(cls, item_type: ItemType) -> Item:
+        """
+        create a new item with a random id, rarity and no owner id
+        """
         id = Id.new()
         rarity = Rarity.new()
         return Item(id, item_type, rarity, None)
