@@ -5,7 +5,6 @@ from disnake.ext import commands
 from disnake import ApplicationCommandInteraction as Aci
 
 from database.models.item import Item
-from client import *
 
 
 class TestView(ui.View):

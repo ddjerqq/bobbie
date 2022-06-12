@@ -1,6 +1,6 @@
 import disnake
 from disnake.ext import commands
-from client import Client
+from client.client import Client
 from database.factories.user_factory import UserFactory
 from database.models.user import User
 

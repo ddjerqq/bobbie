@@ -1,13 +1,10 @@
 import os
-import sys
 import toml
 import pathlib
 import asyncio
-from typing import Any
-from rgbprint import *
 from disnake.ext import commands
 
-from client.logger import Logger
+from logger import Logger
 from database import Database
 from services.embed_services.embed_service import EmbedService
 from services.view_services.button_service import Buttons

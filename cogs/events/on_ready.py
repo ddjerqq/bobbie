@@ -1,8 +1,6 @@
-import disnake
 from disnake.ext import commands
-from client import Client
+from client.client import Client
 from database.factories.user_factory import UserFactory
-from database.models.user import User
 
 
 class OnReady(commands.Cog):
@@ -18,9 +16,9 @@ class OnReady(commands.Cog):
                 if member.id not in all_ids:
                     user = UserFactory.new(member.id, member.name)
                     await self.client.db.users.add(user)
-                    await self.client.log(f"added ({member.id}) {member.name}")
+                    await self.client.logger.log(f"added ({member.id}) {member.name}")
 
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.client.log("bobbi online")
+        await self.client.logger.log("bobbi online")

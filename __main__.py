@@ -4,7 +4,7 @@ import warnings
 import disnake
 from rgbprint import rgbprint
 
-from client import Client
+from client.client import Client
 
 
 warnings.filterwarnings("ignore")
@@ -20,10 +20,7 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
 
     try:
-        loop.run_until_complete(client.db.ainit())
-
         loop.run_until_complete(client.start())
-
         loop.run_forever()
 
     except KeyboardInterrupt:

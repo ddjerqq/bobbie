@@ -15,7 +15,7 @@ class Logger:
         self.client      = client
         self.log_channel = None
 
-    async def log(self, message: str, level: LogLevel = LogLevel.INFO):
+    async def log(self, message: str, /, *, level: LogLevel = LogLevel.INFO):
         """
         |coro|
         log messages with priorities (red) [!] error \n

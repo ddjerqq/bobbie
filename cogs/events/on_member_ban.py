@@ -1,6 +1,6 @@
 import disnake
 from disnake.ext import commands
-from client import Client
+from client.client import Client
 
 
 class OnMemberBan(commands.Cog):
@@ -9,4 +9,4 @@ class OnMemberBan(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_ban(self, guild: disnake.Guild, user: disnake.Member):
-        await self.client.log(f"{user.name}#{user.discriminator} id=({user.id}) got banned in {guild.name}")
+        await self.client.logger.log(f"{user.name}#{user.discriminator} id=({user.id}) got banned in {guild.name}")

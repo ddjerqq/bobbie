@@ -1,6 +1,6 @@
 import disnake
 from disnake.ext import commands
-from client import Client
+from client.client import Client
 from database.factories.user_factory import UserFactory
 
 
@@ -12,7 +12,7 @@ class OnMemberJoin(commands.Cog):
     async def on_member_join(self, member: disnake.Member):
         user = UserFactory.new(member.id, member.name)
         await self.client.db.users.add(user)
-        await self.client.log(f"added ({member.id}) {member.name}")
+        await self.client.logger.log(f"added ({member.id}) {member.name}")
 
 
 def setup(client: Client):

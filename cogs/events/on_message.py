@@ -2,7 +2,7 @@ import random
 
 import disnake
 from disnake.ext import commands
-from client import Client
+from client.client import Client
 
 
 class OnMessage(commands.Cog):

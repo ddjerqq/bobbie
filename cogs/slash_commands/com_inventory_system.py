@@ -2,7 +2,8 @@ from disnake.ext import commands
 from disnake.ext.commands import errors
 from disnake import ApplicationCommandInteraction as Aci
 
-from client import *
+from client.client import Client, DEV_TEST, GUILD_IDS
+from client.logger import LogLevel
 from database.config import *
 from database.factories.item_factory import ItemFactory
 
@@ -45,7 +46,7 @@ class InventorySystemCommands(commands.Cog):
             em = self.client.embeds.cooldown("იყიდე სამი ნივთი მაღაზიიდან", "ყიდვას", _error.retry_after)
             await ctx.send(embed=em)
         else:
-            await self.client.log(_error, priority=1)
+            await self.client.logger.log(_error, level=LogLevel.ERROR)
 
 
     @commands.slash_command(name="inventory", guild_ids=GUILD_IDS, description="ნახე შენი ინვენტარი")
@@ -83,7 +84,7 @@ class InventorySystemCommands(commands.Cog):
             case ItemType.HUNTING_RIFLE:
                 em = self.client.embeds.hunt(item, broken)
             case _:
-                await self.client.log(f"{inter.author.id} tried to use {item_type}", priority=1)
+                await self.client.logger.log(f"{inter.author.id} tried to use {item_type}", level=LogLevel.ERROR)
                 return False
         await inter.send(embed=em)
         return True
@@ -102,7 +103,8 @@ class InventorySystemCommands(commands.Cog):
             em = self.client.embeds.cooldown("ითევზავე", "თევზაობას", _error.retry_after)
             await ctx.send(embed=em)
         else:
-            await self.client.log(f"{_error}\n{_error.args}", priority=1)
+            await self.client.logger.log(_error, level=LogLevel.ERROR)
+
 
     @commands.slash_command(name="hunt", guild_ids=GUILD_IDS, description="წადი სანადიროდ და შეეცადე შენი თავი არჩინო")
     @commands.cooldown(3, 300 if not DEV_TEST else 1, commands.BucketType.user)
@@ -117,7 +119,7 @@ class InventorySystemCommands(commands.Cog):
             em = self.client.embeds.cooldown("ინადირე", "ნადირობას", _error.retry_after)
             await ctx.send(embed=em)
         else:
-            await self.client.log(f"{_error}\n{_error.args}", priority=1)
+            await self.client.logger.log(_error, level=LogLevel.ERROR)
 
     @commands.slash_command(name="dig", guild_ids=GUILD_IDS, description="გათხარე მიწა")
     @commands.cooldown(3, 300 if not DEV_TEST else 1, commands.BucketType.user)
@@ -132,7 +134,7 @@ class InventorySystemCommands(commands.Cog):
             em = self.client.embeds.cooldown("გათხარე მიწა", "მიწის გათხრას", _error.retry_after)
             await ctx.send(embed=em)
         else:
-            await self.client.log(f"{_error}\n{_error.args}", priority=1)
+            await self.client.logger.log(_error, level=LogLevel.ERROR)
 
 
     @commands.slash_command(name="sell", guild_ids=GUILD_IDS, description="გაყიდე რაიმე ნივთი")
@@ -188,7 +190,7 @@ class InventorySystemCommands(commands.Cog):
             return
 
         confirmation_em = self.client.embeds.confirmation_needed("ყველა ნივთის გაყიდვა?")
-        confirmation = self.client.button_service.YesNoButton(intended_user=inter.author)
+        confirmation = self.client.buttons.YesNoButton(intended_user=inter.author)
         await inter.send(embed=confirmation_em, view=confirmation)
         await confirmation.wait()
 

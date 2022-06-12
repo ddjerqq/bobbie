@@ -6,7 +6,7 @@ import disnake
 from disnake import ApplicationCommandInteraction as Aci
 from disnake.ext import commands
 
-from client import *
+from client.client import Client
 
 
 class GeoWordleGame(commands.Cog):

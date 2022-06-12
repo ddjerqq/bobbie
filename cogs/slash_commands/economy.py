@@ -5,9 +5,8 @@ from disnake.ext import commands
 from disnake.ext.commands import errors
 from disnake import ApplicationCommandInteraction as Aci
 
-from client import *
-from database.factories.item_factory import ItemFactory
-from database.models.item import Item
+from client.client import Client, GUILD_IDS, DEV_TEST
+from client.logger import LogLevel
 
 
 class Economy(commands.Cog):
@@ -98,7 +97,7 @@ class Economy(commands.Cog):
 
         if amount >= 100:
             em = self.client.embeds.confirmation_needed(f"{target.name}-ისთვის {amount} ₾-ის მიცემა?")
-            confirmation = self.client.button_service.YesNoButton(intended_user=inter.author)
+            confirmation = self.client.buttons.YesNoButton(intended_user=inter.author)
             await inter.send(embed=em, view=confirmation)
             await confirmation.wait()
 
@@ -186,7 +185,7 @@ class Economy(commands.Cog):
             em = self.client.embeds.cooldown("გაძარცვე ვიღაცა", "ქურდობას", _error.retry_after)
             await ctx.send(embed=em)
         else:
-            await self.client.log(_error, priority=1)
+            await self.client.logger.log(_error, level=LogLevel.ERROR)
 
     @commands.slash_command(name="work", guild_ids=GUILD_IDS, description="იმუშავე და გააკეთე 150 ₾არი")
     @commands.cooldown(1, 600, commands.BucketType.user)
@@ -211,7 +210,7 @@ class Economy(commands.Cog):
             em = self.client.embeds.cooldown("იმუშავე", "მუშაობას", _error.retry_after)
             await ctx.send(embed=em)
         else:
-            await self.client.log(_error, priority=1)
+            await self.client.logger.log(_error, level=LogLevel.ERROR)
 
 
     @commands.slash_command(name="leaderboards", guild_ids=GUILD_IDS, description="Top 10 users")
@@ -229,7 +228,7 @@ class Economy(commands.Cog):
             await inter.send(embed=em)
             return
 
-        user.bank += random.randint(1_000, 10_000)
+        user.bank += random.randint(1_000, 5_000)
         user.experience += 50
 
         await self.client.db.users.update(user)
