@@ -1,12 +1,10 @@
-import random
-
-import disnake
 from disnake.ext import commands
 from disnake.ext.commands import errors
 from disnake import ApplicationCommandInteraction as Aci
 
 from client import *
-from database.models.item import Item
+from database.config import *
+from database.factories.item_factory import ItemFactory
 
 
 class InventorySystemCommands(commands.Cog):
@@ -16,10 +14,10 @@ class InventorySystemCommands(commands.Cog):
 
     @commands.slash_command(name="buy", guild_ids=GUILD_IDS, description="იყიდე რაიმე ნივთი მაღაზიიდან")
     @commands.cooldown(5, 600 if not DEV_TEST else 1, commands.BucketType.user)
-    async def buy(self, inter: Aci, item: Item.tool_buy_prices()):
+    async def buy(self, inter: Aci, item: TOOL_BUY_PRICES):
         user = await self.client.db.users.get(inter.author.id)
-        item = Item.new(item)
-        price = Item.PRICES[item.type]
+        item = ItemFactory.new(ItemType[item])
+        price = ItemPrice[item.type.name].value  # type: int
 
         if user.wallet + user.bank < price:
             em = self.client.embeds.econ_err_not_enough_money("რათა", f"იყიდო {item.name}", price)
@@ -69,26 +67,24 @@ class InventorySystemCommands(commands.Cog):
 
         tool = tools[-1]
 
-        if tool.will_break:
-            user.items.remove(tool)
+        item, broken = ItemFactory.use(tool)
 
-        item = Item.tool_use_result(item_type)
-        item.owner_id = inter.author.id
+        item.owner_id = user.id
         user.experience += 3
         user.items.append(item)
 
         await self.client.db.users.update(user)
 
         match tool.type:
-            case "fishing_rod":
-                em = self.client.embeds.fish(item, tool.will_break)
-            case "shovel":
-                em = self.client.embeds.dig(item, tool.will_break)
-            case "hunting_rifle":
-                em = self.client.embeds.hunt(item, tool.will_break)
+            case ItemType.FISHING_ROD:
+                em = self.client.embeds.fish(item, broken)
+            case ItemType.SHOVEL:
+                em = self.client.embeds.dig(item, broken)
+            case ItemType.HUNTING_RIFLE:
+                em = self.client.embeds.hunt(item, broken)
             case _:
-                em = disnake.Embed(title="ამ მაგალითის გამოყენება ვერ მოხერხდა", color=0xFF0000)
                 await self.client.log(f"{inter.author.id} tried to use {item_type}", priority=1)
+                return False
         await inter.send(embed=em)
         return True
 
@@ -140,7 +136,7 @@ class InventorySystemCommands(commands.Cog):
 
 
     @commands.slash_command(name="sell", guild_ids=GUILD_IDS, description="გაყიდე რაიმე ნივთი")
-    async def sell(self, inter: Aci, item_type: Item.item_sell_prices(), amount: str = "1"):
+    async def sell(self, inter: Aci, item_type: ITEM_SELL_PRICES, amount: str = "1"):
         user = await self.client.db.users.get(inter.author.id)
         items = user.items
         items = sorted(filter(lambda x: x.type == item_type, items),

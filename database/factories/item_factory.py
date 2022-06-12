@@ -28,13 +28,12 @@ class ItemFactory:
         return Item(id, item_type, rarity, owner_id)
 
     @classmethod
-    def use(cls, item: Item) -> Item | None:
+    def use(cls, item: Item) -> tuple[Item, bool] | None:
         """
-        simulate using the item, optionally returns a new item,
-        the booty of the item use
+        return the result of the usage of the item.
+        (item, broken)
         """
-        if random.random() < item.rarity.value ** 2.5:
-            return None
+        broken = random.random() < item.rarity.value ** 2.5
 
         match item.type:
             case ItemType.FISHING_ROD:
@@ -48,4 +47,4 @@ class ItemFactory:
 
         random_type = random.choice(list(iter(group)))
 
-        return cls.new(random_type)
+        return cls.new(random_type), broken

@@ -6,6 +6,7 @@ from disnake.ext.commands import errors
 from disnake import ApplicationCommandInteraction as Aci
 
 from client import *
+from database.factories.item_factory import ItemFactory
 from database.models.item import Item
 
 
@@ -230,8 +231,6 @@ class Economy(commands.Cog):
 
         user.bank += random.randint(1_000, 10_000)
         user.experience += 50
-        items = [Item.random_item() for _ in range(5)]
-        user.items = items
 
         await self.client.db.users.update(user)
 

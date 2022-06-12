@@ -52,6 +52,7 @@ class Client(commands.Bot):
         self._load_words()
 
     async def start(self) -> None:
+        # TODO self.db = db.ainit()
         await super().start(self.__TOKEN if not DEV_TEST else self.__DEV_TEST_TOKEN)
 
     def _load_extensions(self) -> None:
@@ -75,6 +76,7 @@ class Client(commands.Bot):
 
 
     async def log(self, message: Any, priority: int = 3) -> None:
+        # TODO remake this ffs
         """
         |coro|
         log messages with priorities (red) [!] error \n
