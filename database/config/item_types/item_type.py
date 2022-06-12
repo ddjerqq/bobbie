@@ -1,0 +1,26 @@
+from enum import Enum
+
+
+class ItemType(Enum):
+    FISHING_ROD   = "FISHING_ROD"
+    HUNTING_RIFLE = "HUNTING_RIFLE"
+    SHOVEL        = "SHOVEL"
+    COMMON_FISH   = "COMMON_FISH"
+    RARE_FISH     = "RARE_FISH"
+    TROPICAL_FISH = "TROPICAL_FISH"
+    SHARK         = "SHARK"
+    GOLDEN_FISH   = "GOLDEN_FISH"
+    PIG           = "PIG"
+    DEER          = "DEER"
+    BEAR          = "BEAR"
+    WOLF          = "WOLF"
+    TIGER         = "TIGER"
+    LION          = "LION"
+    ELEPHANT      = "ELEPHANT"
+    COPPER_COIN   = "COPPER_COIN"
+    EMERALD       = "EMERALD"
+    RUBY          = "RUBY"
+    SAPPHIRE      = "SAPPHIRE"
+    AMETHYST      = "AMETHYST"
+    DIAMOND       = "DIAMOND"
+    KNIFE         = "KNIFE"
