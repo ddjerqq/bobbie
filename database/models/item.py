@@ -4,8 +4,8 @@ import random
 import sqlite3
 from datetime import datetime
 
-from disnake.ext.commands import option_enum
-from database.models.gio_id import Id
+from database.id import Id
+from database.config import *
 
 
 class Item:
@@ -20,157 +20,18 @@ class Item:
         (0.45; 1.00] => Battle-Scarred
     """
 
-    PRICES = {
-        "fishing_rod"   : 15,
-        "common_fish"   : 5,
-        "rare_fish"     : 10,
-        "tropical_fish" : 20,
-        "shark"         : 40,
-        "golden_fish"   : 50,
-
-        "hunting_rifle" : 20,
-        "pig"           : 5,
-        "deer"          : 10,
-        "bear"          : 20,
-        "wolf"          : 30,
-        "tiger"         : 40,
-        "lion"          : 50,
-        "elephant"      : 60,
-
-        "shovel"        : 15,
-        "copper_coin"   : 1,
-        "emerald"       : 10,
-        "ruby"          : 20,
-        "sapphire"      : 30,
-        "amethyst"      : 40,
-        "diamond"       : 50,
-
-        "knife"         : 50,
-    }
-
-    _FISHABLE_WEIGHTS = {
-        "common_fish": 25,
-        "rare_fish": 12,
-        "tropical_fish": 6,
-        "shark": 3,
-        "golden_fish": 2,
-    }
-
-    _HUNTABLE_WEIGHTS = {
-        "pig": 30,
-        "deer": 20,
-        "bear": 15,
-        "wolf": 10,
-        "tiger": 5,
-        "lion": 2,
-        "elephant": 1,
-    }
-
-    _DIGABLE_WEIGHTS = {
-        "copper_coin": 30,
-        "emerald": 20,
-        "ruby": 15,
-        "sapphire": 10,
-        "amethyst": 5,
-        "diamond": 2,
-    }
-
-    _ITEM_NAMES = {
-        "fishing_rod"   : "ანკესი",
-        "hunting_rifle" : "სანადირო თოფი",
-        "shovel"        : "ნიჩაბი",
-        "common_fish"   : "უბრალო თევზი",
-        "rare_fish"     : "წითელი თევზი",
-        "tropical_fish" : "ტროპიკული თევზი",
-        "shark"         : "ზვიგენი",
-        "golden_fish"   : "ოქროს თევზი",
-        "pig"           : "გოჭი",
-        "deer"          : "ირემი",
-        "bear"          : "დათვი",
-        "wolf"          : "მგელი",
-        "tiger"         : "ვეფხვი",
-        "lion"          : "ლომი",
-        "elephant"      : "სპილო",
-        "copper_coin"   : "სპილენძის მონეტა",
-        "emerald"       : "ზურმუხტი",
-        "ruby"          : "ლალი",
-        "sapphire"      : "ფირუზი",
-        "amethyst"      : "ამეთვისტო",
-        "diamond"       : "ბრილიანი",
-
-        "knife"         : "დანა",
-    }
-
-    _THUMBNAILS = {
-        "fishing_rod"   : "https://i.imgur.com/m7HBPHl.png",
-        "hunting_rifle" : "https://i.imgur.com/pjtWTSg.png",
-        "shovel"        : "https://i.imgur.com/Dod0FE4.png",
-        "common_fish"   : "https://i.imgur.com/I3jU3p7.png",
-        "rare_fish"     : "https://i.imgur.com/7f90E9p.png",
-        "tropical_fish" : "https://i.imgur.com/ZBVZRXw.png",
-        "shark"         : "https://i.imgur.com/NMeTrjK.png",
-        "golden_fish"   : "https://i.imgur.com/o2m9RkM.png",
-        "pig"           : "https://i.imgur.com/v1Qa101.png",
-        "deer"          : "https://i.imgur.com/fGl3N7s.png",
-        "wolf"          : "https://i.imgur.com/k0fRgHl.png",
-        "bear"          : "https://i.imgur.com/4CryBHi.png",
-        "lion"          : "https://i.imgur.com/FBOyDvA.png",
-        "copper_coin"   : "https://i.imgur.com/BR73e8Q.png",
-        "elephant"      : "https://i.imgur.com/qchItpk.png",
-        "ruby"          : "https://i.imgur.com/rqOuL5x.png",
-        "sapphire"      : "https://i.imgur.com/9zrHNnb.png",
-        "amethyst"      : "https://i.imgur.com/cookhhr.png",
-
-    }
-
-    _EMOJI = {
-        "fishing_rod"   : "<:fishingrod:963895429248999454>",
-        "hunting_rifle" : "<:huntingrifle:963895472286756945>",
-        "shovel"        : "<:shovel:964200167001686016>",
-        "common_fish"   : "<:common_fish:964635049859371049>",
-        "rare_fish"     : "<:rare_fish:964635026534842418>",
-        "tropical_fish" : "<:tropical_fish_:964634994742005770>",
-        "shark"         : "<:shark_:964635075922759680>",
-        "golden_fish"   : "<:golden_fish:964514375027286056>",
-        "pig"           : "<:pig_:965295197586079774>",
-        "deer"          : "<:deer_:965295197783203870>",
-        "wolf"          : "<:wolf_:964201606763651112>",
-        "bear:"         : "<:bear_:965304095546150962>",
-        "lion"          : "<:lion_:965363845075980308>",
-        "copper_coin"   : "<:copper_coin_:967416432918933537>",
-        "ruby"          : "<:ruby_:965920123481358376>",
-        "sapphire"      : "<:sapphire_:965920195577253888>",
-        "elephant"      : "<:elephant_:967783490626134016>",
-        "bear"          : "<:bear_:965304095546150962>",
-        "amethyst:"     : "<:amethyst_:965922934369681448>"
-    }
-
-    TOOLS = {"fishing_rod", "hunting_rifle", "shovel", "knife"}
-
-    @classmethod
-    def tool_buy_prices(cls):
-        return option_enum({
-            f"{cls._ITEM_NAMES[t]} {cls.PRICES[t]} ₾": t for t in cls.TOOLS
-        })
-
-    @classmethod
-    def item_sell_prices(cls):
-        return option_enum({
-            f"{v} {cls.PRICES.get(k, 'undefined')} ₾": k for k, v in cls._ITEM_NAMES.items()
-        })
-
-    def __init__(self, id: int, type: str, rarity: float, owner_id: int | None):
+    def __init__(self, id: int, type: ItemType, rarity: float, owner_id: int | None):
         self.__broken = None  # type: bool | None
         self.__id = id
         self.type = type
         self.__rarity = rarity
         self.owner_id = owner_id
 
+    # TODO move this to factory
     @classmethod
     def new(cls, type: str) -> Item:
         id = Id.new()
         rarity = random.random() ** 2
-
         return cls(id, type, rarity, None)
 
     @property
@@ -179,7 +40,7 @@ class Item:
 
     @property
     def price(self) -> int:
-        p = self.PRICES.get(self.type, 1)
+        p = ItemPrice[self.type.name].value
         p += 1 / self.rarity
         return round(p)
 
@@ -188,36 +49,39 @@ class Item:
         """
         :return: bool if the item is in {"fishing_rod", "hunting_rifle", "shovel"}
         """
-        return self.type in self.TOOLS
+        try:
+            Buyable[self.type.name]
+        except KeyError:
+            return False
+        else:
+            return True
 
     @property
-    def emoji(self) -> str:
+    def emoji(self) -> str | None:
         """get the emoji of this item type, if it is missing, then this will return an empty string"""
-        return self._EMOJI.get(self.type, "")
-
-    @property
-    def emoji_id(self) -> int | None:
-        """get the emoji id of this item type, if it is missing, then this will return None"""
-        em = self._EMOJI.get(self.type, None)
-        if em is not None:
-            em = em.split(":")[3]
-            em = em.split(">")[0]
-            em = int(em)
-        return em
+        try:
+            emoji = ItemEmoji[self.type.name].value
+        except KeyError:
+            emoji = ""
+        return emoji
 
     @property
     def thumbnail(self) -> str | None:
         """get the item's thumbnail. if its missing, returns None"""
-        return self._THUMBNAILS.get(self.type, None)
+        try:
+            thumbnail = ItemThumbnail[self.type.name].value
+        except KeyError:
+            thumbnail = None
+        return thumbnail
 
     @property
     def name(self) -> str:
-        """get the item's name. if its missing, returns an empty string"""
-        return self._ITEM_NAMES.get(self.type, "")
+        """get the item's name"""
+        return ItemName[self.type.name].value
 
     @property
     def rarity_string(self) -> str:
-        if 0.0 <= self.__rarity <= 0.07:
+        if   0.0 <= self.__rarity <= 0.07:
             return "სულ ახალი"
         elif 0.07 < self.__rarity <= 0.15:
             return "მინიმალურად გამოყენებული"
@@ -237,19 +101,16 @@ class Item:
     @property
     def created_at(self) -> datetime:
         """
-        get the creation date of Item, using _GIO_EPOCH as the base.
+        get the creation datetime of Item.
         .strftime("%Y-%m-%d %H:%M:%S")
         :return datetime:
         """
-        ts = ((self.id >> 22) + Id.EPOCH) // 100
-        return datetime.fromtimestamp(ts)
+        return Id.created_at(self.__id)
 
     @property
     def will_break(self) -> bool:
-        """
-        try break the item, return True if the item broke
-        """
-        if self.__broken is None:
+        """try break the item, return True if the item broke"""
+        if not self.__broken:
             self.__broken = random.random() < self.__rarity ** 2.5
         return self.__broken
 
@@ -260,44 +121,43 @@ class Item:
         return isinstance(other, Item) and self.__id == other.__id
 
     def __str__(self):
-        return f"{self.type:<32} {self.rarity_string} owner: {self.owner_id}"
+        return f"{self.type.name} {self.rarity_string} owner: {self.owner_id}"
 
     def __repr__(self):
         return f"<Item id={self.id} type={self.type} owner={self.owner_id} rarity={self.__rarity}>"
 
+    # TODO make this return a dict
     @property
     def db(self) -> tuple:
         return self.__id, self.type, self.__rarity, self.owner_id
 
+    # TODO move this to factory
     @classmethod
-    def from_db(cls, data: tuple | sqlite3.Row) -> Item:
-        return cls(*data)
+    def from_db_row(cls, data: sqlite3.Row) -> Item:
+        return cls(**dict(data))
 
-    @classmethod
-    def tool_use_result(cls, tool_type: str) -> Item:
+    def use(self) -> Item:
         """
         generate a random item from the given type of the tool.
-        :param tool_type: the type of the tool which is used to acquire the item
         :return: an item of the given type
         """
-        match tool_type:
-            case "fishing_rod":
-                group = cls._FISHABLE_WEIGHTS
-            case "hunting_rifle":
-                group = cls._HUNTABLE_WEIGHTS
-            case "shovel":
-                group = cls._DIGABLE_WEIGHTS
+        match self.type:
+            case ItemType.FISHING_ROD:
+                group = FishableRandomWeight
+            case ItemType.HUNTING_RIFLE:
+                group = HuntableRandomWeight
+            case ItemType.SHOVEL:
+                group = DigableRandomWeight
             case _:
-                raise ValueError(f"item type '{tool_type}' is not a valid too, must be one of {cls.TOOLS}")
+                raise ValueError(f"item type '{self.type}' is not a valid tool, must be one of {[*Buyable]}")
 
-        random_type = random.choice(list(group.keys()))
+        random_type = random.choice(list(iter(group)))
 
-        return cls.new(random_type)
+        return self.new(random_type)
 
+    # TODO factory pattern
     @classmethod
     def random_item(cls) -> Item:
-        """
-        generate a random item
-        """
-        random_type = random.choice(list(cls.PRICES.keys()))
+        """generate a random item"""
+        random_type = random.choice(list(iter(ItemType)))
         return cls.new(random_type)

@@ -1,3 +1,4 @@
+import datetime
 import time
 import random
 
@@ -32,3 +33,8 @@ class Id(object):
         cls.__worker_increments[worker_id] += 1
 
         return id
+
+    @classmethod
+    def created_at(cls, id: int) -> datetime.datetime:
+        ts = ((id >> 22) + cls.EPOCH) // 100
+        return datetime.datetime.fromtimestamp(ts)
