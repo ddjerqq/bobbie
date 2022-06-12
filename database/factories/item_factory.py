@@ -5,12 +5,14 @@ from database.id import Id
 from database.models.item import Item
 import random
 
+from database.rarity import Rarity
+
 
 class ItemFactory:
     @classmethod
     def new(cls, item_type: ItemType) -> Item:
         id = Id.new()
-        rarity = random.random() ** 2
+        rarity = Rarity.new()
         return Item(id, item_type, rarity, None)
 
     @classmethod
@@ -39,9 +41,3 @@ class ItemFactory:
         random_type = random.choice(list(iter(group)))
 
         return cls.new(random_type)
-
-
-
-for _ in range(10):
-    item = ItemFactory.use(ItemFactory.new(ItemType.FISHING_ROD))
-    print(item)
