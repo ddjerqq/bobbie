@@ -1,0 +1,10 @@
+[bot]
+prefix = "!"
+test_guild_id = 965308417185021982
+testing = false
+
+[channels]
+deleted_msgs = [939534645798793247]
+confessions  = [958456199148343436]
+logging      = [958311400047001600]
+leave        = [942800528822370315]

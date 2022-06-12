@@ -1,113 +1,63 @@
 import os
 import sys
-from itertools import cycle
-import disnake
+import toml
+import pathlib
 import asyncio
 from typing import Any
-from rgbprint import rgbprint
+from rgbprint import *
 from disnake.ext import commands
+
+from client.logger import Logger
 from database import Database
-from client.embed_service import EmbedService
-from client.button_service import Buttons
+from services.embed_services.embed_service import EmbedService
+from services.view_services.button_service import Buttons
+from dotenv import load_dotenv
 
+load_dotenv()
 
-PROJECT_PATH = os.getcwd()
-DEV_TEST     = len(sys.argv) == 2 and sys.argv[1] == "--dev-test"
-GUILD_IDS    = None if not DEV_TEST else [965308417185021982]
-# 965308417185021982
-# 935886444109631510
-# 840836206483734530
-# 913003554225131530
+PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+CONFIG       = toml.load(os.path.join(PROJECT_PATH, "bobbie.toml"))
+DEV_TEST     = CONFIG["bot"]["testing"]
+GUILD_IDS    = None if not DEV_TEST else [CONFIG["bot"]["test_guild_id"]]
 
 
 class Client(commands.Bot):
-    __TOKEN          = "OTU4MTA3OTA1NzkyNTQ0ODA5.YkIhhQ.YduxqTYY1SVVhQ84C_Ev_WBVC1M"
-    __DEV_TEST_TOKEN = "OTYzNDU3MTI4MzM1NTUyNTUy.YlWXXw.n7uo7VtPt_4VRUDMiaqYYlzWUx0"
-    PREFIX           = "!"
+    __TOKEN          = os.getenv("PROD_TOKEN")
+    __TEST_TOKEN     = os.getenv("TEST_TOKEN")
 
-    DELETE_MESSAGE_LOG    = 939534645798793247
-    CONFESSION_CHANNELS   = [958456199148343436]
-    LOG_CHANNEL_ID        = 958311400047001600
-    LEAVE_CHANNEL_ID      = 942800528822370315
+    DELETE_MESSAGE_LOG  = CONFIG["channels"]["deleted_msgs"]
+    CONFESSION_CHANNELS = CONFIG["channels"]["confessions"]
+    LOG_CHANNEL_ID      = CONFIG["channels"]["logging"]
+    LEAVE_CHANNEL_ID    = CONFIG["channels"]["leave"]
 
     def __init__(self, *args, **kwargs):
-        self.db             = Database()
-        self.embeds         = EmbedService(self.db)
-        self.button_service = Buttons()
-        self.log_channel    = None  # type: disnake.TextChannel
-        self.statuses       = cycle([
-            "მიეც გლახაკთა საჭურჭლე,",
-            "ათავისუფლე მონები.",
-            "ddjerqq#2005",
-            "სიკვდილი ყველას გვაშინებს,",
-            "სხვას თუ ჰკვლენ, ცქერა გვწადიან.",
-            "დღეს სტუმარია ეგ ჩემი,",
-            "თუნდ ზღვა ემართოს სისხლისა.",
-        ])
-        self.command_prefix = self.PREFIX
-        self.wordle_words   = []  # type: list[str]
-
         super().__init__(*args, **kwargs)
-        self._load_extensions()
-        self._load_words()
+        self.db             = None  # type: Database | None
+        self.logger         = Logger(self)
+        self.embeds         = EmbedService(self.db)
+        self.buttons        = Buttons()
+        self.config         = CONFIG
+        self.command_prefix = CONFIG["bot"]["prefix"]
+        self.__load_extensions()
 
-    async def start(self) -> None:
-        # TODO self.db = db.ainit()
-        await super().start(self.__TOKEN if not DEV_TEST else self.__DEV_TEST_TOKEN)
+    def __load_extensions(self) -> None:
+        for root, _, files in os.walk(os.path.join(PROJECT_PATH, "cogs")):
+            for cog in files:
+                if cog.endswith(".py"):
+                    cog = cog.removesuffix(".py")
+                if cog.startswith("_"):
+                    continue
+                folder = pathlib.Path(root).name
+                cog = f"cogs.{folder}.{cog}"
+                self.load_extension(cog)
 
-    def _load_extensions(self) -> None:
-        for cog in os.listdir(f"{PROJECT_PATH}/cogs"):
-            if cog.endswith(".py") and not cog.startswith("_"):
-                self.load_extension(f"cogs.{cog[:-3]}")
-
-    def _load_words(self) -> None:
-        with open(f"{PROJECT_PATH}/assets/unverified_words.txt", encoding="utf-8") as f:
-            self.wordle_words = [w.strip() for w in f.readlines() if w]
+    async def start(self, *_) -> None:
+        self.db = Database.ainit(PROJECT_PATH)
+        await super().start(self.__TOKEN if not DEV_TEST else self.__TEST_TOKEN)
 
     async def close(self):
-        await self.log("cancelling tasks")
         pending = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
         for t in pending:
             t.cancel()
-        await self.log("cancelled  tasks")
-        await self.log("closing   client")
         await super().close()
-        await self.log("closed    client")
-
-
-    async def log(self, message: Any, priority: int = 3) -> None:
-        # TODO remake this ffs
-        """
-        |coro|
-        log messages with priorities (red) [!] error \n
-
-        :param message: message to log, it can be any type
-        :param priority: priority for the log, 3 log. 2 warn. 1 error
-        """
-        match priority:
-            case 3:
-                prefix = "[+]"
-                color  = "green"
-                log_type = "log"
-
-            case 2:
-                prefix = "[-]"
-                color  = "yellow"
-                log_type = "warn"
-
-            case 1:
-                prefix = "[!]"
-                color  = "red"
-                log_type = "error"
-
-            case _:
-                prefix, color, log_type = None, None, None
-
-        rgbprint(prefix, color=color, sep="", end=" ")
-        rgbprint(message)
-
-        if priority <= 2:
-            if self.log_channel is not None:
-                await self.log_channel.send(f"*`{log_type}`*```{message}```")
-            else:
-                rgbprint("warn-error log channel not configured")

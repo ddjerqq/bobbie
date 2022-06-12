@@ -8,12 +8,10 @@ from database.services.user_service import UserService
 
 
 class Database:
-    _db_path = "database/database.db"
-
-    def __init__(self):
-        self._connection: aiosqlite.Connection | None = None
-        self._cursor: aiosqlite.Cursor | None = None
-        self.users: UserService | None = None
+    def __init__(self, connection: aiosqlite.Connection, cursor: aiosqlite.Cursor):
+        self._connection = connection
+        self._cursor     = cursor
+        self.users       = UserService(connection, cursor)
 
 
     async def verify_word(self, word: str, status: int):
@@ -36,8 +34,8 @@ class Database:
         words = await self._cursor.fetchall()
         return random.choice(list(words))
 
-
-    async def ainit(self):
-        self._connection  = await aiosqlite.connect(self._db_path)
-        self._cursor      = await self._connection.cursor()
-        self.users = UserService(self._connection, self._cursor)
+    @classmethod
+    async def ainit(cls, path: str):
+        connection  = await aiosqlite.connect(path)
+        cursor      = await connection.cursor()
+        return cls(connection, cursor)
