@@ -20,7 +20,12 @@ class ItemFactory:
 
     @classmethod
     def from_db_row(cls, data: sqlite3.Row) -> Item:
-        return Item(**dict(data))
+        data = dict(data)
+        id        = data.pop("id")
+        item_type = ItemType[data.pop("item_type").upper()]
+        rarity    = Rarity(data.pop("rarity"))
+        owner_id  = data.pop("owner_id")
+        return Item(id, item_type, rarity, owner_id)
 
     @classmethod
     def use(cls, item: Item) -> Item | None:
