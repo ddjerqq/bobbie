@@ -1,0 +1,4 @@
+aiosqlite
+rgbprint
+disnake
+aiohttp
