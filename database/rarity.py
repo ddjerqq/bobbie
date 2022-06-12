@@ -40,7 +40,7 @@ class Rarity:
             return "დაგლეჯილი"
 
     def __repr__(self):
-        return f"<Rarity {self.__rarity}>"
+        return f"<Rarity {self.name} {self.__rarity}>"
 
     def __str__(self):
         return self.name
