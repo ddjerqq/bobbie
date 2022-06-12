@@ -37,6 +37,7 @@ class Client(commands.Bot):
         self.logger         = Logger(self)
         self.embeds         = EmbedService(self.db)
         self.buttons        = Buttons()
+        # TODO game service and other stuff to abstract commands
         self.config         = CONFIG
         self.command_prefix = CONFIG["bot"]["prefix"]
         self.__load_extensions()
