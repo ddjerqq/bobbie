@@ -6,7 +6,7 @@ from client.client import Client
 class OnMessageDelete(commands.Cog):
     def __init__(self, client: Client):
         self.client = client
-        self.deleted_messages_channels = None  # type: None | list[disnake.TextChannel]
+        self.deleted_messages_channels = []  # type: None | list[disnake.TextChannel]
 
     def message_delete_check(self, message: disnake.Message) -> bool:
         if message.guild.id == 935886444109631510:
