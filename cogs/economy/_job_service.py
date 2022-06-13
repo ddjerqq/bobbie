@@ -51,7 +51,8 @@ class JobService:
                 await self.__client.db.users.update(other)
                 await self.__client.db.users.update(this)
 
-                knife = sorted(items, key=lambda i: i.rarity.value, reverse=True)[0]
+                knife = sorted(filter(lambda i: i.type == ItemType.KNIFE, items),
+                               key=lambda i: i.rarity.value, reverse=True)[0]
 
                 _, broken = ItemFactory.use(knife)
 

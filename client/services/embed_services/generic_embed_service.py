@@ -1,10 +1,8 @@
 import disnake
 
-from client.client import Client
-
 
 class GenericEmbedService:
-    def __init__(self, client: Client):
+    def __init__(self, client):
         self.__client = client
 
     def generic_success(self, title: str = "წარმატება!", description: str = None) -> disnake.Embed:

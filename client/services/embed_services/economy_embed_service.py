@@ -1,11 +1,10 @@
 import disnake
 
-from client.client import Client
 from database.models.user import User
 
 
 class EconomyEmbedService:
-    def __init__(self, client: Client):
+    def __init__(self, client):
         self.__client = client
 
     def error_invalid_amount_entered(self) -> disnake.Embed:

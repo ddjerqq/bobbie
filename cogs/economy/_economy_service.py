@@ -68,7 +68,7 @@ class EconomyService:
             return self.__client.embeds.economy.success_withdraw(user, amount)
 
         else:
-            return self.__client.embeds.economy.error_not_enough_money()
+            return await self.__client.embeds.economy.error_not_enough_money()
 
     async def give(self,
                    inter: disnake.ApplicationCommandInteraction,
@@ -109,7 +109,7 @@ class EconomyService:
             ))
 
         if amount >= 100:
-            em = self.__client.embeds.utils.confirmation_needed(f"{other.name}-ისთვის {amount} ₾-ის მიცემა?")
+            em = self.__client.embeds.utils.confirmation_needed(f"{other.username}-ისთვის {amount} ₾-ის მიცემა?")
             confirmation = self.__client.buttons.YesNoButton(intended_user=sender)
             await inter.send(embed=em, view=confirmation)
             await confirmation.wait()

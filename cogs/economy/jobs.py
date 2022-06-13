@@ -43,3 +43,8 @@ class Jobs(commands.Cog):
             await ctx.send(embed=em)
         else:
             await self.client.logger.log(_error, level=LogLevel.ERROR)
+
+
+def setup(client):
+    client.add_cog(Jobs(client))
+

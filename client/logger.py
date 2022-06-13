@@ -1,4 +1,6 @@
 import enum
+
+import disnake
 from rgbprint import *
 
 
@@ -12,8 +14,8 @@ class LogLevel(enum.Enum):
 
 class Logger:
     def __init__(self, client):
-        self.client      = client
-        self.log_channel = None
+        self.client       = client
+        self.log_channels = [] # type: list[disnake.TextChannel]
 
     async def log(self, message: str, /, *, level: LogLevel = LogLevel.INFO):
         """
@@ -22,10 +24,11 @@ class Logger:
         :param message: message to log, it can be any type
         :param level: priority for the log. anything above warn gets sent to the log channel
         """
-        if self.log_channel is None:
-            self.log_channel = self.client.get_channel(
-                self.client.config["channels"]["logging"]
-            )
+        if not self.log_channels:
+            for id_ in self.client.config["channels"]["logging"]:
+                channel = self.client.get_channel(id_)
+                if channel:
+                    self.log_channels.append(channel)
 
         match level:
             case LogLevel.DEBUG:
@@ -36,12 +39,15 @@ class Logger:
 
             case LogLevel.WARN:
                 rgbprint(level.value[1], message, color=level.value[0])
-                await self.log_channel.send(f"*`WARN`*```{message}```")
+                for channel in self.log_channels:
+                    await channel.send(f"*`WARN`*```{message}```")
 
             case LogLevel.ERROR:
                 rgbprint(level.value[1], message, color=level.value[0])
-                await self.log_channel.send(f"*`ERROR`*```{message}```")
+                for channel in self.log_channels:
+                    await channel.send(f"*`ERROR`*```{message}```")
 
             case LogLevel.CRITICAL:
                 rgbprint(level.value[1], message, color=level.value[0])
-                await self.log_channel.send(f"*`CRITICAL`*```{message}```")
+                for channel in self.log_channels:
+                    await channel.send(f"*`CRITICAL`*```{message}```")

@@ -4,10 +4,10 @@ import pathlib
 import asyncio
 from disnake.ext import commands
 
-from logger import Logger
 from database import Database
-from services.embed_services.embed_service import EmbedService
-from services.view_services.button_service import Buttons
+from client.logger import Logger
+from client.services.embed_services.embed_service import EmbedService
+from client.services.view_services.button_service import Buttons
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -23,16 +23,16 @@ class Client(commands.Bot):
     __TOKEN          = os.getenv("PROD_TOKEN")
     __TEST_TOKEN     = os.getenv("TEST_TOKEN")
 
-    DELETE_MESSAGE_LOG  = CONFIG["channels"]["deleted_msgs"]
-    CONFESSION_CHANNELS = CONFIG["channels"]["confessions"]
-    LOG_CHANNEL_ID      = CONFIG["channels"]["logging"]
-    LEAVE_CHANNEL_ID    = CONFIG["channels"]["leave"]
+    DELETE_MESSAGE_LOG_CHANNELS  = CONFIG["channels"]["deleted_msgs"]
+    CONFESSION_CHANNELS          = CONFIG["channels"]["confessions"]
+    LOG_CHANNEL_ID               = CONFIG["channels"]["logging"]
+    LEAVE_CHANNEL_ID             = CONFIG["channels"]["leave"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.db             = None  # type: Database | None
         self.logger         = Logger(self)
-        self.embeds         = EmbedService(self.db)
+        self.embeds         = EmbedService(self)
         self.buttons        = Buttons()
         self.config         = CONFIG
         self.command_prefix = CONFIG["bot"]["prefix"]
@@ -50,7 +50,7 @@ class Client(commands.Bot):
                 self.load_extension(cog)
 
     async def start(self, *_) -> None:
-        self.db = Database.ainit(PROJECT_PATH)
+        self.db = await Database.ainit(os.path.join(PROJECT_PATH, "database", "database.db"))
         await super().start(self.__TOKEN if not DEV_TEST else self.__TEST_TOKEN)
 
     async def close(self):

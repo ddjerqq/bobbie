@@ -1,13 +1,12 @@
 import disnake
 
-from client.client import Client
 from database import ItemType
 from database.factories.item_factory import ItemFactory
 from database.models.item import Item
 
 
 class UtilsEmbedService:
-    def __init__(self, client: Client):
+    def __init__(self, client):
         self.__client = client
 
     def deleted_message(self, message: disnake.Message) -> disnake.Embed:
@@ -113,7 +112,7 @@ class UtilsEmbedService:
                      value=f"`{item.rarity.name}`\n")
 
         em.add_field(name="იშვიათობა",
-                     value=f"`{item.rarity:.8f}`")
+                     value=f"`{item.rarity.value:.8f}`")
 
         em.set_thumbnail(url=item.thumbnail or tool.thumbnail)
         return em
@@ -134,7 +133,7 @@ class UtilsEmbedService:
                      value=f"`{item.rarity.name}`\n")
 
         em.add_field(name="იშვიათობა",
-                     value=f"`{item.rarity:.8f}`")
+                     value=f"`{item.rarity.value:.8f}`")
 
         em.set_thumbnail(url=item.thumbnail or tool.thumbnail)
         return em

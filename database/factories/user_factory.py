@@ -11,13 +11,11 @@ class UserFactory:
         return User(snowflake, username, 0, 0, 0)
 
     @classmethod
-    def from_db_row(cls, data: sqlite3.Row) -> User:
-        data = dict(data)
-
-        id = data.pop("snowflake")
-        username = data.pop("username")
-        experience = data.pop("experience")
-        bank = data.pop("bank")
-        wallet = data.pop("wallet")
+    def from_db_row(cls, data: tuple[int, str, int, int, int]) -> User:
+        id = data[0]
+        username = data[1]
+        experience = data[2]
+        bank = data[3]
+        wallet = data[4]
 
         return User(id, username, experience, bank, wallet)

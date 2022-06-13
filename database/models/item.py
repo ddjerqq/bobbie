@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from database.id import Id
-from database.config import *
+from database.enums import *
 from database.rarity import Rarity
 
 
@@ -52,7 +52,7 @@ class Item:
     def emoji(self) -> str | None:
         """get the emoji of this item type, if it is missing, then this will return an empty string"""
         try:
-            emoji = ItemEmoji[self.type.name].value
+            emoji = ItemEmoji[self.type.name].value[0]
         except KeyError:
             emoji = ""
         return emoji
@@ -61,7 +61,7 @@ class Item:
     def thumbnail(self) -> str | None:
         """get the item's thumbnail. if its missing, returns None"""
         try:
-            thumbnail = ItemThumbnail[self.type.name].value
+            thumbnail = ItemThumbnail[self.type.name].value[0]
         except KeyError:
             thumbnail = None
         return thumbnail
@@ -69,7 +69,7 @@ class Item:
     @property
     def name(self) -> str:
         """get the item's name ქართულად"""
-        return ItemName[self.type.name].value
+        return ItemName[self.type.name].value[0]
 
     @property
     def created_at(self) -> datetime:

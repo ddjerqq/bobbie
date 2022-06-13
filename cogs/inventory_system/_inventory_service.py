@@ -2,7 +2,7 @@ import disnake
 from client.client import Client
 from client.logger import LogLevel
 from database import ItemType
-from database.config import ItemPrice
+from database.enums import ItemPrice
 from database.factories.item_factory import ItemFactory
 from disnake import ApplicationCommandInteraction as Aci
 
@@ -11,22 +11,22 @@ class InventoryService:
     def __init__(self, client: Client):
         self.__client = client
 
-    async def buy(self, buyer, item: ItemType) -> disnake.Embed:
+    async def buy(self, buyer: disnake.Member, item_slug: str) -> disnake.Embed:
         """
         Buy an item from the shop
         :param buyer: user buying the item
-        :param item: item to buy
+        :param item_slug: item to buy
         :return: disnake.Embed
         """
-        user = await self.__client.db.users.get(buyer)
-        item = ItemFactory.new(ItemType[item.name])
+        user = await self.__client.db.users.get(buyer.id)
+        item = ItemFactory.new(ItemType[item_slug])
         price = ItemPrice[item.type.name].value  # type: int
 
         if user.wallet + user.bank < price:
             return self.__client.embeds.economy.error_not_enough_money(f"რათა იყიდო {item.name}\nშენ გჭირდება {price}")
 
         user.experience += 3
-        item.owner_id = buyer
+        item.owner_id = buyer.id
         user.items.append(item)
 
         if user.wallet >= price:
@@ -47,25 +47,25 @@ class InventoryService:
         :return: disnake.Embed
         """
         user = await self.__client.db.users.get(user.id)
-        em = self.__client.embeds.inventory.util_inventory(user)
+        em   = await self.__client.embeds.inventory.util_inventory(user)
         return em
 
-    async def use(self, member: disnake.Member, item_type: ItemType) -> tuple[disnake.Embed, bool]:
+    async def use(self, member: disnake.Member, item_slug: ItemType) -> tuple[disnake.Embed, bool]:
         """
         Use an item
         :param member: user using the item
-        :param item_type: item to use
+        :param item_slug: item to use
         :return: (disnake.Embed, and reset bool)
         if the reset bool is True, then the item was not used, cuz the user didnt have it probably,
         so we should return True
         """
         user = await self.__client.db.users.get(member.id)
         items = user.items
-        tools = list(filter(lambda x: x.type == item_type, items))
-        tools.sort(key=lambda x: x.rarity, reverse=True)
+        tools = list(filter(lambda x: x.type == item_slug, items))
+        tools.sort(key=lambda x: x.rarity.value, reverse=True)
 
         if not len(tools):
-            em = self.__client.embeds.inventory.error_item_not_in_inventory(item_type.name)
+            em = self.__client.embeds.inventory.error_item_not_in_inventory(item_slug.name)
             return em, True
 
         tool = tools[-1]
@@ -86,33 +86,34 @@ class InventoryService:
             case ItemType.HUNTING_RIFLE:
                 em = self.__client.embeds.utils.hunt(reward, broken)
             case _:
-                await self.__client.logger.log(f"{reward.author.id} tried to use {item_type}", level=LogLevel.ERROR)
-                return self.__client.embeds.inventory.error_item_not_in_inventory(item_type.name), True
+                await self.__client.logger.log(f"{member} tried to use {item_slug} inside inventory_system.use",
+                                               level=LogLevel.ERROR)
+                return self.__client.embeds.inventory.error_item_not_in_inventory(item_slug.name), True
 
         return em, False
 
-    async def sell(self, inter: Aci, item_type: ItemType | None, amount: str | None, all_: bool = False) -> None:
+    async def sell(self, inter: Aci, item_slug: str | None, amount: str | None, all_: bool = False) -> None:
         """
         Sell an item
         :param inter: interaction object
-        :param item_type: item to sell
+        :param item_slug: item to sell
         :param amount: amount of items to sell
         :param all_: if true, sell all items of this type
         :return: disnake.Embed
         """
         user  = await self.__client.db.users.get(inter.author.id)
         items = user.items
-        items = sorted(filter(lambda x: all_ or x.type.value == item_type, items),
-                       key=lambda x: x.rarity, reverse=True)
+        items = sorted(filter(lambda x: all_ or x.type.value == item_slug, items),
+                       key=lambda x: x.rarity.value, reverse=True)
 
         if not items:
-            em = self.__client.embeds.inventory.error_item_not_in_inventory(item_type.name)
+            em = self.__client.embeds.inventory.error_item_not_in_inventory(item_slug)
             await inter.send(embed=em)
             return
 
         if all_:
             amount = len(items)
-        if amount.isnumeric() and int(amount):
+        elif amount.isnumeric() and int(amount):
             amount = int(amount)
         elif amount in ["max", "all", "სულ"]:
             amount = len(items)
@@ -122,7 +123,7 @@ class InventoryService:
             return
 
         if not all_ and amount > len(items):
-            em = self.__client.embeds.inventory.error_not_enough_items(item_type, amount, len(items))
+            em = self.__client.embeds.inventory.error_not_enough_items(item_slug, amount, len(items))
             await inter.send(embed=em)
             return
 
@@ -137,9 +138,9 @@ class InventoryService:
         await self.__client.db.users.update(user)
 
         if not all_:
-            sold    = self.__client.embeds.inventory.success_sold_item(item_type.name, amount, total_price)
+            sold = self.__client.embeds.inventory.success_sold_item(item_slug, amount, total_price)
         else:
-            sold    = self.__client.embeds.inventory.success_sold_all_sellables(amount, total_price)
+            sold = self.__client.embeds.inventory.success_sold_all_sellables(amount, total_price)
         balance = await self.__client.embeds.economy.balance(inter.author)
 
         await inter.send(embeds=[sold, balance])

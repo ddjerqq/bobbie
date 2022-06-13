@@ -6,19 +6,20 @@ from client.client import Client
 class OnMemberRemove(commands.Cog):
     def __init__(self, client: Client):
         self.client = client
-        self.leave_channel: None | disnake.TextChannel = None
+        self.leave_channels = []  # type: list[disnake.TextChannel]
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.leave_channel = self.client.get_channel(
-            self.client.LEAVE_CHANNEL_ID
-        )
+        for id_ in self.client.config["channels"]["leave"]:
+            channel = self.client.get_channel(id_)
+            if channel:
+                self.leave_channels.append(channel)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member: disnake.Member):
         em = await self.client.embeds.member_leave(member)
-        await self.leave_channel.send(embed=em)
-        # move to client ^^^^^^^
+        for channel in self.leave_channels:
+            await channel.send(embed=em)
 
 
 def setup(client: Client):

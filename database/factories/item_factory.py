@@ -1,6 +1,6 @@
 import sqlite3
 
-from database.config import *
+from database.enums import *
 from database.id import Id
 from database.models.item import Item
 import random
@@ -19,16 +19,15 @@ class ItemFactory:
         return Item(id, item_type, rarity, None)
 
     @classmethod
-    def from_db_row(cls, data: sqlite3.Row) -> Item:
-        data = dict(data)
-        id        = data.pop("id")
-        item_type = ItemType[data.pop("item_type").upper()]
-        rarity    = Rarity(data.pop("rarity"))
-        owner_id  = data.pop("owner_id")
+    def from_db_row(cls, data: tuple[int, str, float, int]) -> Item:
+        id        = data[0]
+        item_type = ItemType[data[1].upper()]
+        rarity    = Rarity(data[2])
+        owner_id  = data[3]
         return Item(id, item_type, rarity, owner_id)
 
     @classmethod
-    def use(cls, item: Item) -> tuple[Item | None, bool] | None:
+    def use(cls, item: Item) -> tuple[Item | None, bool | None]:
         """
         return the result of the usage of the item.
         (item, broken)
@@ -46,7 +45,7 @@ class ItemFactory:
             case ItemType.KNIFE:
                 return None, broken
             case _:
-                return None
+                return None, None
 
         random_type = random.choice(list(iter(group)))
 

@@ -10,7 +10,7 @@ class OnGuildJoin(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: disnake.Guild):
-        await self.client.logger.log(f"joined {guild.name}")
+        await self.client.logger.log(f"joined ({guild.id}) {guild.name}")
 
         for member in guild.members:
             if member.bot:
@@ -18,7 +18,7 @@ class OnGuildJoin(commands.Cog):
 
             user = UserFactory.new(member.id, member.name)
             await self.client.db.users.add(user)
-            await self.client.logger.log(f"added ({member.id}) {member.name}")
+            await self.client.logger.log(f"added {member.id}")
 
 
 def setup(client: Client):

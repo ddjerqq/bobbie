@@ -116,6 +116,14 @@ class FunCommands(commands.Cog):
         )
         await inter.send(embed=embed)
 
+    @commands.user_command(name="marry", description="დაქორწინდი ვინმეზე", guild_ids=GUILD_IDS)
+    async def marry_user(self, inter: Aci, target: disnake.Member):
+        embed = disnake.Embed(
+            color=0x2d56a9,
+            description=f"{inter.author.mention} დაქორწინდა {target.mention}'ზე <3"
+        )
+        await inter.send(embed=embed)
+
 
 def setup(client):
     client.add_cog(FunCommands(client))
