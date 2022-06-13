@@ -52,7 +52,7 @@ class Item:
     def emoji(self) -> str | None:
         """get the emoji of this item type, if it is missing, then this will return an empty string"""
         try:
-            emoji = ItemEmoji[self.type.name].value[0]
+            emoji = ItemEmoji[self.type.name].value
         except KeyError:
             emoji = ""
         return emoji
@@ -61,7 +61,7 @@ class Item:
     def thumbnail(self) -> str | None:
         """get the item's thumbnail. if its missing, returns None"""
         try:
-            thumbnail = ItemThumbnail[self.type.name].value[0]
+            thumbnail = ItemThumbnail[self.type.name].value
         except KeyError:
             thumbnail = None
         return thumbnail
@@ -69,7 +69,7 @@ class Item:
     @property
     def name(self) -> str:
         """get the item's name ქართულად"""
-        return ItemName[self.type.name].value[0]
+        return ItemName[self.type.name].value
 
     @property
     def created_at(self) -> datetime:

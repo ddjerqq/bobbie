@@ -52,7 +52,7 @@ class FunService:
             "ბობა"
         ]
         em = self.__client.embeds.generic.generic_success(
-            title=f"{user.mention}'მ დალია {random.choice(coffee_types)} ყავა",
+            title=f"{user.name}'მ დალია {random.choice(coffee_types)} ყავა",
         )
         return em
 
@@ -66,7 +66,7 @@ class FunService:
             "მოცოცვის"
         ]
         em = self.__client.embeds.generic.generic_success(
-            title=f"{user.mention}'მ დალია {random.choice(tea_types)} ჩაი",
+            title=f"{user.name}'მ დალია {random.choice(tea_types)} ჩაი",
         )
 
         return em
@@ -81,14 +81,14 @@ class FunService:
             "ზედაზენის"
         ]
         em = self.__client.embeds.generic.generic_success(
-            title=f"{user.mention}'მ დალია {random.choice(beer_types)} ლუდი"
+            title=f"{user.name}'მ დალია {random.choice(beer_types)} ლუდი"
         )
 
         return em
 
     def popcorn(self, user: disnake.Member) -> disnake.Embed:
         em = self.__client.embeds.generic.generic_success(
-            title=f"{user.mention}'მ საიდანღაც დააძრო პოპკორნი"
+            title=f"{user.name}'მ საიდანღაც დააძრო პოპკორნი"
         )
         return em
 
@@ -113,24 +113,24 @@ class FunService:
             return
 
         yes_no = self.__client.embeds.utils.confirmation_needed(f"{inter.author.name}-ზე დაქორწინება, {target.mention}")
-        button = self.__client.buttons.YesNoButton(target)
+        button = self.__client.buttons.YesNoButton(intended_user=target, timeout=600)
 
         await inter.send(embed=yes_no, view=button)
-        result = await button.wait()
+        await button.wait()
 
-        if result:
+        if button.choice:
             user.items.remove(ring)
 
             em = self.__client.embeds.generic.generic_success(
-                title="გილოცავთ!🎂🍰💒",
+                title="გილოცავთ! 🎂🍰💒",
                 description=f"🤵{inter.author.mention} და 👰{target.mention} დაქორწინდნენ 🎊🎊🎊🎊"
             )
 
         else:
             em = self.__client.embeds.generic.generic_error(
-                title=f"არაო 😐😒😔😕",
+                title=f"არაო 😐😒😔😕🤡🤡🤡🤡",
                 description=f"{target.mention}'ს არ უნდა შენზე დაქორწინება, \n"
                             f"||თქვა რო ყლეაო და არ მევასებაო ahahhahah||"
             )
 
-        await inter.send(embed=em)
+        await inter.edit_original_message(embed=em, view=None)

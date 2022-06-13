@@ -46,5 +46,9 @@ class UtilityCommands(commands.Cog):
 
     @commands.command(name="info")
     async def info_text(self, ctx: commands.Context, target: disnake.Member = None):
-        em = self.fun_service.info(target or ctx.author)
+        em = self.util_service.info(target or ctx.author)
         await ctx.send(embed=em)
+
+
+def setup(client):
+    client.add_cog(UtilityCommands(client))
