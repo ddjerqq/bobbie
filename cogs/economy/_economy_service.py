@@ -35,7 +35,8 @@ class EconomyService:
 
         if user.wallet >= amount:
             user.wallet -= amount
-            user.bank += amount
+            user.bank   += amount
+            user.experience += 3
             await self.__client.db.users.update(user)
             return self.__client.embeds.economy.success_deposit(user, amount)
 
@@ -62,6 +63,7 @@ class EconomyService:
         if user.bank >= amount:
             user.bank -= amount
             user.wallet += amount
+            user.experience += 3
             await self.__client.db.users.update(user)
             return self.__client.embeds.economy.success_withdraw(user, amount)
 
@@ -128,6 +130,7 @@ class EconomyService:
             this.bank    -= amount
             other.wallet += amount
 
+        this.experience += 5
         await self.__client.db.users.update(this)
         await self.__client.db.users.update(other)
 
@@ -138,4 +141,3 @@ class EconomyService:
         else:
             await inter.send(embed=em)
 
-    
