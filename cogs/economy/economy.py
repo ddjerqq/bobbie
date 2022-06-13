@@ -14,8 +14,13 @@ class Economy(commands.Cog):
         self.economy_service = EconomyService(client)
         self.job_service     = JobService(client)
 
+    @commands.user_command(name="balance", guild_ids=GUILD_IDS, description="user-ის ბალანსი")
+    async def balance_user(self, inter: Aci, target: disnake.Member):
+        em = await self.economy_service.balance(target)
+        await inter.send(embed=em)
+
     @commands.slash_command(name="balance", guild_ids=GUILD_IDS, description="გაიგე რამდენი ფული გაქვს")
-    async def balance(self, inter: Aci, target: disnake.Member = None):
+    async def balance_slash(self, inter: Aci, target: disnake.Member = None):
         em = await self.economy_service.balance(target or inter.author)
         await inter.send(embed=em)
 
