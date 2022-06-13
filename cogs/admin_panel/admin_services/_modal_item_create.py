@@ -49,6 +49,11 @@ class ItemCreateModal(ui.Modal):
 
     async def callback(self, inter: ModalInteraction) -> None:
         print(inter.data)
+        print(inter.text_values)
+
+        print(inter.token)
+
+
         type     = ItemType[inter.text_values.get("type")]
         rarity   = float(inter.text_values.get("rarity"))
         owner_id = int(inter.text_values.get("owner_id", str(inter.author.id)))
