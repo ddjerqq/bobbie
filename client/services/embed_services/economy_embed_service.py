@@ -14,14 +14,12 @@ class EconomyEmbedService:
                            color=0x692b2b)
         return em
 
-    async def error_not_enough_money(self, where: str = "", _for: str = "", needs: int = "") -> disnake.Embed:
+    async def error_not_enough_money(self, where: str = "") -> disnake.Embed:
         """
-        შენ არ გაქვს საკმარისი ფული {where} {_for} \n
-        შენ გჭირდება {needs} ₾ \n
+        შენ არ გაქვს საკმარისი ფული {where}
         """
         em = disnake.Embed(color=0x692b2b,
-                           description=f"შენ არ გაქვს საკმარისი ფული {where} {_for}\n"
-                                       f"შენ გჭირდება {needs}₾")
+                           description=f"შენ არ გაქვს საკმარისი ფული {where}")
         return em
 
     def error_self_give(self) -> disnake.Embed:

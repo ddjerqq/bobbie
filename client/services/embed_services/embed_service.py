@@ -10,5 +10,3 @@ class EmbedService:
         self.generic   = GenericEmbedService(client)
         self.inventory = InventoryEmbedService(client)
         self.utils     = UtilsEmbedService(client)
-
-

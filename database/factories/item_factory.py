@@ -28,10 +28,11 @@ class ItemFactory:
         return Item(id, item_type, rarity, owner_id)
 
     @classmethod
-    def use(cls, item: Item) -> tuple[Item, bool] | None:
+    def use(cls, item: Item) -> tuple[Item | None, bool] | None:
         """
         return the result of the usage of the item.
         (item, broken)
+        if the item is knife, this will return only only broken
         """
         broken = random.random() < item.rarity.value ** 2.5
 
@@ -42,6 +43,8 @@ class ItemFactory:
                 group = HuntableRandomWeight
             case ItemType.SHOVEL:
                 group = DigableRandomWeight
+            case ItemType.KNIFE:
+                return None, broken
             case _:
                 return None
 
