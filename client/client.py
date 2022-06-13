@@ -40,9 +40,17 @@ class Client(commands.Bot):
             for cog in files:
                 if cog.endswith(".py"):
                     cog = cog.removesuffix(".py")
+                else:
+                    continue
+
                 if cog.startswith("_"):
                     continue
+
                 folder = pathlib.Path(root).name
+
+                if folder.startswith("_"):
+                    continue
+
                 cog = f"cogs.{folder}.{cog}"
                 self.load_extension(cog)
 
