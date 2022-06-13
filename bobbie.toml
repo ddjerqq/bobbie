@@ -1,7 +1,11 @@
+[tokens]
+test = "OTU5ODM5ODQ4ODQ2NDg3NjEy.God_gC.A4-hzr4k4aPFeMNbzT5IVu7FxSJcFnWgAKweQg"
+prod = "OTU4MTA3OTA1NzkyNTQ0ODA5.YkIhhQ.YduxqTYY1SVVhQ84C_Ev_WBVC1M"
+
 [bot]
 prefix = "!"
 test_guild_id = 965308417185021982
-testing = true
+testing = false
 
 
 [channels]

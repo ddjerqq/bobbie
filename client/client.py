@@ -8,9 +8,6 @@ from database import Database
 from client.logger import Logger
 from client.services.embed_services.embed_service import EmbedService
 from client.services.view_services.button_service import Buttons
-from dotenv import load_dotenv
-
-load_dotenv()
 
 PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,8 +17,8 @@ GUILD_IDS    = None if not DEV_TEST else [CONFIG["bot"]["test_guild_id"]]
 
 
 class Client(commands.Bot):
-    __TOKEN          = os.getenv("PROD_TOKEN")
-    __TEST_TOKEN     = os.getenv("TEST_TOKEN")
+    __TOKEN          = CONFIG["tokens"]["prod"]
+    __TEST_TOKEN     = CONFIG["tokens"]["test"]
 
     DELETE_MESSAGE_LOG_CHANNELS  = CONFIG["channels"]["deleted_msgs"]
     CONFESSION_CHANNELS          = CONFIG["channels"]["confessions"]
