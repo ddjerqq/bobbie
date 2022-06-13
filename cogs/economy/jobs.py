@@ -45,7 +45,7 @@ class Jobs(commands.Cog):
     # endregion
 
     # region COMMAND WORK
-    @commands.slash_command(name="work", guild_ids=GUILD_IDS, description="იმუშავე და გააკეთე 150 ₾არი")
+    @commands.slash_command(name="work", guild_ids=GUILD_IDS, description="იმუშავე და გააკეთე 300 ₾არი")
     @commands.cooldown(1, 600, commands.BucketType.user)
     async def work_slash(self, inter: Aci):
         em = await self.job_service.work(inter.author)

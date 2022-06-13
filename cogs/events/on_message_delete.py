@@ -25,7 +25,7 @@ class OnMessageDelete(commands.Cog):
     @commands.Cog.listener()
     async def on_message_delete(self, message: disnake.Message):
         if self.message_delete_check(message):
-            em = self.client.embeds.message_delete(message)
+            em = self.client.embeds.utils.deleted_message(message)
             for channel in self.deleted_messages_channels:
                 await channel.send(embed=em)
 
