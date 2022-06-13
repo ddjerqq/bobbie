@@ -6,3 +6,4 @@ class Buyable(Enum):
     HUNTING_RIFLE = "HUNTING_RIFLE"
     SHOVEL        = "SHOVEL"
     KNIFE         = "KNIFE"
+    WEDDING_RING  = "WEDDING_RING"

@@ -24,3 +24,4 @@ class ItemType(Enum):
     AMETHYST      = "AMETHYST"
     DIAMOND       = "DIAMOND"
     KNIFE         = "KNIFE"
+    WEDDING_RING  = "WEDDING_RING"

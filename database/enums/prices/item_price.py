@@ -24,3 +24,4 @@ class ItemPrice(Enum):
     AMETHYST      = 40
     DIAMOND       = 50
     KNIFE         = 50
+    WEDDING_RING  = 500

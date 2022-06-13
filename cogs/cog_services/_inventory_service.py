@@ -1,4 +1,5 @@
 import disnake
+from disnake.ext.commands import Context as Ctx
 from client.client import Client
 from client.logger import LogLevel
 from database import ItemType
@@ -92,7 +93,7 @@ class InventoryService:
 
         return em, False
 
-    async def sell(self, inter: Aci, item_slug: str | None, amount: str | None, all_: bool = False) -> None:
+    async def sell(self, inter: Aci | Ctx, item_slug: str | None, amount: str | None, all_: bool = False) -> None:
         """
         Sell an item
         :param inter: interaction object

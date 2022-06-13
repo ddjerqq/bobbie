@@ -1,5 +1,7 @@
 import disnake
 from client.client import Client
+from disnake import ApplicationCommandInteraction as Aci
+from disnake.ext.commands import Context as Ctx
 
 
 class EconomyService:
@@ -71,7 +73,7 @@ class EconomyService:
             return await self.__client.embeds.economy.error_not_enough_money()
 
     async def give(self,
-                   inter: disnake.ApplicationCommandInteraction,
+                   inter: Aci | Ctx,
                    sender: disnake.Member,
                    receiver: disnake.Member,
                    amount: str) -> None:

@@ -12,6 +12,12 @@ class Buttons:
         send an ephemeral message to the unintended member
         """
         def __init__(self, *, timeout: float = 180, intended_user: disnake.Member = None):
+            """
+            YesNoButton constructor
+
+            :param timeout: time in seconds before the button times out
+            :param intended_user: user who should be able to use the button
+            """
             super().__init__(timeout=timeout)
             self._intended_user = intended_user
             self.choice = None
