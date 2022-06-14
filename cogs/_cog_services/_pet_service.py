@@ -1,6 +1,6 @@
 import disnake
 from client.client import Client
-from database import PetType, ItemPrice
+from database import PetType, PetPrice
 from database.factories.pet_factory import PetFactory
 
 
@@ -17,7 +17,7 @@ class PetService:
         """
         user  = await self.__client.db.users.get(buyer.id)
         pet   = PetFactory.new(PetType[pet_slug])
-        price = ItemPrice[pet.type.name].value  # type: int
+        price = PetPrice[pet_slug].value  # type: int
 
         if user.wallet + user.bank < price:
             return self.__client.embeds.economy.error_not_enough_money(f"რათა იყიდო {pet.name}\nშენ გჭირდება {price}")

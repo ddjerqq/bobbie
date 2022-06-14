@@ -45,7 +45,7 @@ class PetName(Enum):
     CACTUS    = "კაქტუსი"
     BIRD_FISH = "მფრინავი თევზი"
     BANANA    = "ბანანი"
-    DISCORD_KITTEN = "დისკორდ კიტქნი"
+    DISCORD_KITTEN = "დისკორდ კიტენი"
     HAMSTER   = "ზაზუნა"
 
 

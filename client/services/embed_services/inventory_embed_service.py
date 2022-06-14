@@ -77,7 +77,7 @@ class InventoryEmbedService:
                            color=0x2b693a)
         em.add_field(name="იშვიათობა",
                      value=f"`{item.rarity.name}` - `{item.rarity.value:.8f}`")
-        # em.set_footer(text=f"ID: {item.id}")
+        em.set_footer(text=f"ID: {item.id}")
         return em
 
     async def util_inventory(self, target: disnake.Member) -> disnake.Embed:
