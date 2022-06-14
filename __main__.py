@@ -10,17 +10,18 @@ client = Client(
 )
 
 
-async def main():
+def main():
+    loop = asyncio.get_event_loop()
     try:
-        await client.start()
+        loop.run_until_complete(client.start())
     except KeyboardInterrupt:
-        await client.close()
+        loop.run_until_complete(client.close())
     except Exception as e:
-        await client.logger.log(e, level=LogLevel.ERROR)
-        await client.close()
+        loop.run_until_complete(client.logger.log(e, level=LogLevel.ERROR))
     finally:
-        await client.close()
+        loop.run_until_complete(client.close())
+        loop.close()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

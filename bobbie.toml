@@ -5,7 +5,7 @@ prod = "OTU4MTA3OTA1NzkyNTQ0ODA5.YkIhhQ.YduxqTYY1SVVhQ84C_Ev_WBVC1M"
 [bot]
 prefix = "!"
 test_guild_id = 965308417185021982
-testing = true
+testing = false
 
 
 [channels]
