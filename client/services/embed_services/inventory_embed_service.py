@@ -30,7 +30,7 @@ class InventoryEmbedService:
         """
         შენ არ გაქვს {item.name}
         """
-        em = disnake.Embed(description=f"შენ არ გაქვს {ItemName[item_slug.upper()]}",
+        em = disnake.Embed(description=f"შენ არ გაქვს {ItemName[item_slug.upper()].value}",
                            colour=0x692b2b)
         return em
 

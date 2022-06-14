@@ -9,6 +9,7 @@ class OnMemberBan(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_ban(self, guild: disnake.Guild, user: disnake.Member):
+        await self.client.db.users.delete(user.id)
         await self.client.logger.log(f"{user.name}#{user.discriminator} id=({user.id}) got banned in {guild.name}")
 
 

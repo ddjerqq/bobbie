@@ -1,5 +1,4 @@
 from disnake.ext import commands
-from disnake.ext.commands import errors
 from disnake import ApplicationCommandInteraction as Aci
 from disnake.ext.commands import Context as Ctx
 
@@ -20,7 +19,6 @@ class InventorySystemCommands(commands.Cog):
     async def buy_slash(self, inter: Aci, item: TOOL_BUY_PRICES):  # treat item as item slug
         em = await self.inventory_service.buy(inter.author, item)
         await inter.send(embed=em)
-
     # endregion
 
     # region COMMAND INVENTORY
@@ -44,8 +42,7 @@ class InventorySystemCommands(commands.Cog):
         em, reset = await self.inventory_service.use(inter.author, ItemType.FISHING_ROD)
         if reset:
             self.fish_slash.reset_cooldown(inter)
-        else:
-            await inter.send(embed=em)
+        await inter.send(embed=em)
 
     @commands.command(name="fish")
     @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
@@ -53,8 +50,7 @@ class InventorySystemCommands(commands.Cog):
         em, reset = await self.inventory_service.use(ctx.author, ItemType.FISHING_ROD)
         if reset:
             self.fish_text.reset_cooldown(ctx)
-        else:
-            await ctx.send(embed=em)
+        await ctx.send(embed=em)
     # endregion
 
     # region COMMAND HUNT
@@ -64,8 +60,7 @@ class InventorySystemCommands(commands.Cog):
         em, reset = await self.inventory_service.use(inter.author, ItemType.HUNTING_RIFLE)
         if reset:
             self.hunt_slash.reset_cooldown(inter)
-        else:
-            await inter.send(embed=em)
+        await inter.send(embed=em)
 
 
     @commands.command(name="hunt")
@@ -74,8 +69,7 @@ class InventorySystemCommands(commands.Cog):
         em, reset = await self.inventory_service.use(ctx.author, ItemType.HUNTING_RIFLE)
         if reset:
             self.hunt_text.reset_cooldown(ctx)
-        else:
-            await ctx.send(embed=em)
+        await ctx.send(embed=em)
     # endregion
 
     # region COMMAND DIG
@@ -85,8 +79,7 @@ class InventorySystemCommands(commands.Cog):
         em, reset = await self.inventory_service.use(inter.author, ItemType.SHOVEL)
         if reset:
             self.dig_slash.reset_cooldown(inter)
-        else:
-            await inter.send(embed=em)
+        await inter.send(embed=em)
 
 
     @commands.command(name="dig")
@@ -95,8 +88,7 @@ class InventorySystemCommands(commands.Cog):
         em, reset = await self.inventory_service.use(ctx.author, ItemType.SHOVEL)
         if reset:
             self.dig_text.reset_cooldown(ctx)
-        else:
-            await ctx.send(embed=em)
+        await ctx.send(embed=em)
     # endregion
 
     # region COMMAND SELL

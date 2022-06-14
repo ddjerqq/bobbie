@@ -75,13 +75,15 @@ class ItemName(Enum):
 
 
 class ItemPrice(Enum):
-    FISHING_ROD   = 15
+    FISHING_ROD   = 75
+    HUNTING_RIFLE = 75
+    SHOVEL        = 75
+
     COMMON_FISH   = 5
     RARE_FISH     = 10
     TROPICAL_FISH = 20
     SHARK         = 40
     GOLDEN_FISH   = 50
-    HUNTING_RIFLE = 20
     PIG           = 5
     DEER          = 10
     BEAR          = 20
@@ -89,7 +91,6 @@ class ItemPrice(Enum):
     TIGER         = 40
     LION          = 50
     ELEPHANT      = 60
-    SHOVEL        = 15
     COPPER_COIN   = 1
     EMERALD       = 10
     RUBY          = 20

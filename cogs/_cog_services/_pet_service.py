@@ -40,5 +40,5 @@ class PetService:
 
     async def inventory(self, member: disnake.Member) -> disnake.Embed:
         user = await self.__client.db.users.get(member.id)
-        em   = self.__client.embeds.pets.util_inventory(user)
+        em   = await self.__client.embeds.pets.util_inventory(user)
         return em

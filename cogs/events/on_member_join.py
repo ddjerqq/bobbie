@@ -10,6 +10,9 @@ class OnMemberJoin(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: disnake.Member):
+        old_user = await self.client.db.users.get(member.id)
+        if old_user is not None:
+            return
         user = UserFactory.new(member.id, member.name)
         await self.client.db.users.add(user)
         await self.client.logger.log(f"added {user}")
