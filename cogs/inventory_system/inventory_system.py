@@ -5,7 +5,7 @@ from disnake.ext.commands import Context as Ctx
 
 from client.client import Client, DEV_TEST, GUILD_IDS
 from client.logger import LogLevel
-from cogs.cog_services._inventory_service import InventoryService
+from cogs._cog_services._inventory_service import InventoryService
 from database.enums import *
 
 
@@ -15,46 +15,22 @@ class InventorySystemCommands(commands.Cog):
         self.inventory_service = InventoryService(client)
 
     # region COMMAND BUY
-    @commands.slash_command(name="buy", guild_ids=GUILD_IDS, description="იყიდე რაიმე ნივთი მაღაზიიდან")
+    @commands.slash_command(name="buy_item", guild_ids=GUILD_IDS, description="იყიდე რაიმე ნივთი მაღაზიიდან")
     @commands.cooldown(2, 600 if not DEV_TEST else 1, commands.BucketType.user)
     async def buy_slash(self, inter: Aci, item: TOOL_BUY_PRICES):  # treat item as item slug
         em = await self.inventory_service.buy(inter.author, item)
         await inter.send(embed=em)
 
-    @buy_slash.error
-    async def _buy_slash_error(self, ctx: commands.Context, _error: errors.CommandError):
-        if isinstance(_error, errors.CommandOnCooldown):
-            em = self.client.embeds.cooldown("იყიდე ოთხი ნივთი მაღაზიიდან", "ყიდვას", _error.retry_after)
-            await ctx.send(embed=em)
-        else:
-            await self.client.logger.log(_error, level=LogLevel.ERROR)
-            await ctx.send(embed=self.client.embeds.generic.generic_error("დაფიქსირდა შეცდომა",
-                                                                          description=str(_error)))
-
-    @commands.command(name="buy")
-    @commands.cooldown(2, 600 if not DEV_TEST else 1, commands.BucketType.user)
-    async def buy_text(self, ctx: Ctx, item: TOOL_BUY_PRICES):
-        em = await self.inventory_service.buy(ctx.author, item)
-        await ctx.send(embed=em)
-
-    @buy_text.error
-    async def _buy_text_error(self, ctx: commands.Context, _error: errors.CommandError):
-        if isinstance(_error, errors.CommandOnCooldown):
-            em = self.client.embeds.cooldown("იყიდე ოთხი ნივთი მაღაზიიდან", "ყიდვას", _error.retry_after)
-            await ctx.send(embed=em)
-        else:
-            await self.client.logger.log(_error, level=LogLevel.ERROR)
-            await ctx.send(embed=self.client.embeds.generic.generic_error("დაფიქსირდა შეცდომა",
-                                                                          description=str(_error)))
     # endregion
 
     # region COMMAND INVENTORY
-    @commands.slash_command(name="inventory", guild_ids=GUILD_IDS, description="ნახე შენი ინვენტარი")
+    @commands.slash_command(name="item_inventory", aliases=["inv"], guild_ids=GUILD_IDS,
+                            description="ნახე შენი ნივთების ინვენტარი")
     async def inventory(self, inter: Aci):
         em = await self.inventory_service.inventory(inter.author)
         await inter.send(embed=em)
 
-    @commands.command(name="inventory")
+    @commands.command(name="item_inventory", aliases=["inv"])
     async def inventory_text(self, ctx: Ctx):
         em = await self.inventory_service.inventory(ctx.author)
         await ctx.send(embed=em)
@@ -71,16 +47,6 @@ class InventorySystemCommands(commands.Cog):
         else:
             await inter.send(embed=em)
 
-    @fish_slash.error
-    async def _fish_slash_error(self, ctx: commands.Context, _error: errors.CommandError):
-        if isinstance(_error, errors.CommandOnCooldown):
-            em = self.client.embeds.cooldown("ითევზავე", "თევზაობას", _error.retry_after)
-            await ctx.send(embed=em)
-        else:
-            await self.client.logger.log(_error, level=LogLevel.ERROR)
-            await ctx.send(embed=self.client.embeds.generic.generic_error("დაფიქსირდა შეცდომა",
-                                                                          description=str(_error)))
-
     @commands.command(name="fish")
     @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
     async def fish_text(self, ctx: Ctx):
@@ -89,16 +55,6 @@ class InventorySystemCommands(commands.Cog):
             self.fish_text.reset_cooldown(ctx)
         else:
             await ctx.send(embed=em)
-
-    @fish_text.error
-    async def _fish_text_error(self, ctx: commands.Context, _error: errors.CommandError):
-        if isinstance(_error, errors.CommandOnCooldown):
-            em = self.client.embeds.cooldown("ითევზავე", "თევზაობას", _error.retry_after)
-            await ctx.send(embed=em)
-        else:
-            await self.client.logger.log(_error, level=LogLevel.ERROR)
-            await ctx.send(embed=self.client.embeds.generic.generic_error("დაფიქსირდა შეცდომა",
-                                                                          description=str(_error)))
     # endregion
 
     # region COMMAND HUNT
@@ -111,16 +67,6 @@ class InventorySystemCommands(commands.Cog):
         else:
             await inter.send(embed=em)
 
-    @hunt_slash.error
-    async def _hunt_error(self, ctx: commands.Context, _error: errors.CommandError):
-        if isinstance(_error, errors.CommandOnCooldown):
-            em = self.client.embeds.cooldown("ინადირე", "ნადირობას", _error.retry_after)
-            await ctx.send(embed=em)
-        else:
-            await self.client.logger.log(_error, level=LogLevel.ERROR)
-            await ctx.send(embed=self.client.embeds.generic.generic_error("დაფიქსირდა შეცდომა",
-                                                                          description=str(_error)))
-
 
     @commands.command(name="hunt")
     @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
@@ -130,16 +76,6 @@ class InventorySystemCommands(commands.Cog):
             self.hunt_text.reset_cooldown(ctx)
         else:
             await ctx.send(embed=em)
-
-    @hunt_text.error
-    async def _hunt_error(self, ctx: commands.Context, _error: errors.CommandError):
-        if isinstance(_error, errors.CommandOnCooldown):
-            em = self.client.embeds.cooldown("ინადირე", "ნადირობას", _error.retry_after)
-            await ctx.send(embed=em)
-        else:
-            await self.client.logger.log(_error, level=LogLevel.ERROR)
-            await ctx.send(embed=self.client.embeds.generic.generic_error("დაფიქსირდა შეცდომა",
-                                                                          description=str(_error)))
     # endregion
 
     # region COMMAND DIG
@@ -152,16 +88,6 @@ class InventorySystemCommands(commands.Cog):
         else:
             await inter.send(embed=em)
 
-    @dig_slash.error
-    async def _dig_slash_error(self, ctx: commands.Context, _error: errors.CommandError):
-        if isinstance(_error, errors.CommandOnCooldown):
-            em = self.client.embeds.cooldown("გათხარე მიწა", "მიწის გათხრას", _error.retry_after)
-            await ctx.send(embed=em)
-        else:
-            await self.client.logger.log(_error, level=LogLevel.ERROR)
-            await ctx.send(embed=self.client.embeds.generic.generic_error("დაფიქსირდა შეცდომა",
-                                                                          description=str(_error)))
-
 
     @commands.command(name="dig")
     @commands.cooldown(1, 300 if not DEV_TEST else 1, commands.BucketType.user)
@@ -171,16 +97,6 @@ class InventorySystemCommands(commands.Cog):
             self.dig_text.reset_cooldown(ctx)
         else:
             await ctx.send(embed=em)
-
-    @dig_text.error
-    async def _dig_text_error(self, ctx: commands.Context, _error: errors.CommandError):
-        if isinstance(_error, errors.CommandOnCooldown):
-            em = self.client.embeds.cooldown("გათხარე მიწა", "მიწის გათხრას", _error.retry_after)
-            await ctx.send(embed=em)
-        else:
-            await self.client.logger.log(_error, level=LogLevel.ERROR)
-            await ctx.send(embed=self.client.embeds.generic.generic_error("დაფიქსირდა შეცდომა",
-                                                                          description=str(_error)))
     # endregion
 
     # region COMMAND SELL

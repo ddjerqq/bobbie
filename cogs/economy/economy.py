@@ -4,8 +4,8 @@ from disnake.ext import commands
 from disnake import ApplicationCommandInteraction as Aci
 
 from client.client import Client, GUILD_IDS
-from cogs.cog_services._economy_service import EconomyService
-from cogs.cog_services._job_service import JobService
+from cogs._cog_services._economy_service import EconomyService
+from cogs._cog_services._job_service import JobService
 
 
 class Economy(commands.Cog):

@@ -1,13 +1,7 @@
 import asyncio
-import warnings
-
 import disnake
-from rgbprint import rgbprint
-
 from client.client import Client
-
-
-warnings.filterwarnings("ignore")
+from client.logger import LogLevel
 
 client = Client(
     help_command=None,
@@ -16,20 +10,17 @@ client = Client(
 )
 
 
-if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-
+async def main():
     try:
-        loop.run_until_complete(client.start())
-        loop.run_forever()
-
+        await client.start()
     except KeyboardInterrupt:
-        loop.run_until_complete(client.close())
-
+        await client.close()
     except Exception as e:
-        rgbprint(f"[!!!] {type(e)}\n{e}", color="red")
-
+        await client.logger.log(e, level=LogLevel.ERROR)
+        await client.close()
     finally:
-        loop.stop()
-        loop.close()
-        exit(0)
+        await client.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

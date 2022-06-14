@@ -3,7 +3,7 @@ from disnake.ext import commands
 from disnake import ApplicationCommandInteraction as Aci
 
 from client.client import Client, GUILD_IDS
-from cogs.cog_services._fun_service import FunService
+from cogs._cog_services._fun_service import FunService
 
 
 class FunCommands(commands.Cog):

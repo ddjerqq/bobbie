@@ -49,7 +49,7 @@ class Item:
             return True
 
     @property
-    def emoji(self) -> str | None:
+    def emoji(self) -> str:
         """get the emoji of this item type, if it is missing, then this will return an empty string"""
         try:
             emoji = ItemEmoji[self.type.name].value
@@ -81,7 +81,15 @@ class Item:
 
     @property
     def db_dict(self) -> dict:
-        return {"id": self.id, "type": self.type.name.lower(), "rarity": self.rarity.value, "owner_id": self.owner_id}
+        """
+        id, type, rarity, owner_id
+        """
+        return {
+            "id": self.__id,
+            "type": self.type.name.lower(),
+            "rarity": self.rarity.value,
+            "owner_id": self.owner_id
+        }
 
     def __hash__(self):
         return hash(self.__id)

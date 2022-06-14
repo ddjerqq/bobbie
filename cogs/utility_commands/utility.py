@@ -4,7 +4,7 @@ from disnake import ApplicationCommandInteraction as Aci
 
 
 from client.client import Client, GUILD_IDS
-from cogs.cog_services._utility_service import UtilityService
+from cogs._cog_services._utility_service import UtilityService
 
 
 class UtilityCommands(commands.Cog):

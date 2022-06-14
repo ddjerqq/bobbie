@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from database.models.item import Item
+from database.models.pet import Pet
 
 
 class User(object):
@@ -12,6 +13,7 @@ class User(object):
         self.bank = bank
 
         self.items = []  # type: list[Item]
+        self.pets  = []  # type: list[Pet]
 
     @property
     def id(self):
@@ -21,16 +23,20 @@ class User(object):
     def db_dict(self) -> dict:
         """
         {
+            id
+            username
+            experience
+            wallet
+            bank
+        }
+        """
+        return {
             "id": self.__id,
             "username": self.username,
             "experience": self.experience,
             "wallet": self.wallet,
-            "bank": self.bank
+            "bank": self.bank,
         }
-        """
-        return {"id": self.__id, "username": self.username,
-                "experience": self.experience, "bank": self.bank,
-                "wallet": self.wallet}
 
     def __hash__(self):
         return hash(self.__id)
@@ -39,8 +45,7 @@ class User(object):
         return isinstance(other, User) and self.__id == other.__id
 
     def __repr__(self):
-        return f"<User id={self.__id} username={self.username}>"
+        return f"<Db.User id={self.__id} username={self.username}>"
 
     def __str__(self):
         return f"({self.__id}) {self.username}"
-

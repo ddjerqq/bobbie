@@ -13,6 +13,8 @@ class PetType(Enum):
     CACTUS    = "CACTUS"
     BIRD_FISH = "BIRD_FISH"
     BANANA    = "BANANA"
+    DISCORD_KITTEN = "DISCORD_KITTEN"
+    HAMSTER   = "HAMSTER"
 
 
 class PetEmoji(Enum):
@@ -27,6 +29,8 @@ class PetEmoji(Enum):
     CACTUS    = "🌵"
     BIRD_FISH = "🐟"
     BANANA    = "🍌"
+    DISCORD_KITTEN = "🐈👧"
+    HAMSTER   = "🐀"
 
 
 class PetName(Enum):
@@ -41,6 +45,8 @@ class PetName(Enum):
     CACTUS    = "კაქტუსი"
     BIRD_FISH = "მფრინავი თევზი"
     BANANA    = "ბანანი"
+    DISCORD_KITTEN = "დისკორდ კიტქნი"
+    HAMSTER   = "ზაზუნა"
 
 
 class PetPrice(Enum):
@@ -51,10 +57,12 @@ class PetPrice(Enum):
     PENGUIN   = 500
     WOLF      = 600
     TIGER     = 700
-    LION      = 800
-    CACTUS    = 900
+    LION      = 400
+    CACTUS    = 500
     BIRD_FISH = 1000
     BANANA    = 1100
+    DISCORD_KITTEN = 1200
+    HAMSTER   = 200
 
 
 class PetThumbnail(Enum):
