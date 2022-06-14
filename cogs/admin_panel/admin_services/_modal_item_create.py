@@ -11,6 +11,8 @@ from database.rarity import Rarity
 
 class ItemCreateModal(ui.Modal):
     def __init__(self, client: Client):
+        self.client = client
+
         item_type_select_options = [
             SelectOption(label=item.type.name, value=item.type.value, description=item.name, emoji="🔰")
             for item in map(lambda t: ItemFactory.new(t), ItemType)
@@ -80,5 +82,3 @@ class ItemCreateModal(ui.Modal):
 
     async def on_timeout(self) -> None:
         pass
-
-

@@ -56,7 +56,7 @@ class InventoryService:
         :param member: user using the item
         :param item_slug: item to use
         :return: (disnake.Embed, and reset bool)
-        if the reset bool is True, then the item was not used, cuz the user didnt have it probably,
+        if the reset bool is True, then the item was not used, cuz the user didn't have it probably,
         so we should return True
         """
         user = await self.__client.db.users.get(member.id)
