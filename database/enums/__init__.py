@@ -1,12 +1,14 @@
 import disnake.ext.commands
 
-from . emoji import *
-from . names import *
-from . prices import *
-from . random_chance_weights import *
-from . thumbnails import *
-from . tools import *
-from . item_types import *
+from .item_emoji import *
+from .item_name import *
+from .item_price import *
+from .fishable_weight import *
+from .huntable_weight import *
+from .digable_weight import *
+from .buyable import *
+from .item_thumbnail import *
+from .item_type import *
 
 __all__ = ["ItemEmoji", "ItemName", "ItemPrice",
            "HuntableRandomWeight", "DigableRandomWeight",
