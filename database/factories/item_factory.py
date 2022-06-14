@@ -1,5 +1,3 @@
-import sqlite3
-
 from database.enums import *
 from database.id import Id
 from database.models.item import Item

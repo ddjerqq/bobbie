@@ -1,7 +1,6 @@
 import disnake
 
-from database import ItemType
-from database.enums import ItemName
+from database.enums import *
 from database.factories.item_factory import ItemFactory
 from database.models.item import Item
 from database.models.user import User
