@@ -6,6 +6,7 @@ from disnake.ext import commands
 
 from client.client import Client
 from database import ItemType
+from database.factories.marriage_factory import MarriageFactory
 
 
 class FunService:
@@ -101,8 +102,8 @@ class FunService:
 
 
     async def marry(self, inter: Aci | commands.Context, target: disnake.Member) -> None:
-        user = await self.__client.db.users.get(inter.author.id)
-        ring = next((item for item in user.items if item.type == ItemType.WEDDING_RING), None)
+        user        = await self.__client.db.users.get(inter.author.id)
+        ring        = next((item for item in user.items if item.type == ItemType.WEDDING_RING), None)
 
         if not ring:
             em = self.__client.embeds.generic.generic_error(
@@ -112,25 +113,90 @@ class FunService:
             await inter.send(embed=em)
             return
 
-        yes_no = self.__client.embeds.utils.confirmation_needed(f"{inter.author.name}-ზე დაქორწინება, {target.mention}")
+        if target.id == inter.author.id:
+            em = self.__client.embeds.generic.generic_error(
+                title="დებილო მაიმუნო ბავშვო შენა 🤡",
+                description=f"შენ ვერ მოიყვან შენს თავს ცოლად!!")
+            await inter.send(embed=em)
+            return
+
+
+        yes_no = self.__client.embeds.utils.confirmation_needed(f"{inter.author.mention}-ზე დაქორწინება, {target.mention}")
         button = self.__client.buttons.YesNoButton(intended_user=target, timeout=600)
 
         await inter.send(embed=yes_no, view=button)
         await button.wait()
 
-        if button.choice:
-            user.items.remove(ring)
-
-            em = self.__client.embeds.generic.generic_success(
-                title="გილოცავთ! 🎂🍰💒",
-                description=f"🤵{inter.author.mention} და 👰{target.mention} დაქორწინდნენ 🎊🎊🎊🎊"
-            )
-
-        else:
+        if not button.choice:
             em = self.__client.embeds.generic.generic_error(
                 title=f"არაო 😐😒😔😕🤡🤡🤡🤡",
                 description=f"{target.mention}'ს არ უნდა შენზე დაქორწინება, \n"
                             f"||თქვა რო ყლეაო და არ მევასებაო ahahhahah||"
             )
+            await inter.edit_original_message(embed=em, view=None)
+
+        user.items.remove(ring)
+
+        color = random.randint(0, 0xffffff)
+        bride_role = await inter.guild.create_role(name=f"{inter.author.name}'ს ცოლი",
+                                                   color=color,
+                                                   reason="Marriage")
+        king_role  = await inter.guild.create_role(name=f"{target.name}'ს ქმარი",
+                                                   color=color,
+                                                   reason="Marriage")
+        marriage = MarriageFactory.new(inter.author, target, inter.guild, bride_role, king_role)
+        await self.__client.db.marriages.add(marriage)
+
+        await inter.author.add_roles(king_role, reason="Marriage")
+        await target.add_roles(bride_role, reason="Marriage")
+
+        target_user = await self.__client.db.users.get(target.id)
+        user.marriage_id = marriage.id
+        target_user.marriage_id = marriage.id
+
+        await self.__client.db.users.update(user)
+        await self.__client.db.users.update(target_user)
+
+        em = self.__client.embeds.generic.generic_success(
+            title="გილოცავთ! 🎂🍰💒",
+            description=f"🤵{inter.author.mention} და 👰{target.mention} დაქორწინდნენ 🎊🎊🎊🎊"
+        )
 
         await inter.edit_original_message(embed=em, view=None)
+
+
+    async def divorce(self, inter: Aci | commands.Context) -> None:
+        user = await self.__client.db.users.get(inter.author.id)
+
+        if not user.marriage_id:
+            em = self.__client.embeds.generic.generic_success(
+                title="დებილო მაინმუნო ბავშვო შენა!",
+                description=f"შენ არც ხარ არავისზე დაქორწინებული. ვერავისაც ვერ გაეყრები 😒😐"
+            )
+            await inter.send(embed=em)
+            return
+
+
+        marriage = await self.__client.db.marriages.get(user.marriage_id)
+
+        guild = self.__client.get_guild(marriage.guild_id)
+        bride_role = guild.get_role(marriage.bride_role_id)
+        king_role  = guild.get_role(marriage.king_role_id)
+        await bride_role.delete(reason="Divorce")
+        await king_role.delete(reason="Divorce")
+
+        bride = await self.__client.db.users.get(marriage.bride_id)
+        bride.marriage_id = None
+        user.marriage_id = None
+        await self.__client.db.users.update(user)
+        await self.__client.db.users.update(bride)
+
+        await self.__client.db.marriages.delete(marriage)
+
+        bride_member = guild.get_member(bride.id)
+        em = self.__client.embeds.generic.generic_success(
+            title="წარმატება! 📃",
+            description=f"{inter.author.mention} და {bride_member.mention} განქორწინდნენ"
+        )
+
+        await inter.send(embed=em)

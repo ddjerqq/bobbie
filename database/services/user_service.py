@@ -2,6 +2,7 @@ from itertools import groupby
 import aiosqlite
 from database.models.user import User
 from database.repositories.item_repository import ItemRepository
+from database.repositories.marriage_repository import MarriageRepository
 from database.repositories.pet_repository import PetRepository
 from database.repositories.user_repository import UserRepository
 

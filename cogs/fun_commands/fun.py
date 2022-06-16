@@ -11,11 +11,6 @@ class FunCommands(commands.Cog):
         self.client = client
         self.fun_service = FunService(client)
 
-    @commands.user_command(name="gay", description="გაიგე რამდენად გეია შენ ან სხვა", guild_ids=GUILD_IDS)
-    async def gay_user(self, inter: Aci, target: disnake.Member):
-        em = self.fun_service.gay(inter.author, target)
-        await inter.send(embed=em)
-
     @commands.slash_command(name="gay", description="გაიგე რამდენად გეია შენ ან სხვა", guild_ids=GUILD_IDS)
     async def gay_slash(self, inter: Aci, target: disnake.Member = None):
         em = self.fun_service.gay(inter.author, target or inter.author)
@@ -74,6 +69,13 @@ class FunCommands(commands.Cog):
     async def marry_text(self, ctx: commands.Context, target: disnake.Member = None):
         await self.fun_service.marry(ctx, target or ctx.author)
 
+    @commands.slash_command(name="divorce", description="განქორწინება", guild_ids=GUILD_IDS)
+    async def divorce_slash(self, inter: Aci):
+        await self.fun_service.divorce(inter)
+
+    @commands.command(name="divorce")
+    async def divorce_text(self, ctx: commands.Context):
+        await self.fun_service.divorce(ctx)
 
     @commands.slash_command(name="coffee", description="დალიე ყავა", guild_ids=GUILD_IDS)
     async def coffee_slash(self, inter: Aci):
@@ -107,7 +109,7 @@ class FunCommands(commands.Cog):
         em = self.fun_service.beer(ctx.author)
         await ctx.send(embed=em)
 
-    @commands.slash_command(name="popcorn", description="შეჭამე პორონორი", guild_ids=GUILD_IDS)
+    @commands.slash_command(name="popcorn", description="შეჭამე პოპკრონორი", guild_ids=GUILD_IDS)
     async def popcorn_slash(self, inter: Aci):
         em = self.fun_service.popcorn(inter.author)
         await inter.send(embed=em)

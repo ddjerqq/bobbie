@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import aiosqlite
+
+from database.services.marriage_service import MarriageService
 from database.services.user_service import UserService
 
 
@@ -9,6 +11,7 @@ class Database:
         self._connection = connection
         self._cursor     = cursor
         self.users       = UserService(connection, cursor)
+        self.marriages   = MarriageService(connection, cursor)
 
     @classmethod
     async def ainit(cls, path: str) -> Database:

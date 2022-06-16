@@ -3,6 +3,9 @@ import disnake
 from client.client import Client
 from client.logger import LogLevel
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 client = Client(
     help_command=None,
     intents=disnake.Intents.all(),

@@ -40,7 +40,8 @@ class UserRepository:
             username,
             experience,
             bank,
-            wallet
+            wallet,
+            marriage_id
         )
         VALUES
         (
@@ -48,7 +49,8 @@ class UserRepository:
             :username, 
             :experience,
             :bank, 
-            :wallet
+            :wallet,
+            :marriage_id
         );
         """, user.db_dict)
 
@@ -59,7 +61,8 @@ class UserRepository:
             username=:username,
             experience=:experience,
             bank=:bank,
-            wallet=:wallet
+            wallet=:wallet,
+            marriage_id=:marriage_id
         WHERE snowflake=:id;
         """, user.db_dict)
 

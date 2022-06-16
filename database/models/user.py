@@ -5,7 +5,7 @@ from database.models.pet import Pet
 
 
 class User(object):
-    def __init__(self, id: int, username: str, experience: int, wallet: int, bank: int) -> None:
+    def __init__(self, id: int, username: str, experience: int, wallet: int, bank: int, marriage_id: int | None) -> None:
         self.__id = id
         self.username = username
         self.experience = experience
@@ -14,6 +14,8 @@ class User(object):
 
         self.items = []  # type: list[Item]
         self.pets  = []  # type: list[Pet]
+
+        self.marriage_id = marriage_id
 
     @property
     def id(self):
@@ -28,6 +30,7 @@ class User(object):
             experience
             wallet
             bank
+            marriage_id
         }
         """
         return {
@@ -36,6 +39,7 @@ class User(object):
             "experience": self.experience,
             "wallet": self.wallet,
             "bank": self.bank,
+            "marriage_id": self.marriage_id,
         }
 
     def __hash__(self):

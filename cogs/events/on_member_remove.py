@@ -17,7 +17,7 @@ class OnMemberRemove(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_remove(self, member: disnake.Member):
-        em = await self.client.embeds.member_leave(member)
+        em = await self.client.embeds.utils.member_leave(member)
         for channel in self.leave_channels:
             await channel.send(embed=em)
 

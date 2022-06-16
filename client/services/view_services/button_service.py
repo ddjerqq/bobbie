@@ -40,6 +40,10 @@ class Buttons:
                     self.choice = False
                     self.stop()
 
+        async def on_timeout(self) -> None:
+            self.choice = None
+            self.stop()
+
 
     class YesNoIdk(ui.View):
         """

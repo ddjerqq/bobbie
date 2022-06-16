@@ -8,9 +8,19 @@ class OnMemberBan(commands.Cog):
         self.client = client
 
     @commands.Cog.listener()
-    async def on_member_ban(self, guild: disnake.Guild, user: disnake.Member):
+    async def on_member_ban(self, guild: disnake.Guild, member: disnake.Member):
+        user = await self.client.db.users.get(member.id)
         await self.client.db.users.delete(user.id)
-        await self.client.logger.log(f"{user.name}#{user.discriminator} id=({user.id}) got banned in {guild.name}")
+        if user.marriage_id:
+            await self.client.db.marriages.delete(user.marriage_id)
+            bride_role = guild.get_role(user.marriage_id.bride_role_id)
+            king_role = guild.get_role(user.marriage_id.king_role_id)
+            if bride_role:
+                await bride_role.delete(reason="Banned")
+            if king_role:
+                await king_role.delete(reason="Banned")
+
+        await self.client.logger.log(f"{member.name}#{member.discriminator} id=({member.id}) got banned in {guild.name}")
 
 
 def setup(client: Client):

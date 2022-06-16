@@ -13,12 +13,6 @@ class UtilityCommands(commands.Cog):
         self.util_service = UtilityService(client)
 
 
-    @commands.user_command(name="avatar", description="გაადიდე user-ის ავატარი", guild_ids=GUILD_IDS)
-    async def avatar_user(self, inter: Aci, target: disnake.Member):
-        em = self.util_service.avatar(target or inter.author)
-        await inter.send(embed=em)
-
-
     @commands.slash_command(name="avatar", description="გაადიდე user-ის ავატარი", guild_ids=GUILD_IDS)
     async def avatar_slash(self, inter: Aci, target: disnake.Member = None):
         em = self.util_service.avatar(target or inter.author)
@@ -31,13 +25,6 @@ class UtilityCommands(commands.Cog):
         await ctx.send(embed=em)
 
 
-
-    @commands.user_command(name="info", description="გაიგეთ მომხმარებლის-ის ინფო", guild_ids=GUILD_IDS)
-    async def info_user(self, inter: Aci, target: disnake.Member):
-        em = self.util_service.info(target or inter.author)
-        await inter.send(embed=em)
-
-
     @commands.slash_command(name="info", description="გაიგეთ მომხმარებლის ინფო", guild_ids=GUILD_IDS)
     async def info_slash(self, inter: Aci, target: disnake.Member = None):
         em = self.util_service.info(target or inter.author)
@@ -47,6 +34,16 @@ class UtilityCommands(commands.Cog):
     @commands.command(name="info")
     async def info_text(self, ctx: commands.Context, target: disnake.Member = None):
         em = self.util_service.info(target or ctx.author)
+        await ctx.send(embed=em)
+
+    @commands.slash_command(name="ping", description="ბოტის რეაქციის დრო", guild_ids=GUILD_IDS)
+    async def ping_slash(self, inter: Aci):
+        em = self.util_service.ping()
+        await inter.send(embed=em)
+
+    @commands.command(name="ping")
+    async def ping_text(self, ctx: commands.Context):
+        em = self.util_service.ping()
         await ctx.send(embed=em)
 
 

@@ -43,3 +43,15 @@ class UtilityService:
 
         return em
 
+    def ping(self) -> disnake.Embed:
+        em = disnake.Embed(
+            title="ბოტის რეაქციის დრო",
+            color=0x2d56a9
+        )
+        em.add_field(
+            name="პინგი",
+            value=self.__client.latency,
+            inline=False
+        )
+        return em
+

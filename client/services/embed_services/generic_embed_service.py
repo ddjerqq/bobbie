@@ -12,7 +12,7 @@ class GenericEmbedService:
         return em
 
     def generic_error(self, title: str = "წარუმატებლობა!", description: str = None) -> disnake.Embed:
-        em = disnake.Embed(color=0xB10F28FF, title=title)
+        em = disnake.Embed(color=0xB10F28, title=title)
         if description:
             em.description = description
         return em
