@@ -40,10 +40,10 @@ class UtilsEmbedService:
         შემოვიდა: member.joined_at
         """
         em = disnake.Embed(color=0x2d56a9)
-        em.add_field(name="სახელი", value=member.name)
-        em.add_field(name="შემოვიდა", value=member.joined_at)
-        em.set_thumbnail(url=member.avatar.url)
-        em.set_footer(text=f"ID: {member.id}")
+        em.add_field(name="სახელი", value=member.name if member else "N/A")
+        em.add_field(name="შემოვიდა", value=member.joined_at if member else "N/A")
+        em.set_thumbnail(url=member.avatar.url if member else "N/A")
+        em.set_footer(text=f"ID: {member.id}" if member else "N/A")
 
         return em
 

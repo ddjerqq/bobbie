@@ -65,10 +65,6 @@ class FunCommands(commands.Cog):
     async def marry_slash(self, inter: Aci, target: disnake.Member = None):
         await self.fun_service.marry(inter, target or inter.author)
 
-    @commands.command(name="marry")
-    async def marry_text(self, ctx: commands.Context, target: disnake.Member = None):
-        await self.fun_service.marry(ctx, target or ctx.author)
-
     @commands.slash_command(name="divorce", description="განქორწინება", guild_ids=GUILD_IDS)
     async def divorce_slash(self, inter: Aci):
         await self.fun_service.divorce(inter)

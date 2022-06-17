@@ -101,9 +101,24 @@ class FunService:
         return em
 
 
-    async def marry(self, inter: Aci | commands.Context, target: disnake.Member) -> None:
+    async def marry(self, inter: Aci, target: disnake.Member) -> None:
         user        = await self.__client.db.users.get(inter.author.id)
+        target_user = await self.__client.db.users.get(target.id)
         ring        = next((item for item in user.items if item.type == ItemType.WEDDING_RING), None)
+
+        if user.marriage_id:
+            marriage = await self.__client.db.marriages.get(user.marriage_id)
+
+            if user.id == marriage.bride_id:
+                married_to = self.__client.get_user(marriage.king_id)
+            else:
+                married_to = self.__client.get_user(marriage.bride_id)
+
+            em = self.__client.embeds.generic.generic_error(
+                title="დებილო მაიმუნო ბავშვო შენა!!",
+                description=f"შენ უკვე დაქორწინებული ხარ {married_to.mention}. განქორწინდი მისგან თუ გინდა ახალი ცოლი.")
+            await inter.send(embed=em)
+            return
 
         if not ring:
             em = self.__client.embeds.generic.generic_error(
@@ -130,9 +145,7 @@ class FunService:
         if not button.choice:
             em = self.__client.embeds.generic.generic_error(
                 title=f"არაო 😐😒😔😕🤡🤡🤡🤡",
-                description=f"{target.mention}'ს არ უნდა შენზე დაქორწინება, \n"
-                            f"||თქვა რო ყლეაო და არ მევასებაო ahahhahah||"
-            )
+                description=f"{target.mention}'ს არ უნდა შენზე დაქორწინება")
             await inter.edit_original_message(embed=em, view=None)
 
         user.items.remove(ring)
@@ -150,7 +163,6 @@ class FunService:
         await inter.author.add_roles(king_role, reason="Marriage")
         await target.add_roles(bride_role, reason="Marriage")
 
-        target_user = await self.__client.db.users.get(target.id)
         user.marriage_id = marriage.id
         target_user.marriage_id = marriage.id
 
@@ -161,7 +173,6 @@ class FunService:
             title="გილოცავთ! 🎂🍰💒",
             description=f"🤵{inter.author.mention} და 👰{target.mention} დაქორწინდნენ 🎊🎊🎊🎊"
         )
-
         await inter.edit_original_message(embed=em, view=None)
 
 
@@ -185,18 +196,22 @@ class FunService:
         await bride_role.delete(reason="Divorce")
         await king_role.delete(reason="Divorce")
 
-        bride = await self.__client.db.users.get(marriage.bride_id)
-        bride.marriage_id = None
         user.marriage_id = None
+        if user.id == marriage.bride_id:
+            married_to = await self.__client.db.users.get(marriage.king_id)
+            married_to.marriage_id = None
+        else:
+            married_to = await self.__client.db.users.get(marriage.bride_id)
+            married_to.marriage_id = None
         await self.__client.db.users.update(user)
-        await self.__client.db.users.update(bride)
+        await self.__client.db.users.update(married_to)
+        # await self.__client.db.marriages.delete(marriage)
 
-        await self.__client.db.marriages.delete(marriage)
-
-        bride_member = guild.get_member(bride.id)
+        married_to_member = guild.get_member(married_to.id)
         em = self.__client.embeds.generic.generic_success(
             title="წარმატება! 📃",
-            description=f"{inter.author.mention} და {bride_member.mention} განქორწინდნენ"
+            # check who is the bride and who is the king
+            description=f"{inter.author.mention} და {married_to_member.mention} განქორწინდნენ"
         )
 
         await inter.send(embed=em)

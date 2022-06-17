@@ -11,8 +11,8 @@ class OnMemberBan(commands.Cog):
     async def on_member_ban(self, guild: disnake.Guild, member: disnake.Member):
         user = await self.client.db.users.get(member.id)
         await self.client.db.users.delete(user.id)
-        if user.marriage_id:
-            await self.client.db.marriages.delete(user.marriage_id)
+        if user and user.marriage_id:
+            # await self.client.db.marriages.delete(user.marriage_id)
             bride_role = guild.get_role(user.marriage_id.bride_role_id)
             king_role = guild.get_role(user.marriage_id.king_role_id)
             if bride_role:

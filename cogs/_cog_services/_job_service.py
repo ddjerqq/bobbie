@@ -39,7 +39,7 @@ class JobService:
                 await self.__client.db.users.update(this)
                 await self.__client.db.users.update(other)
 
-                return self.__client.embeds.generic_success(
+                return self.__client.embeds.generic.generic_success(
                     title=f"შენ მოკვდი {target.name}'ის ძარცვის დროს🤣",
                     description=f"შენი საფულე გადაეცა {target.name}'ს"
                 )

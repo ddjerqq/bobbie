@@ -9,7 +9,16 @@ class OnMemberUpdate(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_update(self, before: disnake.Member, after: disnake.Member):
-        """TO ADD"""
+        """timeout members who play league more than 1hr for 1 day"""
+        # TODO
+        # for activity in after.activities:
+        #     if isinstance(activity, disnake.Game):
+        #         activity  # type: disnake.Game
+        #         print(activity.name == League of Legends)
+        #         print(activity.type)
+        #         print(activity.created_at)
+        #         print(activity.start)
+        #         print(activity)
 
 
 def setup(client: Client):
