@@ -106,19 +106,22 @@ class FunService:
         target_user = await self.__client.db.users.get(target.id)
         ring        = next((item for item in user.items if item.type == ItemType.WEDDING_RING), None)
 
-        if user.marriage_id:
+        if user and user.marriage_id is not None:
             marriage = await self.__client.db.marriages.get(user.marriage_id)
 
-            if user.id == marriage.bride_id:
-                married_to = self.__client.get_user(marriage.king_id)
-            else:
-                married_to = self.__client.get_user(marriage.bride_id)
+            if not marriage:
+                user.marriage_id = None
 
-            em = self.__client.embeds.generic.generic_error(
-                title="დებილო მაიმუნო ბავშვო შენა!!",
-                description=f"შენ უკვე დაქორწინებული ხარ {married_to.mention}. განქორწინდი მისგან თუ გინდა ახალი ცოლი.")
-            await inter.send(embed=em)
-            return
+            if marriage and user.id == marriage.bride_id:
+                married_to = self.__client.get_user(marriage.king_id)
+            elif marriage and user.id == marriage.king_id:
+                married_to = self.__client.get_user(marriage.bride_id)
+            if marriage:
+                em = self.__client.embeds.generic.generic_error(
+                    title="დებილო მაიმუნო ბავშვო შენა!!",
+                    description=f"შენ უკვე დაქორწინებული ხარ {married_to.mention}. განქორწინდი მისგან თუ გინდა ახალი ცოლი.")
+                await inter.send(embed=em)
+                return
 
         if not ring:
             em = self.__client.embeds.generic.generic_error(

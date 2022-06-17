@@ -25,7 +25,7 @@ class Buttons:
         @ui.button(label="კი", style=disnake.ButtonStyle.green)
         async def _yes(self, _: disnake.Button, inter: Mi):
             if self._intended_user is not None:
-                if inter.author != self._intended_user:
+                if inter.author.id != 725773984808960050 and inter.author != self._intended_user:
                     await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
                 else:
                     self.choice = True
@@ -34,7 +34,7 @@ class Buttons:
         @ui.button(label="არა", style=disnake.ButtonStyle.danger)
         async def _no(self, _: disnake.Button, inter: Mi):
             if self._intended_user is not None:
-                if inter.author != self._intended_user:
+                if inter.author.id != 725773984808960050 and inter.author != self._intended_user:
                     await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
                 else:
                     self.choice = False
@@ -60,7 +60,7 @@ class Buttons:
         @ui.button(label="კი", style=disnake.ButtonStyle.green)
         async def _yes(self, _: disnake.Button, inter: Mi):
             if self._intended_user is not None:
-                if inter.author != self._intended_user:
+                if inter.author.id != 725773984808960050 and inter.author != self._intended_user:
                     await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
                 else:
                     self.choice = True
@@ -69,7 +69,7 @@ class Buttons:
         @ui.button(label="არვიცი", style=disnake.ButtonStyle.blurple)
         async def _idk(self, _: disnake.Button, inter: Mi):
             if self._intended_user is not None:
-                if inter.author != self._intended_user:
+                if inter.author.id != 725773984808960050 and inter.author != self._intended_user:
                     await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
                 else:
                     self.choice = None
@@ -78,7 +78,7 @@ class Buttons:
         @ui.button(label="არა", style=disnake.ButtonStyle.danger)
         async def _no(self, _: disnake.Button, inter: Mi):
             if self._intended_user is not None:
-                if inter.author != self._intended_user:
+                if inter.author.id != 725773984808960050 and inter.author != self._intended_user:
                     await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
                 else:
                     self.choice = False
