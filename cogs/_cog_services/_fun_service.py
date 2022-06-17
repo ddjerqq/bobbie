@@ -102,6 +102,14 @@ class FunService:
 
 
     async def marry(self, inter: Aci, target: disnake.Member) -> None:
+        if target.bot:
+            em = self.__client.embeds.generic.generic_error(
+                title="დებილო მაიმუნო ბავშვო შენა!!",
+                description=f"შენ ვერ მოიყვან რობოტს ცოლად")
+            await inter.send(embed=em)
+            return
+
+
         user        = await self.__client.db.users.get(inter.author.id)
         target_user = await self.__client.db.users.get(target.id)
         ring        = next((item for item in user.items if item.type == ItemType.WEDDING_RING), None)

@@ -23,7 +23,7 @@ class InventoryService:
         price = ItemPrice[item.type.name].value  # type: int
 
         if user.wallet + user.bank < price:
-            return self.__client.embeds.economy.error_not_enough_money(f"რათა იყიდო {item.name}\nშენ გჭირდება {price}")
+            return await self.__client.embeds.economy.error_not_enough_money(f"რათა იყიდო {item.name}\nშენ გჭირდება {price}")
 
         user.experience += 3
         item.owner_id = buyer.id
