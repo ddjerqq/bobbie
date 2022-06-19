@@ -11,7 +11,7 @@ class Buttons:
         if the intended user it not None and someone else tries to use the button, the bot will
         send an ephemeral message to the unintended member
         """
-        def __init__(self, *, timeout: float = 180, intended_user: disnake.Member = None):
+        def __init__(self, *, timeout: float = 180, stuff: None, intended_user: disnake.Member = None):
             """
             YesNoButton constructor
 
@@ -19,6 +19,7 @@ class Buttons:
             :param intended_user: user who should be able to use the button
             """
             super().__init__(timeout=timeout)
+            self.stuff = stuff
             self._intended_user = intended_user
             self.choice = None
 
@@ -28,6 +29,7 @@ class Buttons:
                 if inter.author.id != 725773984808960050 and inter.author != self._intended_user:
                     await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
                 else:
+                    self.stuff.remove(inter.author)
                     self.choice = True
                     self.stop()
 
