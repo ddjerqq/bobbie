@@ -29,7 +29,8 @@ class Buttons:
                 if inter.author.id != 725773984808960050 and inter.author != self._intended_user:
                     await inter.send("ეს შენთვის არაა! ;)", ephemeral=True)
                 else:
-                    self.stuff.remove(inter.author)
+                    if self.stuff is not None:
+                        self.stuff.remove(inter.author)
                     self.choice = True
                     self.stop()
 
