@@ -100,8 +100,8 @@ class FunService:
         )
         return em
 
-
-    async def marry(self, inter: Aci, target: disnake.Member) -> None:
+    stuff = set()
+    async def marry(self, inter: Aci, stuff=stuff, target: disnake.Member) -> None:
         if target.bot:
             em = self.__client.embeds.generic.generic_error(
                 title="დებილო მაიმუნო ბავშვო შენა!!",
@@ -145,9 +145,14 @@ class FunService:
                 description=f"შენ ვერ მოიყვან შენს თავს ცოლად!!")
             await inter.send(embed=em)
             return
+        
+        #stuff = set()
+        if not inter.author in stuff:
+            await stuff.add(inter.author)
+        elif inter.author in stuff:
+            return
 
-
-        yes_no = self.__client.embeds.utils.confirmation_needed(f"{inter.author.mention}-ზე დაქორწინება, {target.mention}")
+        yes_no = self.__client.embeds.utils.confirmation_needed(f"{target.mention}, თანახმა ხართ თუ არა რომ ცოლად გაყვეთ {inter.author.mention}ს, მზად ხართ რომ ჭირშიც და ლხინშიც მის გვერით იყოთ?")
         button = self.__client.buttons.YesNoButton(intended_user=target, timeout=600)
 
         await inter.send(embed=yes_no, view=button)
@@ -157,6 +162,7 @@ class FunService:
             em = self.__client.embeds.generic.generic_error(
                 title=f"არაო 😐😒😔😕🤡🤡🤡🤡",
                 description=f"{target.mention}'ს არ უნდა შენზე დაქორწინება")
+            stuff.remove(inter.author)
             await inter.edit_original_message(embed=em, view=None)
 
         user.items.remove(ring)
@@ -182,8 +188,9 @@ class FunService:
 
         em = self.__client.embeds.generic.generic_success(
             title="გილოცავთ! 🎂🍰💒",
-            description=f"🤵{inter.author.mention} და 👰{target.mention} დაქორწინდნენ 🎊🎊🎊🎊"
+            description=f"მონიჭებული უფლებით, 🤵{inter.author.mention} და 👰{target.mention} გაცხადებთ ცოლ-ქმრად,შეგიძლიად ერთმანეთს აკოცოთ. (/kiss)"
         )
+        stuff.remove(inter.author)
         await inter.edit_original_message(embed=em, view=None)
 
 
