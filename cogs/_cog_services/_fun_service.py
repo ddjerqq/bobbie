@@ -101,7 +101,13 @@ class FunService:
         return em
 
     stuff = set()
-    async def marry(self, inter: Aci, stuff=stuff, target: disnake.Member) -> None:
+    async def marry(self, inter: Aci, target: disnake.Member, stuff=stuff) -> None:
+        
+        if not inter.author in stuff:
+            stuff.add(inter.author)
+        elif inter.author in stuff:
+            return
+        
         if target.bot:
             em = self.__client.embeds.generic.generic_error(
                 title="დებილო მაიმუნო ბავშვო შენა!!",
@@ -146,11 +152,6 @@ class FunService:
             await inter.send(embed=em)
             return
         
-        #stuff = set()
-        if not inter.author in stuff:
-            await stuff.add(inter.author)
-        elif inter.author in stuff:
-            return
 
         yes_no = self.__client.embeds.utils.confirmation_needed(f"{target.mention}, თანახმა ხართ თუ არა რომ ცოლად გაყვეთ {inter.author.mention}ს, მზად ხართ რომ ჭირშიც და ლხინშიც მის გვერით იყოთ?")
         button = self.__client.buttons.YesNoButton(intended_user=target, timeout=600)
