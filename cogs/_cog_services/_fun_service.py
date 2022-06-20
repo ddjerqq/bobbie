@@ -100,8 +100,7 @@ class FunService:
         )
         return em
 
-    stuff = set()
-    async def marry(self, inter: Aci, target: disnake.Member, stuff=stuff) -> None:
+    async def marry(self, inter: Aci, target: disnake.Member, stuff=set()) -> None:
         if target.bot:
             em = self.__client.embeds.generic.generic_error(
                 title="დებილო მაიმუნო ბავშვო შენა!!",
