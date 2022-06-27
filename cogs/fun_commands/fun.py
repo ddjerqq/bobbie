@@ -56,23 +56,6 @@ class FunCommands(commands.Cog):
         em = self.fun_service.kiss(ctx.author, target or ctx.author)
         await ctx.send(embed=em)
 
-
-    @commands.user_command(name="marry", description="დაქორწინდი ვინმეზე", guild_ids=GUILD_IDS)
-    async def marry_user(self, inter: Aci, target: disnake.Member):
-        await self.fun_service.marry(inter, target or inter.author)
-
-    @commands.slash_command(name="marry", description="დაქორწინდი ვინმეზე", guild_ids=GUILD_IDS)
-    async def marry_slash(self, inter: Aci, target: disnake.Member = None):
-        await self.fun_service.marry(inter, target or inter.author)
-
-    @commands.slash_command(name="divorce", description="განქორწინება", guild_ids=GUILD_IDS)
-    async def divorce_slash(self, inter: Aci):
-        await self.fun_service.divorce(inter)
-
-    @commands.command(name="divorce")
-    async def divorce_text(self, ctx: commands.Context):
-        await self.fun_service.divorce(ctx)
-
     @commands.slash_command(name="coffee", description="დალიე ყავა", guild_ids=GUILD_IDS)
     async def coffee_slash(self, inter: Aci):
         em = self.fun_service.coffee(inter.author)

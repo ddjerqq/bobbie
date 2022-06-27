@@ -19,6 +19,8 @@ class ErrorHandlers(commands.Cog):
                 text = f"შენ უკვე გამოიყენე ეს კომანდა, შენ შეძლებ ისე გამოყენებას {int(error.retry_after)} წამში"
             case errors.CommandNotFound:
                 return
+            case errors.CheckFailure:
+                return
             case _:
                 text = f"უცნობი შეცდომა: {error}"
                 await self.client.logger.log(f"{error!r}", level=LogLevel.ERROR)
