@@ -130,7 +130,11 @@ class FunService:
                     description=f"შენ უკვე დაქორწინებული ხარ {married_to.mention}. განქორწინდი მისგან თუ გინდა ახალი ცოლი.")
                 await inter.send(embed=em)
                 return
-
+        if target_user and target_user.marriage_id is not None:
+                sus = self.__client.embeds.generic.generic_error(
+                    title="დებილო მაიმუნო ბავშვო შენა!!",
+                    description=f"{target.mention}-ს ვერ მოიყვან ცოლად რადგანაც ის უკვე დაქორწინებულია.")
+                return await inter.send(embed=sus)
         if not ring:
             em = self.__client.embeds.generic.generic_error(
                 title="დებილო მაიმუნო ბავშვო შენა!!",
