@@ -30,9 +30,9 @@ class PaginatorService:
         pages = [dict(list(grouped_items.items())[i: i + 10]) for i in range(0, len(grouped_items), 10)]
 
         embeds: list[disnake.Embed] = []
-        for page in pages:
+        for idx, page in enumerate(pages):
             em = disnake.Embed(
-                title=f"{user.username}'ის ინვენტარი",
+                title=f"{user.username}'ის ინვენტარი - {idx + 1}/{len(pages)}",
                 color=0x00ff00,
             )
             for type_, items in page.items():
