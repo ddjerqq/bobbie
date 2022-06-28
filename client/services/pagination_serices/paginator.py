@@ -23,6 +23,7 @@ class PaginatorService:
 
     def generate_pages(self, user: User) -> list[disnake.Embed]:
         group = itertools.groupby(user.items, lambda x: x.type)
+        total_price = sum(map(lambda i: i.price, user.items))
 
         grouped_items = {type_: list(items) for type_, items in group}
         grouped_items = {sk: grouped_items[sk] for sk in sorted(grouped_items, key=lambda x: x.name)}
@@ -32,7 +33,8 @@ class PaginatorService:
         embeds: list[disnake.Embed] = []
         for idx, page in enumerate(pages):
             em = disnake.Embed(
-                title=f"{user.username}'ის ინვენტარი - {idx + 1}/{len(pages)}",
+                title=f"{user.username}'ის ინვენტარი - {idx + 1}/{len(pages)}\n"
+                      f"ფასი ჯამში: {total_price}₾",
                 color=0x00ff00,
             )
             for type_, items in page.items():
