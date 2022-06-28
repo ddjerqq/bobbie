@@ -4,6 +4,7 @@ import pathlib
 import asyncio
 from disnake.ext import commands
 
+from client.services.pagination_serices.paginator import PaginatorService
 from database import Database
 from client.logger import Logger
 from client.services.embed_services.embed_service import EmbedService
@@ -31,6 +32,7 @@ class Client(commands.Bot):
         self.logger         = Logger(self)
         self.embeds         = EmbedService(self)
         self.buttons        = Buttons()
+        self.pagination     = PaginatorService(self)
         self.config         = CONFIG
         self.command_prefix = CONFIG["bot"]["prefix"]
         self.__load_extensions()

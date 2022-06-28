@@ -22,16 +22,10 @@ class InventorySystemCommands(commands.Cog):
     # endregion
 
     # region COMMAND INVENTORY
-    @commands.slash_command(name="item_inventory", aliases=["inv"], guild_ids=GUILD_IDS,
+    @commands.slash_command(name="item_inventory", guild_ids=GUILD_IDS,
                             description="ნახე შენი ნივთების ინვენტარი")
     async def inventory(self, inter: Aci):
-        em = await self.inventory_service.inventory(inter.author)
-        await inter.send(embed=em)
-
-    @commands.command(name="item_inventory", aliases=["inv"])
-    async def inventory_text(self, ctx: Ctx):
-        em = await self.inventory_service.inventory(ctx.author)
-        await ctx.send(embed=em)
+        await self.inventory_service.inventory(inter)
     # endregion
 
     # region COMMAND FISH

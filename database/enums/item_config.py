@@ -33,10 +33,11 @@ class ItemEmoji(Enum):
     SHOVEL        = "<:shovel:964200167001686016>"
     COMMON_FISH   = "🐟"
     RARE_FISH     = "🐡"
+    TIGET         = "🐯"
     TROPICAL_FISH = "🐠"
     SHARK         = "🦈"
     GOLDEN_FISH   = "🥇🐟"
-    PIG           = "🐖"
+    PIG           = "🐷"
     DEER          = "🦌"
     WOLF          = "🐺"
     BEAR          = "🐻"
@@ -46,6 +47,9 @@ class ItemEmoji(Enum):
     RUBY          = "🔶"
     SAPPHIRE      = "🔷"
     AMETHYST      = "🔴"
+    DIAMOND       = "💎"
+    KNIFE         = "🔪"
+    WEDDING_RING  = "💍"
 
 
 class ItemName(Enum):

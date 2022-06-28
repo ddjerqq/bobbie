@@ -4,7 +4,7 @@ from client.client import Client
 from client.logger import LogLevel
 from database.enums import *
 from database.factories.item_factory import ItemFactory
-from disnake import ApplicationCommandInteraction as Aci
+from disnake import ApplicationCommandInteraction as Inter
 
 
 class InventoryService:
@@ -40,15 +40,11 @@ class InventoryService:
         em = self.__client.embeds.inventory.success_bought_item(item)
         return em
 
-    async def inventory(self, user: disnake.Member) -> disnake.Embed:
+    async def inventory(self, inter: Inter) -> None:
         """
-        Show user's inventory
-        :param user: user to show inventory of
-        :return: disnake.Embed
+        Handle the user's inventory
         """
-        user = await self.__client.db.users.get(user.id)
-        em   = await self.__client.embeds.inventory.util_inventory(user)
-        return em
+        await self.__client.pagination.inventory_pages(inter)
 
     async def use(self, member: disnake.Member, item_slug: ItemType) -> tuple[disnake.Embed, bool]:
         """
@@ -92,7 +88,7 @@ class InventoryService:
 
         return em, False
 
-    async def sell(self, inter: Aci | Ctx, item_slug: str | None, amount: str | None, all_: bool = False) -> None:
+    async def sell(self, inter: Inter | Ctx, item_slug: str | None, amount: str | None, all_: bool = False) -> None:
         """
         Sell an item
         :param inter: interaction object
