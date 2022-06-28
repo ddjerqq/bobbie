@@ -101,4 +101,4 @@ class Item:
         return f"{self.type.name} {self.rarity.name} owner: {self.owner_id}"
 
     def __repr__(self):
-        return f"<Item id={self.id} type={self.type.name} owner={self.owner_id} rarity={self.rarity!r}>"
+        return f"<Item id={self.id} type={self.type!r} owner={self.owner_id} rarity={self.rarity!r}>"
