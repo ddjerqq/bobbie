@@ -33,8 +33,7 @@ class PaginatorService:
         embeds: list[disnake.Embed] = []
         for idx, page in enumerate(pages):
             em = disnake.Embed(
-                title=f"{user.username}'ის ინვენტარი - {idx + 1}/{len(pages)}\n"
-                      f"ფასი ჯამში: {total_price}₾",
+                title=f"{user.username}'ის ინვენტარი - {idx + 1}/{len(pages)}",
                 color=0x00ff00,
             )
             for type_, items in page.items():
@@ -43,6 +42,7 @@ class PaginatorService:
                     value="\n".join(map(self.__embedify, items)),
                     inline=False,
                 )
+            em.set_footer(text=f"სულ ფასი: {total_price}₾")
             embeds.append(em)
 
         return embeds
