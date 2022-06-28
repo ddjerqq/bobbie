@@ -19,7 +19,7 @@ class PaginatorService:
 
     @staticmethod
     def __embedify(item: Item) -> str:
-        return f"`{item.id}` - `{item.rarity.value:6g}` - `{item.price}`₾"
+        return f"`{item.id}` - `{item.rarity.value:.6f}` - `{item.price}`₾"
 
     def generate_pages(self, user: User) -> list[disnake.Embed]:
         group = itertools.groupby(user.items, lambda x: x.type)
