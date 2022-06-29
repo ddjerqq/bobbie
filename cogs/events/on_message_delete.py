@@ -9,9 +9,12 @@ class OnMessageDelete(commands.Cog):
         self.deleted_messages_channels = []  # type: None | list[disnake.TextChannel]
 
     def message_delete_check(self, message: disnake.Message) -> bool:
+        filtered_channels = self.client.config["channels"]["deleted_msgs"] + \
+                            self.client.config["channels"]["confessions"]
+
         if message.guild.id == 935886444109631510:
             if message.author != self.client.user:
-                if message.channel.id not in self.client.config["channels"]["deleted_msgs"]:
+                if message.channel.id not in filtered_channels:
                     return True
         return False
 
