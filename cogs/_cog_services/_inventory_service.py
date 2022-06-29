@@ -11,34 +11,6 @@ class InventoryService:
     def __init__(self, client: Client):
         self.__client = client
 
-    async def buy(self, buyer: disnake.Member, item_slug: str) -> disnake.Embed:
-        """
-        Buy an item from the shop
-        :param buyer: user buying the item
-        :param item_slug: item to buy
-        :return: disnake.Embed
-        """
-        user = await self.__client.db.users.get(buyer.id)
-        item = ItemFactory.new(ItemType[item_slug])
-        price = ItemPrice[item.type.name].value  # type: int
-
-        if user.wallet + user.bank < price:
-            return await self.__client.embeds.economy.error_not_enough_money(f"რათა იყიდო {item.name}\nშენ გჭირდება {price}")
-
-        user.experience += 3
-        item.owner_id = buyer.id
-        user.items.append(item)
-
-        if user.wallet >= price:
-            user.wallet -= price
-        else:
-            price -= user.wallet
-            user.wallet = 0
-            user.bank -= price
-
-        await self.__client.db.users.update(user)
-        em = self.__client.embeds.inventory.success_bought_item(item)
-        return em
 
     async def inventory(self, inter: Inter) -> None:
         """
@@ -46,7 +18,8 @@ class InventoryService:
         """
         await self.__client.pagination.inventory_pages(inter)
 
-    async def use(self, member: disnake.Member, item_slug: ItemType) -> tuple[disnake.Embed, bool]:
+
+    async def use(self, member: disnake.Member, item_slug: ItemType) -> disnake.Embed:
         """
         Use an item
         :param member: user using the item
@@ -59,11 +32,6 @@ class InventoryService:
         items = user.items
         tools = list(filter(lambda x: x.type == item_slug, items))
         tools.sort(key=lambda x: x.rarity.value, reverse=True)
-
-        if not len(tools):
-            em = self.__client.embeds.inventory.error_item_not_in_inventory(item_slug.name)
-            return em, True
-
         tool = tools[-1]
 
         reward, broken = ItemFactory.use(tool)
@@ -84,44 +52,21 @@ class InventoryService:
             case _:
                 await self.__client.logger.log(f"{member} tried to use {item_slug} inside inventory_system.use",
                                                level=LogLevel.ERROR)
-                return self.__client.embeds.inventory.error_item_not_in_inventory(item_slug.name), True
+                return self.__client.embeds.inventory.error_item_not_in_inventory(item_slug.name)
 
-        return em, False
+        return em
 
-    async def sell(self, inter: Inter | Ctx, item_slug: str | None, amount: str | None, all_: bool = False) -> None:
-        """
-        Sell an item
-        :param inter: interaction object
-        :param item_slug: item to sell
-        :param amount: amount of items to sell
-        :param all_: if true, sell all items of this type
-        :return: disnake.Embed
-        """
+
+    async def sell_one_or_all(self, inter: Inter, item_slug: str | None, all_: bool = False) -> None:
         user  = await self.__client.db.users.get(inter.author.id)
         items = user.items
         items = sorted(filter(lambda x: all_ or x.type.value == item_slug, items),
                        key=lambda x: x.rarity.value, reverse=True)
 
-        if not items:
-            em = self.__client.embeds.inventory.error_item_not_in_inventory(item_slug)
-            await inter.send(embed=em)
-            return
-
         if all_:
             amount = len(items)
-        elif amount.isnumeric() and int(amount):
-            amount = int(amount)
-        elif amount in ["max", "all", "სულ"]:
-            amount = len(items)
         else:
-            em = self.__client.embeds.economy.error_invalid_amount_entered()
-            await inter.send(embed=em)
-            return
-
-        if not all_ and amount > len(items):
-            em = self.__client.embeds.inventory.error_not_enough_items(item_slug, amount, len(items))
-            await inter.send(embed=em)
-            return
+            amount = 1
 
         total_price = 0
         for idx in range(amount):

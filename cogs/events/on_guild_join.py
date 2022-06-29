@@ -12,10 +12,7 @@ class OnGuildJoin(commands.Cog):
     async def on_guild_join(self, guild: disnake.Guild):
         await self.client.logger.log(f"joined ({guild.id}) {guild.name}")
 
-        for member in guild.members:
-            if member.bot:
-                continue
-
+        for member in filter(lambda x: not x.bot, guild.members):
             user = UserFactory.new(member.id, member.name)
             await self.client.db.users.add(user)
             await self.client.logger.log(f"added {member.id}")

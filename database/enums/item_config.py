@@ -42,6 +42,7 @@ class ItemEmoji(Enum):
     WOLF          = "🐺"
     BEAR          = "🐻"
     LION          = "🦁"
+    TIGER         = "🐯"
     ELEPHANT      = "🐘"
     COPPER_COIN   = "👛"
     RUBY          = "🔶"

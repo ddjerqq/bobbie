@@ -26,12 +26,13 @@ class OnMemberRemove(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: disnake.Member):
-        old_user = await self.client.db.users.get(member.id)
-        if old_user is not None:
+        if member.bot:
             return
-        user = UserFactory.new(member.id, member.name)
-        await self.client.db.users.add(user)
-        await self.client.logger.log(f"added {user}")
+        old_user = await self.client.db.users.get(member.id)
+        if old_user is None:
+            user = UserFactory.new(member.id, member.name)
+            await self.client.db.users.add(user)
+            await self.client.logger.log(f"added {user}")
 
 
     @commands.Cog.listener()
@@ -68,6 +69,8 @@ class OnMemberRemove(commands.Cog):
 
     @commands.Cog.listener()
     async def on_user_update(self, before: disnake.User, after: disnake.User):
+        if before.bot:
+            return
         if before.name != after.name:
             user = await self.client.db.users.get(after.id)
             if isinstance(user, User):
