@@ -13,7 +13,7 @@ class StatusChanger(commands.Cog):
         self.statuses = cycle([
             "მიეც გლახაკთა საჭურჭლე,",
             "ათავისუფლე მონები.",
-            "ddjerqq#2005",
+            "ddjerqq#1111",
             "რასაცა გასცემ შენია",
             "რასც არა დაკარგულია"
         ])

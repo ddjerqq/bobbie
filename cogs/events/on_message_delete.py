@@ -13,9 +13,10 @@ class OnMessageDelete(commands.Cog):
                             self.client.config["channels"]["confessions"]
 
         if message.guild.id == 935886444109631510:
-            if message.author != self.client.user:
-                if message.channel.id not in filtered_channels:
-                    return True
+            if not message.author.bot:
+                if message.author != self.client.user:
+                    if message.channel.id not in filtered_channels:
+                        return True
         return False
 
     @commands.Cog.listener()
