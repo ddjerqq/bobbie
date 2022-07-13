@@ -21,8 +21,6 @@ class FunCommands(commands.Cog):
         em = self.fun_service.gay(ctx.author, target or ctx.author)
         await ctx.send(embed=em)
 
-
-
     @commands.slash_command(name="slap", description="გაულაწუნე ვინმეს", guild_ids=GUILD_IDS)
     async def slap_slash(self, inter: Aci, target: disnake.Member = None):
         em = self.fun_service.slap(inter.author, target or inter.author)
@@ -33,8 +31,6 @@ class FunCommands(commands.Cog):
         em = self.fun_service.slap(ctx.author, target or ctx.author)
         await ctx.send(embed=em)
 
-
-
     @commands.slash_command(name="hug", description="ჩაეხუტე ვინმეს", guild_ids=GUILD_IDS)
     async def hug_slash(self, inter: Aci, target: disnake.Member = None):
         em = self.fun_service.hug(inter.author, target or inter.author)
@@ -44,7 +40,6 @@ class FunCommands(commands.Cog):
     async def hug_text(self, ctx: commands.Context, target: disnake.Member = None):
         em = self.fun_service.hug(ctx.author, target or ctx.author)
         await ctx.send(embed=em)
-
 
     @commands.slash_command(name="kiss", description="აკოცე ვინმეს", guild_ids=GUILD_IDS)
     async def kiss_slash(self, inter: Aci, target: disnake.Member = None):
@@ -66,7 +61,6 @@ class FunCommands(commands.Cog):
         em = self.fun_service.coffee(ctx.author)
         await ctx.send(embed=em)
 
-
     @commands.slash_command(name="tea", description="დალიე ჩაი", guild_ids=GUILD_IDS)
     async def tea_slash(self, inter: Aci):
         em = self.fun_service.tea(inter.author)
@@ -76,7 +70,6 @@ class FunCommands(commands.Cog):
     async def tea_text(self, ctx: commands.Context):
         em = self.fun_service.tea(ctx.author)
         await ctx.send(embed=em)
-
 
     @commands.slash_command(name="beer", description="დალიე ლუდი", guild_ids=GUILD_IDS)
     async def beer_slash(self, inter: Aci):
@@ -97,7 +90,6 @@ class FunCommands(commands.Cog):
     async def popcorn_text(self, ctx: commands.Context):
         em = self.fun_service.popcorn(ctx.author)
         await ctx.send(embed=em)
-
 
     @commands.slash_command(name="fuck", description="მოტყანი ვინმე", guild_ids=GUILD_IDS)
     async def fuck_slash(self, inter: Aci, target: disnake.Member = None):

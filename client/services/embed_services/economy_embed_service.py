@@ -8,12 +8,11 @@ class EconomyEmbedService:
         self.__client = client
 
     def error_invalid_amount_entered(self) -> disnake.Embed:
-        em = disnake.Embed(description=f"შეიყვანე რაოდენობა როგორც რიცხვი, \n"
-                                       f"ან დაწერე [max, all, სულ]",
+        em = disnake.Embed(description=f"შეიყვანე რაოდენობა როგორც რიცხვი. მაგალითი: `42069`",
                            color=0x692b2b)
         return em
 
-    async def error_not_enough_money(self, where: str = "") -> disnake.Embed:
+    def error_not_enough_money(self, where: str = "") -> disnake.Embed:
         """
         შენ არ გაქვს საკმარისი ფული {where}
         """
@@ -75,7 +74,13 @@ class EconomyEmbedService:
         top_ten = sorted(users, key=lambda u: u.wallet + u.bank, reverse=True)[:10]
 
         for idx, user in enumerate(top_ten):
-            em.add_field(name=f"[{idx + 1:02}] {user.username}", value=f"net: {user.wallet + user.bank}", inline=False)
+            em.add_field(
+                name=f"[{idx+1:02}] {user.username}",
+                value=f"ID: {user.id}\n"
+                      f"Net: {user.wallet + user.bank}₾\n"
+                      f"Items: {len(user.items)} ცალი - {sum(map(lambda item: item.price, user.items))} ₾",
+                inline=False
+            )
 
         return em
 
