@@ -1,10 +1,10 @@
 import aiosqlite
 
-from database.factories.item_factory import ItemFactory
-from database.models.item import Item
+from database.factories.pet_factory import PetFactory
+from database.models.pet import Pet
 
 
-class ItemRepository:
+class PetRepository:
     """
     it's your responsibility to commit the changes to the database
     """
@@ -15,30 +15,31 @@ class ItemRepository:
     async def save_changes(self):
         await self._connection.commit()
 
-    async def get_all(self) -> list[Item | None]:
+    async def get_all(self) -> list[Pet | None]:
         await self._cursor.execute("""
-        SELECT * FROM items;
+        SELECT * FROM pets;
         """)
         rows = await self._cursor.fetchall()
-        return [ItemFactory.from_db_row(row) for row in rows]
+        return [PetFactory.from_db_row(row) for row in rows]
 
-    async def get(self, id: int) -> Item | None:
+    async def get(self, id: int) -> Pet | None:
         await self._cursor.execute("""
-        SELECT * FROM items 
+        SELECT * FROM pets 
         WHERE id=?;
         """, (id,))
         data = await self._cursor.fetchone()
         if data is not None:
-            data = ItemFactory.from_db_row(data)
+            data = PetFactory.from_db_row(data)
         return data
 
-    async def add(self, item: Item) -> None:
+    async def add(self, entity: Pet) -> None:
         await self._cursor.execute("""
-        INSERT OR IGNORE INTO items
+        INSERT OR IGNORE INTO pets
         (
             id,
             type,
             rarity,
+            level,
             owner_id
         )
         VALUES
@@ -46,22 +47,24 @@ class ItemRepository:
             :id, 
             :type,
             :rarity, 
+            :level,
             :owner_id
         );
-        """, item.db_dict)
+        """, entity.db_dict)
 
-    async def update(self, item: Item) -> None:
+    async def update(self, entity: Pet) -> None:
         await self._cursor.execute("""
-        UPDATE items 
+        UPDATE pets 
         SET 
             type=:type,
             rarity=:rarity,
+            level=:level,
             owner_id=:owner_id
         WHERE id=:id;
-        """, item.db_dict)
+        """, entity.db_dict)
 
-    async def delete(self, item: Item) -> None:
+    async def delete(self, entity: Pet) -> None:
         await self._cursor.execute("""
-        DELETE FROM items
+        DELETE FROM pets
         WHERE id=:id;
-        """, item.db_dict)
+        """, entity.db_dict)

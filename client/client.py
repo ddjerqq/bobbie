@@ -1,86 +1,67 @@
 import os
-from itertools import cycle
-import disnake
+import toml
+import pathlib
 import asyncio
-from typing import Any
-from rgbprint import rgbprint
 from disnake.ext import commands
+
+from client.services.pagination_serices.paginator import PaginatorService
 from database import Database
-from client.embed_service import EmbedService
-from client.button_service import Buttons
-from utils import PROJECT_PATH
+from client.logger import Logger
+from client.services.embed_services.embed_service import EmbedService
+from client.services.view_services.button_service import Buttons
+
+PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+CONFIG       = toml.load(os.path.join(PROJECT_PATH, "bobbie.toml"))
+DEV_TEST     = CONFIG["bot"]["testing"]
+GUILD_IDS    = None if not DEV_TEST else [CONFIG["bot"]["test_guild_id"]]
 
 
 class Client(commands.Bot):
+    __TOKEN          = CONFIG["tokens"]["prod"]
+    __TEST_TOKEN     = CONFIG["tokens"]["test"]
+
+    DELETE_MESSAGE_LOG_CHANNELS  = CONFIG["channels"]["deleted_msgs"]
+    CONFESSION_CHANNELS          = CONFIG["channels"]["confessions"]
+    LOG_CHANNEL_ID               = CONFIG["channels"]["logging"]
+    LEAVE_CHANNEL_ID             = CONFIG["channels"]["leave"]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._load_extensions()
+        self.db             = None  # type: Database | None
+        self.logger         = Logger(self)
+        self.embeds         = EmbedService(self)
+        self.buttons        = Buttons()
+        self.pagination     = PaginatorService(self)
+        self.config         = CONFIG
+        self.command_prefix = CONFIG["bot"]["prefix"]
+        self.__load_extensions()
 
-        self.db = Database()
-        self.embeds  = EmbedService(self.db)
-        self.button_service = Buttons()
+    def __load_extensions(self) -> None:
+        for root, _, files in os.walk(os.path.join(PROJECT_PATH, "cogs")):
+            for cog in files:
+                if cog.endswith(".py"):
+                    cog = cog.removesuffix(".py")
+                else:
+                    continue
 
-        self.log_channel: disnake.TextChannel | None  = None
-        self.statuses = cycle([
-            "მიეც გლახაკთა საჭურჭლე,",
-            "ათავისუფლე მონები.",
-            "ddjerqq#2005",
-            "სიკვდილი ყველას გვაშინებს,",
-            "სხვას თუ ჰკვლენ, ცქერა გვწადიან.",
-            "დღეს სტუმარია ეგ ჩემი,",
-            "თუნდ ზღვა ემართოს სისხლისა.",
-        ])
+                if cog.startswith("_"):
+                    continue
 
+                folder = pathlib.Path(root).name
 
-    def _load_extensions(self) -> None:
-        for cog in os.listdir(f"{PROJECT_PATH}/cogs"):
-            if cog.endswith(".py") and not cog.startswith("_"):
-                self.load_extension(f"cogs.{cog[:-3]}")
+                if folder.startswith("_"):
+                    continue
 
+                cog = f"cogs.{folder}.{cog}"
+                self.load_extension(cog)
+
+    async def start(self, *_) -> None:
+        self.db = await Database.ainit(os.path.join(PROJECT_PATH, "database", "database.db"))
+        await super().start(self.__TOKEN if not DEV_TEST else self.__TEST_TOKEN)
 
     async def close(self):
-        await self.log("cancelling tasks")
         pending = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
         for t in pending:
             t.cancel()
-        await self.log("cancelled  tasks")
-        await self.log("closing   client")
         await super().close()
-        await self.log("closed    client")
-
-
-    async def log(self, message: Any, priority: int = 3) -> None:
-        """
-        |coro|
-        log messages with priorities (red) [!] error \n
-
-        :param message: message to log, it can be any type
-        :param priority: priority for the log, 3 log. 2 warn. 1 error
-        """
-        match priority:
-            case 3:
-                prefix = "[+]"
-                color  = "green"
-                log_type = "log"
-
-            case 2:
-                prefix = "[-]"
-                color  = "yellow"
-                log_type = "warn"
-
-            case 1:
-                prefix = "[!]"
-                color  = "red"
-                log_type = "error"
-
-            case _:
-                prefix, color, log_type = None, None, None
-
-        rgbprint(prefix, color=color, sep="", end=" ")
-        rgbprint(message)
-
-        if priority <= 2:
-            if self.log_channel is not None:
-                await self.log_channel.send(f"*`{log_type}`*```{message}```")
-            else:
-                rgbprint("warn-error log channel not configured")

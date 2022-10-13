@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import sqlite3
-
 from database.models.item import Item
+from database.models.pet import Pet
 
 
 class User(object):
-    def __init__(self, id: int, username: str, experience: int, wallet: int, bank: int) -> None:
+    def __init__(self, id: int, username: str, experience: int, wallet: int, bank: int, marriage_id: int | None) -> None:
         self.__id = id
         self.username = username
         self.experience = experience
@@ -14,41 +13,43 @@ class User(object):
         self.bank = bank
 
         self.items = []  # type: list[Item]
+        self.pets  = []  # type: list[Pet]
+
+        self.marriage_id = marriage_id
 
     @property
     def id(self):
         return self.__id
 
-    @classmethod
-    def new(cls, snowflake: int, username: str) -> User:
-        """
-        create users with this
-        :param snowflake: id of the user
-        :param username:  username of the user
-        :return: User object
-        """
-        return cls(snowflake, username, 0, 0, 0)
-
     @property
-    def db(self) -> tuple:
+    def db_dict(self) -> dict:
         """
-        (snowflake, username, experience, bank, wallet)
+        {
+            id
+            username
+            experience
+            wallet
+            bank
+            marriage_id
+        }
         """
-        return self.__id, self.username, int(self.experience), int(self.bank), int(self.wallet)
-
-    @classmethod
-    def from_db(cls, data: tuple | sqlite3.Row) -> User:
-        return cls(*data)
+        return {
+            "id": self.__id,
+            "username": self.username,
+            "experience": self.experience,
+            "wallet": self.wallet,
+            "bank": self.bank,
+            "marriage_id": self.marriage_id,
+        }
 
     def __hash__(self):
-        return hash(self.db)
+        return hash(self.__id)
 
     def __eq__(self, other: User):
-        return self.id == other.id
+        return isinstance(other, User) and self.__id == other.__id
 
     def __repr__(self):
-        return f"<{self.__class__} id={self.__id} username={self.username} at {hex(id(self))}>"
+        return f"<Db.User id={self.__id} username={self.username}>"
 
     def __str__(self):
         return f"({self.__id}) {self.username}"
-

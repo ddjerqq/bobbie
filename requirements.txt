@@ -1,0 +1,5 @@
+aiosqlite~=0.17.0
+rgbprint~=3.0.5
+disnake>=2.5
+aiohttp
+toml~=0.10.2
